@@ -46,8 +46,8 @@ repositories {
     }
 }
 
-group= "mcjty.ariente"
-archivesBaseName = "ariente"
+group= "mcjty.hologui"
+archivesBaseName = "hologui"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -69,14 +69,6 @@ dependencies {
         deobfCompile "com.github.mcjty:mcjtylib:${mcjtylib_version}"
     } else {
 	compile project(':McJtyLib')
-    }
-    compile "li.cil.oc:OpenComputers:${oc_version}"
-    compile "team.chisel.ctm:CTM:MC1.12-0.2.3.12"
-}
-
-jar {
-    manifest {
-        attributes 'FMLAT': 'ariente_at.cfg'
     }
 }
 

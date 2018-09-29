@@ -1,8 +1,8 @@
 [
 {
-  "modid": "ariente",
-  "name": "Ariente",
-  "description": "Ariente: a tech mod with a twist",
+  "modid": "hologui",
+  "name": "HoloGui",
+  "description": "HoloGui: Holographic guis",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",

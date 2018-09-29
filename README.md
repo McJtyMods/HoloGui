@@ -1,2 +1,2 @@
-# Ariente
-Ariente is a mod about technology and exploration
+# HoloGui
+HoloGui is a mod about holographic gui's
