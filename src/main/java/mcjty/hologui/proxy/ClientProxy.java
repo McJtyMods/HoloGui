@@ -1,6 +1,7 @@
 package mcjty.hologui.proxy;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import mcjty.hologui.ModEntities;
 import mcjty.lib.McJtyLibClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -41,7 +42,7 @@ public class ClientProxy extends CommonProxy {
 
     @SubscribeEvent
     public void registerModels(ModelRegistryEvent event) {
-//        ModEntities.initModels();
+        ModEntities.initModels();
     }
 
 

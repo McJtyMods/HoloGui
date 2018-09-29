@@ -1,0 +1,4 @@
+{
+    "guiclick" : {"category": "player", "sounds": ["hologui:guiclick"]},
+    "guiopen" : {"category": "player", "sounds": ["hologui:guiopen"]}
+}

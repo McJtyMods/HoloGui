@@ -1,6 +1,8 @@
 package mcjty.hologui;
 
 
+import mcjty.hologui.api.IHoloGuiHandler;
+import mcjty.hologui.gui.HoloGuiHandler;
 import mcjty.hologui.proxy.CommonProxy;
 import mcjty.lib.base.ModBase;
 import mcjty.lib.compat.MainCompatHandler;
@@ -18,8 +20,7 @@ import org.apache.logging.log4j.Logger;
                 "required-after:mcjtylib_ng@[" + HoloGui.MIN_MCJTYLIB_VER + ",);" +
                 "after:forge@[" + HoloGui.MIN_FORGE11_VER + ",)",
         acceptedMinecraftVersions = "[1.12,1.13)",
-        version = HoloGui.VERSION,
-        guiFactory = "mcjty.hologui.config.HoloGuiModGuiFactory")
+        version = HoloGui.VERSION)
 public class HoloGui implements ModBase {
     public static final String MODID = "hologui";
     public static final String MODNAME = "HoloGui";
@@ -32,6 +33,8 @@ public class HoloGui implements ModBase {
 
     @Mod.Instance
     public static HoloGui instance;
+
+    public static IHoloGuiHandler guiHandler = new HoloGuiHandler();
 
     public static Logger logger;
 
