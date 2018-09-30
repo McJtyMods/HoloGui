@@ -72,6 +72,16 @@ dependencies {
     }
 }
 
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'dev'
+}
+
+artifacts {
+    archives sourceJar
+    archives deobfJar
+}
+
 processResources
 {
     // this will ensure that this task is redone when the versions change.
@@ -89,6 +99,52 @@ processResources
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
+    }
+}
+
+task("uploadJars", dependsOn: "reobf") {
+    description = "uploads JARs"
+    if (System.getenv("local_maven") != null) {
+        apply plugin: 'maven'
+        uploadArchives {
+            repositories {
+                mavenDeployer {
+                    repository(url: "file://" + System.getenv("local_maven"))
+                    pom {
+                        groupId = project.group
+                        version = project.version
+                        artifactId = project.archivesBaseName
+                        project {
+                            name project.archivesBaseName
+                            packaging 'jar'
+                            description 'HoloGui'
+                            scm {
+                                url 'https://github.com/McJtyMods/HoloGui'
+                                connection 'scm:git:git@github.com:McJtyMods/HoloGui.git'
+                                developerConnection 'scm:git:git@github.com:McJtyMods/HoloGui.git'
+                            }
+                            issueManagement {
+                                system 'github'
+                                url 'https://github.com/McJtyMods/HoloGui/issues'
+                            }
+                            licenses {
+                                license {
+                                    name 'MIT'
+                                    distribution 'repo'
+                                }
+                            }
+                            developers {
+                                developer {
+                                    id 'McJty'
+                                    name 'McJty'
+                                    roles { role 'developer' }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
