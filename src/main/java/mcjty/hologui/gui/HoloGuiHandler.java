@@ -39,6 +39,9 @@ public class HoloGuiHandler implements IHoloGuiHandler {
 
     @Override
     public IHoloGuiEntity openHoloGui(World world, BlockPos pos, EntityPlayer player, String guiId, double distance) {
+        // @todo
+
+        world.playSound(player, pos, HoloGuiSounds.guiopen, SoundCategory.PLAYERS, 1.0f, 1.0f);
         if (world.isRemote) {
             world.playSound(pos.getX(), pos.getY(), pos.getZ(), HoloGuiSounds.guiopen, SoundCategory.PLAYERS, 1.0f, 1.0f, true);
             return null;
@@ -113,4 +116,10 @@ public class HoloGuiHandler implements IHoloGuiHandler {
     public IGuiComponentRegistry getComponentRegistry() {
         return guiComponentRegistry;
     }
+
+    @Override
+    public void render(IHoloGuiEntity entity, double x, double y, double z, float entityYaw) {
+        HoloGuiEntityRender.doActualRender((HoloGuiEntity) entity, x, y, z, entityYaw);
+    }
+
 }

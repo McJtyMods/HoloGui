@@ -10,9 +10,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Optional;
+import java.util.function.Function;
 
 
 @Mod(modid = HoloGui.MODID, name = HoloGui.MODNAME,
@@ -59,6 +63,20 @@ public class HoloGui implements ModBase {
     @Override
     public String getModId() {
         return HoloGui.MODID;
+    }
+
+    @Mod.EventHandler
+    public void imcCallback(FMLInterModComms.IMCEvent event) {
+        for (FMLInterModComms.IMCMessage message : event.getMessages()) {
+            if (message.key.equalsIgnoreCase("getHoloHandler")) {
+                Optional<Function<IHoloGuiHandler, Void>> value = message.getFunctionValue(IHoloGuiHandler.class, Void.class);
+                if (value.isPresent()) {
+                    value.get().apply(guiHandler);
+                } else {
+                    logger.warn("Some mod didn't return a valid result with getHoloHandler!");
+                }
+            }
+        }
     }
 
     @Override

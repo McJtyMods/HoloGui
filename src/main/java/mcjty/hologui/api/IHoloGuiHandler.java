@@ -18,6 +18,9 @@ public interface IHoloGuiHandler {
 
     IHoloGuiEntity openHoloGuiEntity(World world, BlockPos pos, EntityPlayer player, String tag, double distance);
 
+    // Client side only
+    void render(IHoloGuiEntity entity, double x, double y, double z, float entityYaw);
+
     Class<? extends Entity> getHoloEntityClass();
 
     IGuiRegistry getGuiRegistry();
