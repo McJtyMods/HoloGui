@@ -6,7 +6,6 @@ import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.components.IIconChoice;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -55,7 +54,6 @@ public class HoloIcons extends AbstractHoloComponent implements IIconChoice {
         }
         int u = icons.get(value).getLeft();
         int v = icons.get(value).getRight();
-        GlStateManager.color(1, 1, 1, 1);
         HoloGuiRenderTools.renderImage(x, y, u, v, 16, 16, 256, 256, image);
     }
 

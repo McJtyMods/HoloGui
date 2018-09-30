@@ -6,21 +6,58 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+
 public interface IHoloGuiHandler {
 
+    /**
+     * Register a provider to find out if a block needs a gui (IGuiTile)
+     * @param provider
+     */
+    void registerProvider(IHoloGuiProvider provider);
+
+    /**
+     * Using all the registered providers, find out if a given block needs a gui (IGuiTile)
+     */
+    @Nullable
+    IGuiTile getGuiTile(World world, BlockPos pos);
+
+    /**
+     * Using the IHoloGuiProvider implementations that you registered this will
+     * try to open the holo gui for a given block in the world. You would typically
+     * call this function from your onBlockActivated() implementation.
+     * On the server this returns false if no holo gui was found. On the
+     * client this will always return false.
+     */
     boolean openHoloGui(World world, BlockPos pos, EntityPlayer player);
 
-    IGuiComponent createNoAccessPanel();
-
-    IHoloGuiEntity openHoloGui(World world, BlockPos pos, EntityPlayer player, String guiId, double distance);
-
-    IHoloGuiEntity openHoloGuiRelative(World world, Entity parent, Vec3d offset, String guiId);
-
+    /**
+     * Open a holo gui for a given block (using the IGuiTile gotten from
+     * your IHoloGuiProvider) but with a specific tag and distance from the player. On the client
+     * this will always return null (and just play a sound)
+     */
+    @Nullable
     IHoloGuiEntity openHoloGuiEntity(World world, BlockPos pos, EntityPlayer player, String tag, double distance);
 
-    // Client side only
+    /**
+     * Open a specific gui (registered with the IGuiRegistry). This is not tied
+     * to a specific block in the world.
+     */
+    IHoloGuiEntity openHoloGui(EntityPlayer player, String guiId, double distance);
+
+    /**
+     * Open a holo gui relative to another entity (the holo gui will be
+     * 'riding' the other entity)
+     */
+    IHoloGuiEntity openHoloGuiRelative(Entity parent, Vec3d offset, String guiId);
+
+    // @todo, generalize, move into Ariente?
+    IGuiComponent createNoAccessPanel();
+
+    // Client side only. Use this to render your holo gui from some other renderer
     void render(IHoloGuiEntity entity, double x, double y, double z, float entityYaw);
 
+    // This can be used in case you want to find all nearby holo gui entities in the world
     Class<? extends Entity> getHoloEntityClass();
 
     IGuiRegistry getGuiRegistry();

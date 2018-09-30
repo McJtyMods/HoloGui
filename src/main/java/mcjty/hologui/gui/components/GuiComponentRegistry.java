@@ -26,11 +26,6 @@ public class GuiComponentRegistry implements IGuiComponentRegistry {
     }
 
     @Override
-    public IModeToggle modeToggle(double x, double y, double w, double h) {
-        return new HoloMode(x, y, w, h);
-    }
-
-    @Override
     public INumber number(double x, double y, double w, double h) {
         return new HoloNumber(x, y, w, h);
     }

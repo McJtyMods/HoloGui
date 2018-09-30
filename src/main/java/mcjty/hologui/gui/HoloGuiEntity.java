@@ -12,7 +12,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -167,9 +166,9 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
             } else {
                 BlockPos tile = getGuiTile();
                 if (tile != null) {
-                    TileEntity te = world.getTileEntity(tile);
-                    if (te instanceof IGuiTile) {
-                        ((IGuiTile) te).syncToClient();
+                    IGuiTile guiTile = HoloGui.guiHandler.getGuiTile(world, tile);
+                    if (guiTile != null) {
+                        guiTile.syncToClient();
                     }
                 }
             }
@@ -238,9 +237,8 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
             } else {
                 BlockPos tile = getGuiTile();
                 if (tile != null) {
-                    TileEntity te = world.getTileEntity(tile);
-                    if (te instanceof IGuiTile) {
-                        IGuiTile guiTile = (IGuiTile) te;
+                    IGuiTile guiTile = HoloGui.guiHandler.getGuiTile(world, tile);
+                    if (guiTile != null) {
                         panel = guiTile.createGui(getTag(), HoloGui.guiHandler.getComponentRegistry());
                     }
                 }
