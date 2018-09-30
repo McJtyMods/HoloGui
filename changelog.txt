@@ -1,2 +1,5 @@
+0.0.2-beta:
+- In-game mod config was broken
+
 0.0.1-beta:
 - First version of HoloGui. WARNING! API is still subject to change!
