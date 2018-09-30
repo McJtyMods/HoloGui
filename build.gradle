@@ -119,13 +119,13 @@ task("uploadJars", dependsOn: "reobf") {
                             packaging 'jar'
                             description 'HoloGui'
                             scm {
-                                url 'https://github.com/McJtyMods/HoloGui'
-                                connection 'scm:git:git@github.com:McJtyMods/HoloGui.git'
-                                developerConnection 'scm:git:git@github.com:McJtyMods/HoloGui.git'
+                                url 'https://github.com/McJty/HoloGui'
+                                connection 'scm:git:git@github.com:McJty/HoloGui.git'
+                                developerConnection 'scm:git:git@github.com:McJty/HoloGui.git'
                             }
                             issueManagement {
                                 system 'github'
-                                url 'https://github.com/McJtyMods/HoloGui/issues'
+                                url 'https://github.com/McJty/HoloGui/issues'
                             }
                             licenses {
                                 license {
