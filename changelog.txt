@@ -1,0 +1,2 @@
+0.0.1-beta:
+- First version of HoloGui. WARNING! API is still subject to change!
