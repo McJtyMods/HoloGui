@@ -1,7 +1,7 @@
 package mcjty.hologui.gui.components;
 
-import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.IGuiComponent;
+import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.components.IPanel;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -18,7 +18,7 @@ public class HoloPanel extends AbstractHoloComponent implements IPanel {
     }
 
     @Override
-    public HoloPanel add(IGuiComponent... components) {
+    public IPanel add(IGuiComponent... components) {
         Collections.addAll(children, components);
         return this;
     }

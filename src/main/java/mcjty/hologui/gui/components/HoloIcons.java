@@ -18,7 +18,9 @@ import java.util.function.Function;
 
 public class HoloIcons extends AbstractHoloComponent implements IIconChoice {
 
-    private static final ResourceLocation image = new ResourceLocation(HoloGui.MODID, "textures/gui/guielements.png");
+    private ResourceLocation image = new ResourceLocation(HoloGui.MODID, "textures/gui/guielements.png");
+    private int image_w = 256;
+    private int image_h = 256;
 
     private List<Pair<Integer, Integer>> icons = new ArrayList<>();
     private Function<EntityPlayer, Integer> currentValue;
@@ -29,19 +31,27 @@ public class HoloIcons extends AbstractHoloComponent implements IIconChoice {
     }
 
     @Override
-    public HoloIcons getter(Function<EntityPlayer, Integer> getter) {
+    public IIconChoice image(ResourceLocation resource, int w, int h) {
+        this.image = resource;
+        this.image_w = w;
+        this.image_h = h;
+        return this;
+    }
+
+    @Override
+    public IIconChoice getter(Function<EntityPlayer, Integer> getter) {
         this.currentValue = getter;
         return this;
     }
 
     @Override
-    public HoloIcons icon(int u, int v) {
+    public IIconChoice icon(int u, int v) {
         icons.add(Pair.of(u, v));
         return this;
     }
 
     @Override
-    public HoloIcons hitEvent(IEvent event) {
+    public IIconChoice hitEvent(IEvent event) {
         this.hitEvent = event;
         return this;
     }
@@ -54,7 +64,7 @@ public class HoloIcons extends AbstractHoloComponent implements IIconChoice {
         }
         int u = icons.get(value).getLeft();
         int v = icons.get(value).getRight();
-        HoloGuiRenderTools.renderImage(x, y, u, v, 16, 16, 256, 256, image);
+        HoloGuiRenderTools.renderImage(x, y, u, v, 16, 16, image_w, image_h, image);
     }
 
     @Override

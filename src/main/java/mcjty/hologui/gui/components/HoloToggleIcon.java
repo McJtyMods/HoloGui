@@ -16,7 +16,9 @@ import java.util.function.Function;
 
 public class HoloToggleIcon extends AbstractHoloComponent implements IIconToggle {
 
-    private static final ResourceLocation image = new ResourceLocation(HoloGui.MODID, "textures/gui/guielements.png");
+    private ResourceLocation image = new ResourceLocation(HoloGui.MODID, "textures/gui/guielements.png");
+    private int image_w = 256;
+    private int image_h = 256;
 
     private int normal_u;
     private int normal_v;
@@ -30,27 +32,35 @@ public class HoloToggleIcon extends AbstractHoloComponent implements IIconToggle
     }
 
     @Override
-    public HoloToggleIcon getter(Function<EntityPlayer, Boolean> getter) {
+    public IIconToggle image(ResourceLocation resource, int w, int h) {
+        this.image = resource;
+        this.image_w = w;
+        this.image_h = h;
+        return this;
+    }
+
+    @Override
+    public IIconToggle getter(Function<EntityPlayer, Boolean> getter) {
         this.currentValue = getter;
         return this;
     }
 
     @Override
-    public HoloToggleIcon image(int u, int v) {
+    public IIconToggle icon(int u, int v) {
         this.normal_u = u;
         this.normal_v = v;
         return this;
     }
 
     @Override
-    public HoloToggleIcon selected(int u, int v) {
+    public IIconToggle selected(int u, int v) {
         this.selected_u = u;
         this.selected_v = v;
         return this;
     }
 
     @Override
-    public HoloToggleIcon hitEvent(IEvent event) {
+    public IIconToggle hitEvent(IEvent event) {
         this.hitEvent = event;
         return this;
     }
@@ -65,7 +75,7 @@ public class HoloToggleIcon extends AbstractHoloComponent implements IIconToggle
             v = selected_v;
         }
         GlStateManager.color(1, 1, 1, 1);
-        HoloGuiRenderTools.renderImage(x, y, u, v, 16, 16, 256, 256, image);
+        HoloGuiRenderTools.renderImage(x, y, u, v, 16, 16, image_w, image_h, image);
     }
 
     @Override

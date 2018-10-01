@@ -19,19 +19,19 @@ public class HoloNumber extends AbstractHoloComponent implements INumber {
     }
 
     @Override
-    public HoloNumber getter(BiFunction<EntityPlayer, IHoloGuiEntity, Integer> getter) {
+    public INumber getter(BiFunction<EntityPlayer, IHoloGuiEntity, Integer> getter) {
         this.getter = getter;
         return this;
     }
 
     @Override
-    public HoloNumber color(int color) {
+    public INumber color(int color) {
         this.color = color;
         return this;
     }
 
     @Override
-    public HoloNumber colorGetter(Function<EntityPlayer, Integer> getter) {
+    public INumber colorGetter(Function<EntityPlayer, Integer> getter) {
         colorGetter = getter;
         return this;
     }

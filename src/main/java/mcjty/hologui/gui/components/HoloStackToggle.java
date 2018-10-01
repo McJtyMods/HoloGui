@@ -30,13 +30,13 @@ public class HoloStackToggle extends AbstractHoloComponent implements IStackTogg
     }
 
     @Override
-    public HoloStackToggle itemStack(@Nonnull ItemStack stack) {
+    public IStackToggle itemStack(@Nonnull ItemStack stack) {
         this.stack = stack;
         return this;
     }
 
     @Override
-    public HoloStackToggle getter(Function<EntityPlayer, Boolean> getter) {
+    public IStackToggle getter(Function<EntityPlayer, Boolean> getter) {
         this.currentValue = getter;
         return this;
     }
@@ -68,7 +68,7 @@ public class HoloStackToggle extends AbstractHoloComponent implements IStackTogg
     }
 
     @Override
-    public HoloStackToggle hitEvent(IEvent event) {
+    public IStackToggle hitEvent(IEvent event) {
         this.hitEvent = event;
         return this;
     }

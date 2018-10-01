@@ -9,7 +9,9 @@ import net.minecraft.util.ResourceLocation;
 
 public class HoloIcon extends AbstractHoloComponent implements IIcon {
 
-    private static final ResourceLocation image = new ResourceLocation(HoloGui.MODID, "textures/gui/guielements.png");
+    private ResourceLocation image = new ResourceLocation(HoloGui.MODID, "textures/gui/guielements.png");
+    private int image_w = 256;
+    private int image_h = 256;
 
     private int normal_u;
     private int normal_v;
@@ -19,7 +21,15 @@ public class HoloIcon extends AbstractHoloComponent implements IIcon {
     }
 
     @Override
-    public HoloIcon image(int u, int v) {
+    public IIcon image(ResourceLocation resource, int w, int h) {
+        this.image = resource;
+        this.image_w = w;
+        this.image_h = h;
+        return this;
+    }
+
+    @Override
+    public IIcon icon(int u, int v) {
         this.normal_u = u;
         this.normal_v = v;
         return this;
@@ -27,7 +37,7 @@ public class HoloIcon extends AbstractHoloComponent implements IIcon {
 
     @Override
     public void render(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY) {
-        HoloGuiRenderTools.renderImage(x, y, normal_u, normal_v, 16, 16, 256, 256, image);
+        HoloGuiRenderTools.renderImage(x, y, normal_u, normal_v, 16, 16, image_w, image_h, image);
 //        HoloGuiRenderTools.renderText(x, y, "x", 0xffffff);
     }
 }

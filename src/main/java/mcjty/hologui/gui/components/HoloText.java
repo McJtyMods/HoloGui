@@ -17,19 +17,19 @@ public class HoloText extends AbstractHoloComponent implements IText {
     }
 
     @Override
-    public HoloText text(String text) {
+    public IText text(String text) {
         this.text = () -> text;
         return this;
     }
 
     @Override
-    public HoloText text(Supplier<String> text) {
+    public IText text(Supplier<String> text) {
         this.text = text;
         return this;
     }
 
     @Override
-    public HoloText color(int color) {
+    public IText color(int color) {
         this.color = color;
         return this;
     }

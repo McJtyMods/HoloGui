@@ -24,30 +24,30 @@ public class HoloTextButton extends AbstractHoloComponent implements IButton {
     }
 
     @Override
-    public HoloTextButton text(String text) {
+    public IButton text(String text) {
         this.text = text;
         return this;
     }
 
     @Override
-    public HoloTextButton color(int color) {
+    public IButton color(int color) {
         this.color = color;
         return this;
     }
 
-    public HoloTextButton hover(int hoverColor) {
+    public IButton hover(int hoverColor) {
         this.hoverColor = hoverColor;
         return this;
     }
 
     @Override
-    public HoloTextButton hitEvent(IEvent event) {
+    public IButton hitEvent(IEvent event) {
         this.hitEvent = event;
         return this;
     }
 
     @Override
-    public HoloTextButton hitClientEvent(IEvent event) {
+    public IButton hitClientEvent(IEvent event) {
         this.hitClientEvent = event;
         return this;
     }

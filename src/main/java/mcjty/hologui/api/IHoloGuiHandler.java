@@ -47,7 +47,9 @@ public interface IHoloGuiHandler {
 
     /**
      * Open a holo gui relative to another entity (the holo gui will be
-     * 'riding' the other entity)
+     * 'riding' the other entity). Note that a hologui that is a child of another
+     * entity will not render itself. It is up to the renderer of the parent to
+     * make sure the hologui renders.
      */
     IHoloGuiEntity openHoloGuiRelative(Entity parent, Vec3d offset, String guiId);
 

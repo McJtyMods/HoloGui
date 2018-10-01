@@ -18,7 +18,7 @@ public class HoloStackIcon extends AbstractHoloComponent implements IStackIcon {
     }
 
     @Override
-    public HoloStackIcon itemStack(@Nonnull ItemStack stack) {
+    public IStackIcon itemStack(@Nonnull ItemStack stack) {
         this.stack = stack;
         return this;
     }

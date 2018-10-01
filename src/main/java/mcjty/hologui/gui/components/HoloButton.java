@@ -13,7 +13,9 @@ import net.minecraft.util.SoundCategory;
 
 public class HoloButton extends AbstractHoloComponent implements IIconButton {
 
-    private static final ResourceLocation image = new ResourceLocation(HoloGui.MODID, "textures/gui/guielements.png");
+    private ResourceLocation image = new ResourceLocation(HoloGui.MODID, "textures/gui/guielements.png");
+    private int image_w = 256;
+    private int image_h = 256;
 
     private int normal_u;
     private int normal_v;
@@ -27,27 +29,35 @@ public class HoloButton extends AbstractHoloComponent implements IIconButton {
     }
 
     @Override
-    public HoloButton image(int u, int v) {
+    public IIconButton image(ResourceLocation resource, int w, int h) {
+        this.image = resource;
+        this.image_w = w;
+        this.image_h = h;
+        return this;
+    }
+
+    @Override
+    public IIconButton icon(int u, int v) {
         this.normal_u = u;
         this.normal_v = v;
         return this;
     }
 
     @Override
-    public HoloButton hover(int u, int v) {
+    public IIconButton hover(int u, int v) {
         this.hover_u = u;
         this.hover_v = v;
         return this;
     }
 
     @Override
-    public HoloButton hitEvent(IEvent event) {
+    public IIconButton hitEvent(IEvent event) {
         this.hitEvent = event;
         return this;
     }
 
     @Override
-    public HoloButton hitClientEvent(IEvent event) {
+    public IIconButton hitClientEvent(IEvent event) {
         this.hitClientEvent = event;
         return this;
     }
@@ -63,7 +73,7 @@ public class HoloButton extends AbstractHoloComponent implements IIconButton {
             u = normal_u;
             v = normal_v;
         }
-        HoloGuiRenderTools.renderImage(x, y, u, v, 16, 16, 256, 256, image);
+        HoloGuiRenderTools.renderImage(x, y, u, v, 16, 16, image_w, image_h, image);
 //        HoloGuiRenderTools.renderText(x, y, "x", 0xffffff);
     }
 
