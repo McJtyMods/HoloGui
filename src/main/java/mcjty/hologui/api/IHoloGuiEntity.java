@@ -4,6 +4,9 @@ import net.minecraft.entity.Entity;
 
 public interface IHoloGuiEntity {
 
+    /**
+     * Get the actual entity representing this hologui
+     */
     Entity getEntity();
 
     /**
@@ -14,6 +17,7 @@ public interface IHoloGuiEntity {
 
     /**
      * Set the timeout before this gui closes (in ticks)
+     * This is only used in case CloseStrategy.TIMEOUT is active
      */
     void setTimeout(int timeout);
 
@@ -32,12 +36,18 @@ public interface IHoloGuiEntity {
 
     float getScale();
 
+    /**
+     * Scale to render this hologui at. Default is 1.0f
+     */
     void setScale(float scale);
 
     String getGuiId();
 
     String getTag();
 
+    /**
+     * Switch to another registered gui (using IGuiRegistry)
+     */
     void switchGui(String guiId);
 }
 
