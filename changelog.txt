@@ -1,3 +1,6 @@
+0.0.3-beta:
+- Several api cleanups and improvements
+
 0.0.2-beta:
 - In-game mod config was broken
 
