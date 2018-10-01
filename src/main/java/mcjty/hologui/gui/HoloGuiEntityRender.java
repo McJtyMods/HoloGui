@@ -63,7 +63,9 @@ public class HoloGuiEntityRender extends Render<HoloGuiEntity> {
 
         GlStateManager.rotate(180.0F - entityYaw, 0.0F, 1.0F, 0.0F);
         GlStateManager.translate(0, .5, 0);
-        double scale = entity.isSmall() ? .6 : 1;
+        float scale = entity.getScale();
+        scale = 1f - (1f-scale) * (.4f / .25f);
+
         GlStateManager.scale(scale, scale, scale);
 
         GlStateManager.enableTexture2D();

@@ -122,7 +122,8 @@ public class HoloGuiHandler implements IHoloGuiHandler {
     }
 
     private static HoloGuiEntity createHoloGuiRelative(World world, Entity parent, Vec3d offset, String tag) {
-        HoloGuiEntity entity = new HoloGuiEntitySmall(world);
+//        HoloGuiEntity entity = new HoloGuiEntitySmall(world);
+        HoloGuiEntity entity = new HoloGuiEntity(world);
         entity.setTag(tag);
         double x = parent.posX + offset.x;
         double y = parent.posY + offset.y;

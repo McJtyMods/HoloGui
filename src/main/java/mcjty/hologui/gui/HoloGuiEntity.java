@@ -2,11 +2,11 @@ package mcjty.hologui.gui;
 
 import com.google.common.base.Optional;
 import mcjty.hologui.HoloGui;
+import mcjty.hologui.api.CloseStrategy;
 import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.api.IGuiTile;
 import mcjty.hologui.api.IHoloGuiEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -25,6 +25,8 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     private static final DataParameter<Optional<BlockPos>> GUITILE = EntityDataManager.createKey(HoloGuiEntity.class, DataSerializers.OPTIONAL_BLOCK_POS);
     private static final DataParameter<String> TAG = EntityDataManager.createKey(HoloGuiEntity.class, DataSerializers.STRING);
     private static final DataParameter<String> GUIID = EntityDataManager.createKey(HoloGuiEntity.class, DataSerializers.STRING);
+    private static final DataParameter<Float> SCALE = EntityDataManager.createKey(HoloGuiEntity.class, DataSerializers.FLOAT);
+    private static final DataParameter<Integer> CLOSESTRATEGY = EntityDataManager.createKey(HoloGuiEntity.class, DataSerializers.VARINT);
 
     private AxisAlignedBB playerDetectionBox = null;
 
@@ -76,6 +78,17 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         return hit;
     }
 
+    private static final AxisAlignedBB HOLO_ZERO_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
+
+    @Override
+    public float getScale() {
+        return this.dataManager.get(SCALE);
+    }
+
+    @Override
+    public void setScale(float scale) {
+        this.dataManager.set(SCALE, scale);
+    }
     public void setGuiTile(BlockPos guiTile) {
         this.dataManager.set(GUITILE, Optional.fromNullable(guiTile));
     }
@@ -84,6 +97,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         return (BlockPos) ((Optional) this.dataManager.get(GUITILE)).orNull();
     }
 
+    @Override
     public String getGuiId() {
         return this.dataManager.get(GUIID);
     }
@@ -96,47 +110,15 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         this.dataManager.set(TAG, tag);
     }
 
+    @Override
     public String getTag() {
         return this.dataManager.get(TAG);
-    }
-
-    public boolean isSmall() {
-        return false;
-    }
-
-    @Override
-    public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport) {
-//        System.out.println("setPositionAndRotationDirect: yaw = " + yaw);
-        super.setPositionAndRotationDirect(x, y, z, yaw, pitch, posRotationIncrements, teleport);
-    }
-
-    @Override
-    protected void setRotation(float yaw, float pitch) {
-        super.setRotation(yaw, pitch);
-    }
-
-    @Override
-    public void setPosition(double x, double y, double z) {
-        super.setPosition(x, y, z);
-    }
-
-    @Override
-    public void setLocationAndAngles(double x, double y, double z, float yaw, float pitch) {
-        super.setLocationAndAngles(x, y, z, yaw, pitch);
-//        System.out.println("yaw = " + yaw);
-    }
-
-
-
-    @Override
-    public void move(MoverType type, double x, double y, double z) {
-    // @todo remove
-        super.move(type, x, y, z);
     }
 
     @Override
     public void onUpdate() {
         super.onUpdate();
+        setSize(getScale(), getScale());
 
         if (world.isRemote) {
             String id = getGuiId();
@@ -174,16 +156,18 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
             }
         }
 
-        if (timeout < 2000000000) {
+        if (hasCloseStrategy(CloseStrategy.TIMEOUT)) {
             timeout--;
             if (timeout <= 0) {
                 world.playSound(null, posX, posY, posZ, HoloGuiSounds.guiopen, SoundCategory.PLAYERS, 0.2f, 1.0f);
                 this.setDead();
             }
-            if (world.getEntitiesWithinAABB(EntityPlayer.class, playerDetectionBox)
-                    .stream()
-                    .anyMatch(this::playerLooksAtMe)) {
-                timeout = maxTimeout;
+            if (hasCloseStrategy(CloseStrategy.TIMEOUT_RESET)) {
+                if (world.getEntitiesWithinAABB(EntityPlayer.class, playerDetectionBox)
+                        .stream()
+                        .anyMatch(this::playerLooksAtMe)) {
+                    timeout = maxTimeout;
+                }
             }
         }
     }
@@ -196,13 +180,14 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 
         double cx;
         double cy;
-        if (isSmall()) {
-            cx = vec2d.x * 10 / .6 - 4.1;
-            cy = vec2d.y * 10 / .6 - 4.1;
-        } else {
-            cx = vec2d.x * 10 - .8;
-            cy = vec2d.y * 10 - .8;
-        }
+        float scale = getScale();
+
+        float factor = 1f - (1f - scale) * (.4f / .25f);
+        float offset = .8f + (1f - scale) * (3.3f / .25f);
+
+        cx = vec2d.x * 10 / factor - offset;
+        cy = vec2d.y * 10 / factor - offset;
+
         return cx >= 0 && cx <= 10 && cy >= 0 && cy <= 10;
     }
 
@@ -212,13 +197,13 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         Vec3d v = getIntersect3D(player, lookVec);
         Vec2f vec2d = get2DProjection(lookVec, v);
 
-        if (isSmall()) {
-            cursorX = vec2d.x * 10 / .6 - 4.1;
-            cursorY = vec2d.y * 10 / .6 - 4.1;
-        } else {
-            cursorX = vec2d.x * 10 - .8;
-            cursorY = vec2d.y * 10 - .8;
-        }
+        float scale = getScale();
+
+        float factor = 1f - (1f - scale) * (.4f / .25f);
+        float offset = .8f + (1f - scale) * (3.3f / .25f);
+
+        cursorX = vec2d.x * 10 / factor - offset;
+        cursorY = vec2d.y * 10 / factor - offset;
 
         hit = v;
     }
@@ -253,9 +238,24 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     }
 
     @Override
+    public void setCloseStrategy(int strategy) {
+        this.dataManager.set(CLOSESTRATEGY, strategy);
+    }
+
+    @Override
+    public int getCloseStrategy() {
+        return this.dataManager.get(CLOSESTRATEGY);
+    }
+
+    @Override
+    public boolean hasCloseStrategy(int s) {
+        return (getCloseStrategy() & s) != 0;
+    }
+
+    @Override
     public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
         // The small holo is used as a child on the flux levitator. It doesn't close like this
-        if (!isSmall()) {
+        if (hasCloseStrategy(CloseStrategy.RIGHTCLICK)) {
             world.playSound(posX, posY, posZ, HoloGuiSounds.guiopen, SoundCategory.PLAYERS, 0.2f, 1.0f, true);  // @todo config
             setDead();
         }
@@ -332,13 +332,13 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
             if (gui != null) {
                 double x;
                 double y;
-                if (isSmall()) {
-                    x = vec2d.x * 10 / .6 - 4.1;
-                    y = vec2d.y * 10 / .6 - 4.1;
-                } else {
-                    x = vec2d.x * 10 - .8;
-                    y = vec2d.y * 10 - .8;
-                }
+                float scale = getScale();
+
+                float factor = 1f - (1f - scale) * (.4f / .25f);
+                float offset = .8f + (1f - scale) * (3.3f / .25f);
+
+                x = vec2d.x * 10 / factor - offset;
+                y = vec2d.y * 10 / factor - offset;
 
                 if (!world.isRemote) {
                     gui.hit(player, this, x, y);
@@ -360,6 +360,8 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         this.dataManager.register(GUITILE, Optional.absent());
         this.dataManager.register(TAG, "");
         this.dataManager.register(GUIID, "");
+        this.dataManager.register(SCALE, 1.0f);
+        this.dataManager.register(CLOSESTRATEGY, CloseStrategy.TIMEOUT + CloseStrategy.TIMEOUT_RESET + CloseStrategy.RIGHTCLICK);
     }
 
     @Override
@@ -374,6 +376,12 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         }
         setTag(compound.getString("tag"));
         setGuiId(compound.getString("guiId"));
+        if (compound.hasKey("scale")) {
+            setScale(compound.getFloat("scale"));
+        }
+        if (compound.hasKey("closeStrategy")) {
+            setCloseStrategy(compound.getInteger("closeStrategy"));
+        }
     }
 
     @Override
@@ -394,5 +402,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         if (guiid != null) {
             compound.setString("guiId", guiid);
         }
+        compound.setFloat("scale", getScale());
+        compound.setInteger("closeStrategy", getCloseStrategy());
     }
 }
