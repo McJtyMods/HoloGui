@@ -54,4 +54,14 @@ public class GuiComponentRegistry implements IGuiComponentRegistry {
     public IButton button(double x, double y, double w, double h) {
         return new HoloTextButton(x, y, w, h);
     }
+
+    @Override
+    public ISlots slots(double x, double y, double w, double h) {
+        return new HoloSlots(x, y, w, h);
+    }
+
+    @Override
+    public IPlayerSlots playerSlots(double x, double y, double w, double h) {
+        return new HoloPlayerSlots(x, y, w, h);
+    }
 }

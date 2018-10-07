@@ -62,10 +62,12 @@ public class HoloGuiRenderTools {
         GlStateManager.translate(x * 0.95 - 3.7, 4.2 - y * 1.2, 0);
         GlStateManager.scale(1, 1, 0.1);
         if (!stack.isEmpty()) {
+            GlStateManager.disableLighting();
             RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
             IBakedModel ibakedmodel = renderItem.getItemModelWithOverrides(stack, null, null);
             renderItemModel(stack, ibakedmodel, ItemCameraTransforms.TransformType.GUI, lightmap);
             if (border) {
+                net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
                 Tessellator tessellator = Tessellator.getInstance();
                 BufferBuilder builder = tessellator.getBuffer();
                 builder.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION_COLOR);

@@ -61,4 +61,14 @@ public interface IGuiComponentRegistry {
      * A text button
      */
     IButton button(double x, double y, double w, double h);
+
+    /**
+     * A set of inventory slots
+     */
+    ISlots slots(double x, double y, double w, double h);
+
+    /**
+     * A set of inventory slots for the player
+     */
+    IPlayerSlots playerSlots(double x, double y, double w, double h);
 }
