@@ -5,6 +5,7 @@ import mcjty.hologui.api.IStackEvent;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -56,6 +57,7 @@ public abstract class AbstractPlayerSlots extends AbstractHoloComponent {
                 }
             }
         }
+        RenderHelper.enableStandardItemLighting();
     }
 
     protected abstract List<Pair<ItemStack, Integer>> getStacks(EntityPlayer player);
@@ -93,7 +95,8 @@ public abstract class AbstractPlayerSlots extends AbstractHoloComponent {
             GlStateManager.scale(0.4, 0.4, 0.0);
             int xx = (int) (cursorX - x);
             int yy = (int) (cursorY - y);
-            HoloGuiRenderTools.renderToolTip(stack, (int) ((xx+x) * 30 - 120), (int) ((yy+y+.5) * 30 - 120));
+            HoloGuiRenderTools.renderToolTip(stack, (int) ((xx+x) * 30 - 120), (int) ((yy+y) * 30 - 120 + 25));
+            RenderHelper.enableStandardItemLighting();
             GlStateManager.popMatrix();
         }
     }

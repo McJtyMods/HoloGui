@@ -7,6 +7,7 @@ import mcjty.hologui.api.components.IStackToggle;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -53,6 +54,7 @@ public class HoloStackToggle extends AbstractHoloComponent implements IStackTogg
             border = true;
         }
         HoloGuiRenderTools.renderItem(x, y, stack, lightmap, border, 1);
+        RenderHelper.enableStandardItemLighting();
     }
 
     @Override
@@ -64,6 +66,7 @@ public class HoloStackToggle extends AbstractHoloComponent implements IStackTogg
         GlStateManager.translate(0, 0, -10);
         GlStateManager.scale(0.4, 0.4, 0.0);
         HoloGuiRenderTools.renderToolTip(stack, (int) (x * 30 - 120), (int) (y * 30 - 120));
+        RenderHelper.enableStandardItemLighting();
         GlStateManager.popMatrix();
     }
 

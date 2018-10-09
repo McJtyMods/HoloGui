@@ -39,7 +39,8 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     private double cursorX;
     private double cursorY;
     private Vec3d hit;
-    private String lastGuiId = null;   // Last guiId that was rendered on the client. If it changes then we have to redo the gui
+    private String lastGuiId = null;    // Last guiId that was rendered on the client. If it changes then we have to redo the gui
+    private String lastTag = null;      // Last tag
     public int tooltipTimeout = 10;
     public IGuiComponent tooltipComponent = null;
 
@@ -116,6 +117,15 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     }
 
     @Override
+    public void switchTag(String tag) {
+        if (tag.equals(getTag())) {
+            return;
+        }
+        setTag(tag);
+        panel = null;
+    }
+
+    @Override
     public void onUpdate() {
         super.onUpdate();
         setSize(getScale(), getScale());
@@ -126,6 +136,13 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
                 if (!id.equals(lastGuiId)) {
                     panel = null;
                     lastGuiId = id;
+                }
+            }
+            String tag = getTag();
+            if (tag != null && !tag.isEmpty()) {
+                if (!tag.equals(lastTag)) {
+                    panel = null;
+                    lastTag = tag;
                 }
             }
             onUpdateClient();

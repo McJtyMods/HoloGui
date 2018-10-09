@@ -1,3 +1,8 @@
+0.0.4-beta:
+- Some support for inventory handling (both for player and blocks)
+- Fixed a bug with holo tooltips not completely correcting GL state
+- Added support for switching tags for an open GUI. This allows for creating menus for IGuiTile based gui's
+
 0.0.3-beta:
 - Several api cleanups and improvements
 

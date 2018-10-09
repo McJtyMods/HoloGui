@@ -4,6 +4,7 @@ import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.components.IStackIcon;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
@@ -26,6 +27,7 @@ public class HoloStackIcon extends AbstractHoloComponent implements IStackIcon {
     @Override
     public void render(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         HoloGuiRenderTools.renderItem(x, y, stack, null, false, 1);
+        RenderHelper.enableStandardItemLighting();
     }
 
     @Override
@@ -37,6 +39,7 @@ public class HoloStackIcon extends AbstractHoloComponent implements IStackIcon {
         GlStateManager.translate(0, 0, -10);
         GlStateManager.scale(0.4, 0.4, 0.0);
         HoloGuiRenderTools.renderToolTip(stack, (int) (x * 30 - 120), (int) (y * 30 - 120));
+        RenderHelper.enableStandardItemLighting();
         GlStateManager.popMatrix();
     }
 

@@ -49,5 +49,10 @@ public interface IHoloGuiEntity {
      * Switch to another registered gui (using IGuiRegistry)
      */
     void switchGui(String guiId);
+
+    /**
+     * Switch the gui to another tag. Mainly used in combination with IGuiTile
+     */
+    void switchTag(String tag);
 }
 
