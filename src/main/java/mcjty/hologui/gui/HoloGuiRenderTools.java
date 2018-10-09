@@ -56,10 +56,56 @@ public class HoloGuiRenderTools {
         GlStateManager.popMatrix();
     }
 
-    public static void renderItem(double x, double y, ItemStack stack, @Nullable ResourceLocation lightmap, boolean border) {
+    public static void renderBorder(double x, double y, double w, double h, int r, int g, int b, int a) {
+
+        y += h-1;
+
+        x *= 1.05;
+        y *= 0.85;
+        y += .45;
+
         GlStateManager.pushMatrix();
         GlStateManager.scale(0.1, 0.1, 0.1);
         GlStateManager.translate(x * 0.95 - 3.7, 4.2 - y * 1.2, 0);
+        GlStateManager.scale(1, 1, 0.1);
+
+        GlStateManager.disableLighting();
+        net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder builder = tessellator.getBuffer();
+        builder.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION_COLOR);
+        x /= 200;
+        x -= 0.47;
+        y /= 100;
+        y -= 0.5;
+
+        GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        GlStateManager.glLineWidth(2.0F);
+        GlStateManager.disableTexture2D();
+
+        double z = 0.3;
+        builder.pos(x, y, z).color(r, g, b, a).endVertex();
+        builder.pos(x + w, y, z).color(r, g, b, a).endVertex();
+        builder.pos(x + w, y + h, z).color(r, g, b, a).endVertex();
+        builder.pos(x, y + h, z).color(r, g, b, a).endVertex();
+        builder.pos(x, y, z).color(r, g, b, a).endVertex();
+        tessellator.draw();
+
+        GlStateManager.disableBlend();
+        GlStateManager.enableTexture2D();
+        GlStateManager.popMatrix();
+    }
+
+    public static void renderItem(double x, double y, ItemStack stack, @Nullable ResourceLocation lightmap, boolean border, double scale) {
+
+        x *= 1.05;
+        y *= 0.85;
+        y += .45;
+
+        GlStateManager.pushMatrix();
+        GlStateManager.scale(0.1 * scale, 0.1 * scale, 0.1 * scale);
+        GlStateManager.translate((x * 0.95 - 3.7) / scale, (4.2 - y * 1.2) / scale, 0);
         GlStateManager.scale(1, 1, 0.1);
         if (!stack.isEmpty()) {
             GlStateManager.disableLighting();
@@ -71,8 +117,10 @@ public class HoloGuiRenderTools {
                 Tessellator tessellator = Tessellator.getInstance();
                 BufferBuilder builder = tessellator.getBuffer();
                 builder.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION_COLOR);
-                x /= 200; x -= 0.47;
-                y /= 100; y -= 0.5;
+                x /= 200;
+                x -= 0.47;
+                y /= 100;
+                y -= 0.5;
 
                 GlStateManager.enableBlend();
                 GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
@@ -82,9 +130,9 @@ public class HoloGuiRenderTools {
                 double z = 0.3;
                 double w = 0.9;
                 builder.pos(x, y, z).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
-                builder.pos(x+w, y, z).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
-                builder.pos(x+w, y+w, z).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
-                builder.pos(x, y+w, z).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
+                builder.pos(x + w, y, z).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
+                builder.pos(x + w, y + w, z).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
+                builder.pos(x, y + w, z).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
                 builder.pos(x, y, z).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
                 tessellator.draw();
 

@@ -25,7 +25,7 @@ public class HoloStackIcon extends AbstractHoloComponent implements IStackIcon {
 
     @Override
     public void render(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY) {
-        HoloGuiRenderTools.renderItem(x * 1.05, y * 0.85 + .45, stack, null, false);
+        HoloGuiRenderTools.renderItem(x, y, stack, null, false, 1);
     }
 
     @Override

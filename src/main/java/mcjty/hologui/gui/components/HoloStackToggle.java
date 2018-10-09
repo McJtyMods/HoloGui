@@ -52,7 +52,7 @@ public class HoloStackToggle extends AbstractHoloComponent implements IStackTogg
         } else {
             border = true;
         }
-        HoloGuiRenderTools.renderItem(x * 1.05, y * 0.85 + .45, stack, lightmap, border);
+        HoloGuiRenderTools.renderItem(x, y, stack, lightmap, border, 1);
     }
 
     @Override
