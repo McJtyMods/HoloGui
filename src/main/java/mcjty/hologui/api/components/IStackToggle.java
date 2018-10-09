@@ -9,6 +9,7 @@ import javax.annotation.Nonnull;
 import java.util.function.Function;
 
 public interface IStackToggle extends IGuiComponent {
+
     IStackToggle itemStack(@Nonnull ItemStack stack);
 
     IStackToggle getter(Function<EntityPlayer, Boolean> getter);
