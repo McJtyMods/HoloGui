@@ -3,7 +3,7 @@ package mcjty.hologui.api.components;
 import mcjty.hologui.api.IEvent;
 import mcjty.hologui.api.IGuiComponent;
 
-public interface IButton extends IGuiComponent {
+public interface IButton extends IGuiComponent<IButton> {
 
     IButton text(String text);
 

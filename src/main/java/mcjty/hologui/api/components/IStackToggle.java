@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 import javax.annotation.Nonnull;
 import java.util.function.Function;
 
-public interface IStackToggle extends IGuiComponent {
+public interface IStackToggle extends IGuiComponent<IStackToggle> {
 
     IStackToggle itemStack(@Nonnull ItemStack stack);
 

@@ -17,14 +17,14 @@ import net.minecraft.util.SoundCategory;
 import javax.annotation.Nonnull;
 import java.util.function.Function;
 
-public class HoloStackToggle extends AbstractHoloComponent implements IStackToggle {
+public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> implements IStackToggle {
 
     private ItemStack stack;
     private Function<EntityPlayer, Boolean> currentValue;
     private IEvent hitEvent;
 
-    private static final ResourceLocation DARKEN = new ResourceLocation(HoloGui.MODID, "textures/gui/darken.png");
-    private static final ResourceLocation INVALID = new ResourceLocation(HoloGui.MODID, "textures/gui/darken_red.png");
+    public static final ResourceLocation DARKEN = new ResourceLocation(HoloGui.MODID, "textures/gui/darken.png");
+    public static final ResourceLocation INVALID = new ResourceLocation(HoloGui.MODID, "textures/gui/darken_red.png");
 
     HoloStackToggle(double x, double y, double w, double h) {
         super(x, y, w, h);

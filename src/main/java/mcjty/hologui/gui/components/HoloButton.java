@@ -11,7 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 
-public class HoloButton extends AbstractHoloComponent implements IIconButton {
+public class HoloButton extends AbstractHoloComponent<IIconButton> implements IIconButton {
 
     private ResourceLocation image = new ResourceLocation(HoloGui.MODID, "textures/gui/guielements.png");
     private int image_w = 256;

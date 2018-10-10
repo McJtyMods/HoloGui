@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class HoloNumber extends AbstractHoloComponent implements INumber {
+public class HoloNumber extends AbstractHoloComponent<INumber> implements INumber {
 
     private int color;
     private BiFunction<EntityPlayer, IHoloGuiEntity, Integer> getter;

@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public class HoloStackIcon extends AbstractHoloComponent implements IStackIcon {
+public class HoloStackIcon extends AbstractHoloComponent<IStackIcon> implements IStackIcon {
 
     private ItemStack stack;
 

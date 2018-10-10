@@ -2,13 +2,17 @@ package mcjty.hologui.api;
 
 import net.minecraft.entity.player.EntityPlayer;
 
-public interface IGuiComponent {
+import java.util.Optional;
+
+public interface IGuiComponent<P extends IGuiComponent<P>> {
 
     void render(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY);
 
     void renderTooltip(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY);
 
-    IGuiComponent findHoveringWidget(double cursorX, double cursorY);
+    IGuiComponent<?> findHoveringWidget(double cursorX, double cursorY);
+
+    Optional<IGuiComponent<?>> findChild(String name);
 
     void hit(EntityPlayer player, IHoloGuiEntity entity, double cursorX, double cursorY);
 
@@ -23,4 +27,9 @@ public interface IGuiComponent {
     double getW();
 
     double getH();
+
+    /// Set the name of this component
+    P name(String name);
+
+    String getName();
 }

@@ -14,7 +14,7 @@ import net.minecraft.util.SoundCategory;
 
 import java.util.function.Function;
 
-public class HoloToggleIcon extends AbstractHoloComponent implements IIconToggle {
+public class HoloToggleIcon extends AbstractHoloComponent<IIconToggle> implements IIconToggle {
 
     private ResourceLocation image = new ResourceLocation(HoloGui.MODID, "textures/gui/guielements.png");
     private int image_w = 256;

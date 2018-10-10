@@ -10,7 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundCategory;
 
-public class HoloTextButton extends AbstractHoloComponent implements IButton {
+public class HoloTextButton extends AbstractHoloComponent<IButton> implements IButton {
 
     private IEvent hitEvent;
     private IEvent hitClientEvent;

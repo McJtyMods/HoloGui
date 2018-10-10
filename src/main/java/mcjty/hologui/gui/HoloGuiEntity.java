@@ -20,6 +20,8 @@ import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 
     private static final DataParameter<Optional<BlockPos>> GUITILE = EntityDataManager.createKey(HoloGuiEntity.class, DataSerializers.OPTIONAL_BLOCK_POS);
@@ -33,7 +35,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     private int timeout;
     private int maxTimeout;
     private int ticks;  // For syncing TE to client
-    private IGuiComponent panel;
+    private IGuiComponent<?> panel;
 
     // Client side only
     private double cursorX;
@@ -42,7 +44,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     private String lastGuiId = null;    // Last guiId that was rendered on the client. If it changes then we have to redo the gui
     private String lastTag = null;      // Last tag
     public int tooltipTimeout = 10;
-    public IGuiComponent tooltipComponent = null;
+    public IGuiComponent<?> tooltipComponent = null;
 
     public HoloGuiEntity(World worldIn) {
         super(worldIn);
@@ -231,7 +233,17 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         panel = null;
     }
 
-    public IGuiComponent getGui(EntityPlayer player) {
+    @Nonnull
+    @Override
+    public java.util.Optional<IGuiComponent<?>> findComponent(String name) {
+        if (panel == null) {
+            return java.util.Optional.empty();
+        }
+
+        return panel.findChild(name);
+    }
+
+    public IGuiComponent<?> getGui(EntityPlayer player) {
         if (panel == null) {
             String id = getGuiId();
             if (id != null && !id.isEmpty()) {

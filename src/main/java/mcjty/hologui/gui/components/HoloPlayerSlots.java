@@ -10,10 +10,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class HoloPlayerSlots extends AbstractPlayerSlots implements IPlayerSlots {
+public class HoloPlayerSlots extends AbstractSlots<IPlayerSlots> implements IPlayerSlots {
 
     public HoloPlayerSlots(double x, double y, double w, double h) {
         super(x, y, w, h);
+    }
+
+    @Override
+    public int getSelected() {
+        return selected;
+    }
+
+    @Override
+    public void setSelection(int index) {
+        selected = index;
     }
 
     @Override

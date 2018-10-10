@@ -7,7 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public interface INumber extends IGuiComponent {
+public interface INumber extends IGuiComponent<INumber> {
 
     INumber getter(BiFunction<EntityPlayer, IHoloGuiEntity, Integer> getter);
 

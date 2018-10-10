@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public interface IStackIcon extends IGuiComponent {
+public interface IStackIcon extends IGuiComponent<IStackIcon> {
 
     IStackIcon itemStack(@Nonnull ItemStack stack);
 }

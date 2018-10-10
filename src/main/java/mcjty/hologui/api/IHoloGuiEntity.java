@@ -2,6 +2,9 @@ package mcjty.hologui.api;
 
 import net.minecraft.entity.Entity;
 
+import javax.annotation.Nonnull;
+import java.util.Optional;
+
 public interface IHoloGuiEntity {
 
     /**
@@ -54,5 +57,11 @@ public interface IHoloGuiEntity {
      * Switch the gui to another tag. Mainly used in combination with IGuiTile
      */
     void switchTag(String tag);
+
+    /**
+     * Find a named gui component on the current gui
+     */
+    @Nonnull
+    Optional<IGuiComponent<?>> findComponent(String name);
 }
 

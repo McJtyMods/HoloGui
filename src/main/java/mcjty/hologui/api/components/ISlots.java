@@ -7,7 +7,7 @@ import net.minecraftforge.items.IItemHandler;
 
 import java.util.function.Predicate;
 
-public interface ISlots extends IGuiComponent {
+public interface ISlots extends IGuiComponent<ISlots> {
 
     // Which items from the inventory should be shown
     ISlots filter(Predicate<ItemStack> matcher);
@@ -16,4 +16,9 @@ public interface ISlots extends IGuiComponent {
 
     ISlots itemHandler(IItemHandler handler);
 
+    // Get the index (in the itemhandler) of the selected stack. -1 if nothing is selected
+    int getSelected();
+
+    // Set the selection. Use -1 to clear the selection
+    void setSelection(int index);
 }

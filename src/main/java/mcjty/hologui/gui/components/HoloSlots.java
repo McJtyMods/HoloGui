@@ -11,12 +11,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class HoloSlots extends AbstractPlayerSlots implements ISlots {
+public class HoloSlots extends AbstractSlots<ISlots> implements ISlots {
 
     private IItemHandler handler;
 
     public HoloSlots(double x, double y, double w, double h) {
         super(x, y, w, h);
+    }
+
+    @Override
+    public int getSelected() {
+        return selected;
+    }
+
+    @Override
+    public void setSelection(int index) {
+        selected = index;
     }
 
     @Override

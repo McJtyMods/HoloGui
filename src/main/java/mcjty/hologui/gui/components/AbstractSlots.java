@@ -1,5 +1,6 @@
 package mcjty.hologui.gui.components;
 
+import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.IStackEvent;
 import mcjty.hologui.gui.HoloGuiRenderTools;
@@ -9,6 +10,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -16,27 +18,31 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.function.Predicate;
 
-public abstract class AbstractPlayerSlots extends AbstractHoloComponent {
+public abstract class AbstractSlots<P extends IGuiComponent<P>> extends AbstractHoloComponent<P> {
 
     protected Predicate<ItemStack> filter = itemStack -> false;
     protected IStackEvent hitEvent;
+    protected int selected = -1;
 
-    public AbstractPlayerSlots(double x, double y, double w, double h) {
+    public AbstractSlots(double x, double y, double w, double h) {
         super(x, y, w, h);
     }
 
     @Override
     public void hit(EntityPlayer player, IHoloGuiEntity entity, double cursorX, double cursorY) {
+        Pair<ItemStack, Integer> pair = getSelectedPair(player, cursorX, cursorY);
         if (hitEvent != null) {
-            Pair<ItemStack, Integer> pair = getSelectedPair(player, cursorX, cursorY);
             hitEvent.hit(this, player, entity, cursorX, cursorY, pair.getLeft(), pair.getRight());
         }
+        selected = pair.getRight();
     }
 
     @Override
     public void hitClient(EntityPlayer player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         Entity ent = entity.getEntity();
         player.world.playSound(ent.posX, ent.posY, ent.posZ, HoloGuiSounds.guiclick, SoundCategory.PLAYERS, 1.0f, 1.0f, true);
+        Pair<ItemStack, Integer> pair = getSelectedPair(player, cursorX, cursorY);
+        selected = pair.getRight();
     }
 
     @Override
@@ -47,7 +53,11 @@ public abstract class AbstractPlayerSlots extends AbstractHoloComponent {
 
         for (Pair<ItemStack, Integer> pair : getStacks(player)) {
             ItemStack stack = pair.getLeft();
-            HoloGuiRenderTools.renderItem(xx, yy, stack, null, false, 0.9);
+            ResourceLocation lightmap = null;
+            if (selected != pair.getRight()) {
+                lightmap = HoloStackToggle.DARKEN;
+            }
+            HoloGuiRenderTools.renderItem(xx, yy, stack, lightmap, false, 0.9);
             xx++;
             if (xx >= x+w) {
                 yy++;

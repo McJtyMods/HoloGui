@@ -8,31 +8,32 @@ import net.minecraft.entity.player.EntityPlayer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-public class HoloPanel extends AbstractHoloComponent implements IPanel {
+public class HoloPanel extends AbstractHoloComponent<IPanel> implements IPanel {
 
-    private final List<IGuiComponent> children = new ArrayList<>();
+    private final List<IGuiComponent<?>> children = new ArrayList<>();
 
     HoloPanel(double x, double y, double w, double h) {
         super(x, y, w, h);
     }
 
     @Override
-    public IPanel add(IGuiComponent... components) {
+    public IPanel add(IGuiComponent<?>... components) {
         Collections.addAll(children, components);
         return this;
     }
 
     @Override
     public void render(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY) {
-        for (IGuiComponent child : children) {
+        for (IGuiComponent<?> child : children) {
             child.render(player, holo, cursorX, cursorY);
         }
     }
 
     @Override
-    public IGuiComponent findHoveringWidget(double cursorX, double cursorY) {
-        for (IGuiComponent child : children) {
+    public IGuiComponent<?> findHoveringWidget(double cursorX, double cursorY) {
+        for (IGuiComponent<?> child : children) {
             if (child.isInside(cursorX, cursorY)) {
                 return child.findHoveringWidget(cursorX, cursorY);
             }
@@ -41,8 +42,19 @@ public class HoloPanel extends AbstractHoloComponent implements IPanel {
     }
 
     @Override
+    public Optional<IGuiComponent<?>> findChild(String name) {
+        for (IGuiComponent<?> child : children) {
+            Optional<IGuiComponent<?>> result = child.findChild(name);
+            if (result.isPresent()) {
+                return result;
+            }
+        }
+        return super.findChild(name);
+    }
+
+    @Override
     public void hit(EntityPlayer player, IHoloGuiEntity entity, double cursorX, double cursorY) {
-        for (IGuiComponent child : children) {
+        for (IGuiComponent<?> child : children) {
             if (child.isInside(cursorX, cursorY)) {
                 child.hit(player, entity, cursorX, cursorY);
             }
@@ -51,7 +63,7 @@ public class HoloPanel extends AbstractHoloComponent implements IPanel {
 
     @Override
     public void hitClient(EntityPlayer player, IHoloGuiEntity entity, double cursorX, double cursorY) {
-        for (IGuiComponent child : children) {
+        for (IGuiComponent<?> child : children) {
             if (child.isInside(cursorX, cursorY)) {
                 child.hitClient(player, entity, cursorX, cursorY);
             }

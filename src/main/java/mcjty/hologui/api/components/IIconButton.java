@@ -4,7 +4,7 @@ import mcjty.hologui.api.IEvent;
 import mcjty.hologui.api.IGuiComponent;
 import net.minecraft.util.ResourceLocation;
 
-public interface IIconButton extends IGuiComponent {
+public interface IIconButton extends IGuiComponent<IIconButton> {
 
     /// The resource location and dimension to use for this icon
     IIconButton image(ResourceLocation resource, int w, int h);

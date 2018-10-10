@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public class HoloIcons extends AbstractHoloComponent implements IIconChoice {
+public class HoloIcons extends AbstractHoloComponent<IIconChoice> implements IIconChoice {
 
     private ResourceLocation image = new ResourceLocation(HoloGui.MODID, "textures/gui/guielements.png");
     private int image_w = 256;

@@ -7,7 +7,7 @@ import mcjty.hologui.gui.HoloGuiRenderTools;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
-public class HoloIcon extends AbstractHoloComponent implements IIcon {
+public class HoloIcon extends AbstractHoloComponent<IIcon> implements IIcon {
 
     private ResourceLocation image = new ResourceLocation(HoloGui.MODID, "textures/gui/guielements.png");
     private int image_w = 256;

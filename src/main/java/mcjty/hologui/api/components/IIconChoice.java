@@ -7,7 +7,7 @@ import net.minecraft.util.ResourceLocation;
 
 import java.util.function.Function;
 
-public interface IIconChoice extends IGuiComponent {
+public interface IIconChoice extends IGuiComponent<IIconChoice> {
 
     /// The resource location and dimension to use for this icon
     IIconChoice image(ResourceLocation resource, int w, int h);

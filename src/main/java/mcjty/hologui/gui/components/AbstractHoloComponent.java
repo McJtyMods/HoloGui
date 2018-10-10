@@ -4,7 +4,11 @@ import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.IGuiComponent;
 import net.minecraft.entity.player.EntityPlayer;
 
-public abstract class AbstractHoloComponent implements IGuiComponent {
+import java.util.Optional;
+
+public abstract class AbstractHoloComponent<P extends IGuiComponent<P>> implements IGuiComponent<P> {
+
+    private String name;
 
     protected final double x;
     protected final double y;
@@ -29,8 +33,17 @@ public abstract class AbstractHoloComponent implements IGuiComponent {
     }
 
     @Override
-    public IGuiComponent findHoveringWidget(double cursorX, double cursorY) {
+    public IGuiComponent<?> findHoveringWidget(double cursorX, double cursorY) {
         return this;
+    }
+
+    @Override
+    public Optional<IGuiComponent<?>> findChild(String name) {
+        if (name.equals(this.name)) {
+            return Optional.of(this);
+        } else {
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -61,5 +74,16 @@ public abstract class AbstractHoloComponent implements IGuiComponent {
     @Override
     public void hitClient(EntityPlayer player, IHoloGuiEntity entity, double cursorX, double cursorY) {
 
+    }
+
+    @Override
+    public P name(String name) {
+        this.name = name;
+        return (P) this;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }

@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.function.Supplier;
 
-public class HoloText extends AbstractHoloComponent implements IText {
+public class HoloText extends AbstractHoloComponent<IText> implements IText {
 
     private Supplier<String> text;
     private int color;

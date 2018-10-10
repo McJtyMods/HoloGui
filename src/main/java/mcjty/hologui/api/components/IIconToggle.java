@@ -7,7 +7,7 @@ import net.minecraft.util.ResourceLocation;
 
 import java.util.function.Function;
 
-public interface IIconToggle extends IGuiComponent {
+public interface IIconToggle extends IGuiComponent<IIconToggle> {
 
     /// The resource location and dimension to use for this icon
     IIconToggle image(ResourceLocation resource, int w, int h);
