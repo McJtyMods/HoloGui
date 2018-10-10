@@ -46,7 +46,8 @@ public class HoloGuiHandler implements IHoloGuiHandler {
 
     @Override
     public boolean openHoloGui(World world, BlockPos pos, EntityPlayer player) {
-        return openHoloGuiEntity(world, pos, player, TAG_DEFAULT, 1.0) != null;
+        IHoloGuiEntity entity = openHoloGuiEntity(world, pos, player, TAG_DEFAULT, 1.0);
+        return world.isRemote ? true : entity != null;
     }
 
     @Override

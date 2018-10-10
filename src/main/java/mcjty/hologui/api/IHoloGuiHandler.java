@@ -27,7 +27,7 @@ public interface IHoloGuiHandler {
      * try to open the holo gui for a given block in the world. You would typically
      * call this function from your onBlockActivated() implementation.
      * On the server this returns false if no holo gui was found. On the
-     * client this will always return false.
+     * client this will always return true.
      */
     boolean openHoloGui(World world, BlockPos pos, EntityPlayer player);
 
