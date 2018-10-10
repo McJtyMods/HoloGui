@@ -5,6 +5,7 @@ import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.components.IButton;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundCategory;
@@ -60,6 +61,7 @@ public class HoloTextButton extends AbstractHoloComponent implements IButton {
         } else {
             color = this.color;
         }
+        RenderHelper.disableStandardItemLighting();
         HoloGuiRenderTools.renderText(x, y, text, color);
     }
 
