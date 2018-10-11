@@ -9,24 +9,38 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
 public class HoloStackIcon extends AbstractHoloComponent<IStackIcon> implements IStackIcon {
 
-    private ItemStack stack;
+    private Supplier<ItemStack> stackSupplier;
+    private double scale = 1.0;
 
     HoloStackIcon(double x, double y, double w, double h) {
         super(x, y, w, h);
     }
 
     @Override
+    public IStackIcon scale(double scale) {
+        this.scale = scale;
+        return this;
+    }
+
+    @Override
     public IStackIcon itemStack(@Nonnull ItemStack stack) {
-        this.stack = stack;
+        this.stackSupplier = () -> stack;
+        return this;
+    }
+
+    @Override
+    public IStackIcon itemStack(Supplier<ItemStack> supplier) {
+        this.stackSupplier = supplier;
         return this;
     }
 
     @Override
     public void render(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY) {
-        HoloGuiRenderTools.renderItem(x, y, stack, null, false, 1);
+        HoloGuiRenderTools.renderItem(x, y, stackSupplier.get(), null, false, scale);
         RenderHelper.enableStandardItemLighting();
     }
 
@@ -38,7 +52,7 @@ public class HoloStackIcon extends AbstractHoloComponent<IStackIcon> implements 
         GlStateManager.rotate(180, 0, 0, 1);
         GlStateManager.translate(0, 0, -10);
         GlStateManager.scale(0.4, 0.4, 0.0);
-        HoloGuiRenderTools.renderToolTip(stack, (int) (x * 30 - 120), (int) (y * 30 - 120));
+        HoloGuiRenderTools.renderToolTip(stackSupplier.get(), (int) (x * 30 - 120), (int) (y * 30 - 120));
         RenderHelper.enableStandardItemLighting();
         GlStateManager.popMatrix();
     }

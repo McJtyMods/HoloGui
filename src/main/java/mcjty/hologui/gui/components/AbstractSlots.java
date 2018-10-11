@@ -47,9 +47,11 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
 
     @Override
     public void render(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY) {
-        HoloGuiRenderTools.renderBorder(x, y, w, h, 255, 255, 255, 255);
+        HoloGuiRenderTools.renderBorder(x, y, w, h, 128, 200, 255, 255);
         double yy = y;
         double xx = x;
+
+        Pair<ItemStack, Integer> cursorPair = getSelectedPair(player, cursorX, cursorY);
 
         for (Pair<ItemStack, Integer> pair : getStacks(player)) {
             ItemStack stack = pair.getLeft();
@@ -57,7 +59,7 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
             if (selected != pair.getRight()) {
                 lightmap = HoloStackToggle.DARKEN;
             }
-            HoloGuiRenderTools.renderItem(xx, yy, stack, lightmap, false, 0.9);
+            HoloGuiRenderTools.renderItem(xx, yy, stack, lightmap, cursorPair.getRight() == pair.getRight(), 0.9);
             xx++;
             if (xx >= x+w) {
                 yy++;
@@ -74,6 +76,9 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
 
     @Nonnull
     protected Pair<ItemStack, Integer> getSelectedPair(EntityPlayer player, double cursorX, double cursorY) {
+        if (!isInside(cursorX, cursorY)) {
+            return Pair.of(ItemStack.EMPTY, -1);
+        }
         List<Pair<ItemStack, Integer>> stacks = getStacks(player);
 
         int xx = (int) (cursorX - x);

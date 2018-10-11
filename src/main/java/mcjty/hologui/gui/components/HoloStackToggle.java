@@ -22,12 +22,19 @@ public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> impleme
     private ItemStack stack;
     private Function<EntityPlayer, Boolean> currentValue;
     private IEvent hitEvent;
+    double scale = 1.0;
 
     public static final ResourceLocation DARKEN = new ResourceLocation(HoloGui.MODID, "textures/gui/darken.png");
     public static final ResourceLocation INVALID = new ResourceLocation(HoloGui.MODID, "textures/gui/darken_red.png");
 
     HoloStackToggle(double x, double y, double w, double h) {
         super(x, y, w, h);
+    }
+
+    @Override
+    public IStackToggle scale(double scale) {
+        this.scale = scale;
+        return this;
     }
 
     @Override
@@ -53,7 +60,7 @@ public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> impleme
         } else {
             border = true;
         }
-        HoloGuiRenderTools.renderItem(x, y, stack, lightmap, border, 1);
+        HoloGuiRenderTools.renderItem(x, y, stack, lightmap, border, scale);
         RenderHelper.enableStandardItemLighting();
     }
 

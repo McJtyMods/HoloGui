@@ -15,4 +15,6 @@ public interface IStackToggle extends IGuiComponent<IStackToggle> {
     IStackToggle getter(Function<EntityPlayer, Boolean> getter);
 
     IStackToggle hitEvent(IEvent event);
+
+    IStackToggle scale(double scale);
 }
