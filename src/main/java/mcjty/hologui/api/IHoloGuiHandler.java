@@ -54,7 +54,7 @@ public interface IHoloGuiHandler {
     IHoloGuiEntity openHoloGuiRelative(Entity parent, Vec3d offset, String guiId);
 
     // @todo, generalize, move into Ariente?
-    IGuiComponent createNoAccessPanel();
+    IGuiComponent<?> createNoAccessPanel();
 
     // Client side only. Use this to render your holo gui from some other renderer
     void render(IHoloGuiEntity entity, double x, double y, double z, float entityYaw);
