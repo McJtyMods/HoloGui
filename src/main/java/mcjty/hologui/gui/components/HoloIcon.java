@@ -2,6 +2,7 @@ package mcjty.hologui.gui.components;
 
 import mcjty.hologui.HoloGui;
 import mcjty.hologui.api.IHoloGuiEntity;
+import mcjty.hologui.api.Icons;
 import mcjty.hologui.api.components.IIcon;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,6 +34,11 @@ public class HoloIcon extends AbstractHoloComponent<IIcon> implements IIcon {
         this.normal_u = u;
         this.normal_v = v;
         return this;
+    }
+
+    @Override
+    public IIcon icon(Icons icon) {
+        return icon(icon.getU(), icon.getV());
     }
 
     @Override

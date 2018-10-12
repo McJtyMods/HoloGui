@@ -3,6 +3,7 @@
 - Fixed a bug with holo tooltips not completely correcting GL state
 - Added support for switching tags for an open GUI. This allows for creating menus for IGuiTile based gui's
 - IHoloGuiHandler.openHoloGui() now returns true on client
+- There are now predefined icons (and an Icons class to use them)
 
 0.0.3-beta:
 - Several api cleanups and improvements

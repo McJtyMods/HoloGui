@@ -3,6 +3,7 @@ package mcjty.hologui.gui.components;
 import mcjty.hologui.HoloGui;
 import mcjty.hologui.api.IEvent;
 import mcjty.hologui.api.IHoloGuiEntity;
+import mcjty.hologui.api.Icons;
 import mcjty.hologui.api.components.IIconButton;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
@@ -44,10 +45,20 @@ public class HoloButton extends AbstractHoloComponent<IIconButton> implements II
     }
 
     @Override
+    public IIconButton icon(Icons icon) {
+        return icon(icon.getU(), icon.getV());
+    }
+
+    @Override
     public IIconButton hover(int u, int v) {
         this.hover_u = u;
         this.hover_v = v;
         return this;
+    }
+
+    @Override
+    public IIconButton hover(Icons icon) {
+        return hover(icon.getU(), icon.getV());
     }
 
     @Override

@@ -3,6 +3,7 @@ package mcjty.hologui.gui.components;
 import mcjty.hologui.HoloGui;
 import mcjty.hologui.api.IEvent;
 import mcjty.hologui.api.IHoloGuiEntity;
+import mcjty.hologui.api.Icons;
 import mcjty.hologui.api.components.IIconChoice;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
@@ -48,6 +49,11 @@ public class HoloIcons extends AbstractHoloComponent<IIconChoice> implements IIc
     public IIconChoice icon(int u, int v) {
         icons.add(Pair.of(u, v));
         return this;
+    }
+
+    @Override
+    public IIconChoice icon(Icons icon) {
+        return icon(icon.getU(), icon.getV());
     }
 
     @Override

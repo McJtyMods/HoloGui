@@ -3,6 +3,7 @@ package mcjty.hologui.gui.components;
 import mcjty.hologui.HoloGui;
 import mcjty.hologui.api.IEvent;
 import mcjty.hologui.api.IHoloGuiEntity;
+import mcjty.hologui.api.Icons;
 import mcjty.hologui.api.components.IIconToggle;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
@@ -53,10 +54,20 @@ public class HoloToggleIcon extends AbstractHoloComponent<IIconToggle> implement
     }
 
     @Override
+    public IIconToggle icon(Icons icon) {
+        return icon(icon.getU(), icon.getV());
+    }
+
+    @Override
     public IIconToggle selected(int u, int v) {
         this.selected_u = u;
         this.selected_v = v;
         return this;
+    }
+
+    @Override
+    public IIconToggle selected(Icons icon) {
+        return selected(icon.getU(), icon.getV());
     }
 
     @Override
