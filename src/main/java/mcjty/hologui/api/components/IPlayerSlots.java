@@ -4,12 +4,13 @@ import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.api.IStackEvent;
 import net.minecraft.item.ItemStack;
 
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 public interface IPlayerSlots extends IGuiComponent<IPlayerSlots> {
 
-    // Which items from the player inventory should be shown
-    IPlayerSlots filter(Predicate<ItemStack> matcher);
+    // Which items from the player inventory should be shown (item and index)
+    IPlayerSlots filter(BiPredicate<ItemStack, Integer> matcher);
 
     IPlayerSlots hitEvent(IStackEvent event);
 

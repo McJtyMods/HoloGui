@@ -9,7 +9,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
+import java.util.function.BiPredicate;
 
 public class HoloSlots extends AbstractSlots<ISlots> implements ISlots {
 
@@ -34,7 +34,7 @@ public class HoloSlots extends AbstractSlots<ISlots> implements ISlots {
         List<Pair<ItemStack, Integer>> stacks = new ArrayList<>();
         for (int i = 0 ; i < handler.getSlots() ; i++) {
             ItemStack stack = handler.getStackInSlot(i);
-            if (filter.test(stack)) {
+            if (filter.test(stack, i)) {
                 stacks.add(Pair.of(stack, i));
             }
         }
@@ -48,7 +48,7 @@ public class HoloSlots extends AbstractSlots<ISlots> implements ISlots {
     }
 
     @Override
-    public ISlots filter(Predicate<ItemStack> filter) {
+    public ISlots filter(BiPredicate<ItemStack, Integer> filter) {
         this.filter = filter;
         return this;
     }

@@ -8,7 +8,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
+import java.util.function.BiPredicate;
 
 public class HoloPlayerSlots extends AbstractSlots<IPlayerSlots> implements IPlayerSlots {
 
@@ -31,7 +31,7 @@ public class HoloPlayerSlots extends AbstractSlots<IPlayerSlots> implements IPla
         List<Pair<ItemStack, Integer>> stacks = new ArrayList<>();
         for (int i = 0 ; i < player.inventory.getSizeInventory() ; i++) {
             ItemStack stack = player.inventory.getStackInSlot(i);
-            if (filter.test(stack)) {
+            if (filter.test(stack, i)) {
                 stacks.add(Pair.of(stack, i));
             }
         }
@@ -39,7 +39,7 @@ public class HoloPlayerSlots extends AbstractSlots<IPlayerSlots> implements IPla
     }
 
     @Override
-    public IPlayerSlots filter(Predicate<ItemStack> filter) {
+    public IPlayerSlots filter(BiPredicate<ItemStack, Integer> filter) {
         this.filter = filter;
         return this;
     }
