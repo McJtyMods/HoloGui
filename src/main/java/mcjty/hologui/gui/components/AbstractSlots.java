@@ -20,7 +20,7 @@ import java.util.function.BiPredicate;
 
 public abstract class AbstractSlots<P extends IGuiComponent<P>> extends AbstractHoloComponent<P> {
 
-    protected BiPredicate<ItemStack, Integer> filter = (stack, index) -> false;
+    protected BiPredicate<ItemStack, Integer> filter = (stack, index) -> true;
     protected IStackEvent hitEvent;
     protected int selected = -1;
 
