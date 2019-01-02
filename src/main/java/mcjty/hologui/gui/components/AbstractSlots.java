@@ -23,6 +23,7 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
     protected BiPredicate<ItemStack, Integer> filter = (stack, index) -> true;
     protected IStackEvent hitEvent;
     protected int selected = -1;
+    private boolean withAmount = false;
 
     public AbstractSlots(double x, double y, double w, double h) {
         super(x, y, w, h);
@@ -45,6 +46,11 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
         selected = pair.getRight();
     }
 
+    public P withAmount() {
+        this.withAmount = true;
+        return (P) this;
+    }
+
     @Override
     public void render(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         HoloGuiRenderTools.renderBorder(x, y, w, h, 128, 200, 255, 255);
@@ -60,6 +66,13 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
                 lightmap = HoloStackToggle.DARKEN;
             }
             HoloGuiRenderTools.renderItem(xx, yy, stack, lightmap, cursorPair.getRight() == pair.getRight(), 0.9);
+            if (withAmount && stack.getCount() > 1) {
+                GlStateManager.pushMatrix();
+                GlStateManager.scale(.5f, .5f, .5f);
+                String s = Integer.toString(stack.getCount());
+                HoloGuiRenderTools.renderTextShadow(xx*2-4+.4, yy*2 -4 + .9, s, 0xffffffff);
+                GlStateManager.popMatrix();
+            }
             xx++;
             if (xx >= x+w) {
                 yy++;

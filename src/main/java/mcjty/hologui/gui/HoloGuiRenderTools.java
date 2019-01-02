@@ -30,6 +30,15 @@ public class HoloGuiRenderTools {
         GlStateManager.popMatrix();
     }
 
+    public static void renderTextShadow(double x, double y, String text, int color) {
+        GlStateManager.pushMatrix();
+        GlStateManager.scale(0.01, 0.01, 0.01);
+        GlStateManager.rotate(180, 0, 1, 0);
+        GlStateManager.rotate(180, 0, 0, 1);
+        Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(text, (int) (x * 10 - 40), (int) (y * 10 - 40), color);
+        GlStateManager.popMatrix();
+    }
+
     public static void renderImage(double x, double y, int u, int v, int w, int h, int txtw, int txth, ResourceLocation image) {
         GlStateManager.pushMatrix();
         GlStateManager.scale(0.01, 0.01, 0.01);
@@ -141,6 +150,8 @@ public class HoloGuiRenderTools {
             }
         }
         GlStateManager.popMatrix();
+
+
     }
 
     private static void renderItemModel(ItemStack stack, IBakedModel bakedmodel, ItemCameraTransforms.TransformType transform, @Nullable ResourceLocation lightmap) {

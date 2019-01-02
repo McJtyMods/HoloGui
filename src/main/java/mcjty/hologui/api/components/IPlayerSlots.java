@@ -14,6 +14,8 @@ public interface IPlayerSlots extends IGuiComponent<IPlayerSlots> {
 
     IPlayerSlots hitEvent(IStackEvent event);
 
+    IPlayerSlots withAmount();
+
     // Get the index (in the player inventory) of the selected stack. -1 if nothing is selected
     int getSelected();
 

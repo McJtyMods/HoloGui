@@ -16,6 +16,8 @@ public interface ISlots extends IGuiComponent<ISlots> {
 
     ISlots itemHandler(IItemHandler handler);
 
+    ISlots withAmount();
+
     // Get the index (in the itemhandler) of the selected stack. -1 if nothing is selected
     int getSelected();
 
