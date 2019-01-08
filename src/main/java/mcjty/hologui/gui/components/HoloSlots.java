@@ -58,4 +58,11 @@ public class HoloSlots extends AbstractSlots<ISlots> implements ISlots {
         this.hitEvent = event;
         return this;
     }
+
+    @Override
+    public ISlots doubleClickEvent(IStackEvent event) {
+        this.doubleClickEvent = event;
+        return this;
+    }
+
 }

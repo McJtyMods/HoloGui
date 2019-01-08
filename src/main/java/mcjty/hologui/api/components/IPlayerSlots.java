@@ -5,7 +5,6 @@ import mcjty.hologui.api.IStackEvent;
 import net.minecraft.item.ItemStack;
 
 import java.util.function.BiPredicate;
-import java.util.function.Predicate;
 
 public interface IPlayerSlots extends IGuiComponent<IPlayerSlots> {
 
@@ -13,6 +12,8 @@ public interface IPlayerSlots extends IGuiComponent<IPlayerSlots> {
     IPlayerSlots filter(BiPredicate<ItemStack, Integer> matcher);
 
     IPlayerSlots hitEvent(IStackEvent event);
+
+    IPlayerSlots doubleClickEvent(IStackEvent event);
 
     IPlayerSlots withAmount();
 

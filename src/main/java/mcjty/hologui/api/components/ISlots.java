@@ -14,6 +14,8 @@ public interface ISlots extends IGuiComponent<ISlots> {
 
     ISlots hitEvent(IStackEvent event);
 
+    ISlots doubleClickEvent(IStackEvent event);
+
     ISlots itemHandler(IItemHandler handler);
 
     ISlots withAmount();

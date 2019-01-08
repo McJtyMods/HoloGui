@@ -22,8 +22,12 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
 
     protected BiPredicate<ItemStack, Integer> filter = (stack, index) -> true;
     protected IStackEvent hitEvent;
+    protected IStackEvent doubleClickEvent;
     protected int selected = -1;
     private boolean withAmount = false;
+
+    private int previousSelected = -1;
+    private long previousTime = -1;
 
     public AbstractSlots(double x, double y, double w, double h) {
         super(x, y, w, h);
@@ -35,7 +39,17 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
         if (hitEvent != null) {
             hitEvent.hit(this, player, entity, cursorX, cursorY, pair.getLeft(), pair.getRight());
         }
+
         selected = pair.getRight();
+
+        long time = System.currentTimeMillis();
+        if (doubleClickEvent != null && previousTime != -1 && previousSelected != -1) {
+            if (time - previousTime < 500 && selected == previousSelected) {
+                doubleClickEvent.hit(this, player, entity, cursorX, cursorY, pair.getLeft(), pair.getRight());
+            }
+        }
+        previousTime = time;
+        previousSelected = selected;
     }
 
     @Override

@@ -2,6 +2,7 @@ package mcjty.hologui.gui.components;
 
 import mcjty.hologui.api.IStackEvent;
 import mcjty.hologui.api.components.IPlayerSlots;
+import mcjty.hologui.api.components.ISlots;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import org.apache.commons.lang3.tuple.Pair;
@@ -52,6 +53,12 @@ public class HoloPlayerSlots extends AbstractSlots<IPlayerSlots> implements IPla
     @Override
     public IPlayerSlots hitEvent(IStackEvent event) {
         this.hitEvent = event;
+        return this;
+    }
+
+    @Override
+    public IPlayerSlots doubleClickEvent(IStackEvent event) {
+        this.doubleClickEvent = event;
         return this;
     }
 }
