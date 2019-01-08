@@ -5,10 +5,12 @@ import mcjty.hologui.api.components.IPlayerSlots;
 import mcjty.hologui.api.components.ISlots;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 
 public class HoloPlayerSlots extends AbstractSlots<IPlayerSlots> implements IPlayerSlots {
@@ -47,6 +49,12 @@ public class HoloPlayerSlots extends AbstractSlots<IPlayerSlots> implements IPla
     @Override
     public IPlayerSlots filter(BiPredicate<ItemStack, Integer> filter) {
         this.filter = filter;
+        return this;
+    }
+
+    @Override
+    public IPlayerSlots overlay(BiFunction<ItemStack, Integer, ResourceLocation> overlay) {
+        this.overlay = overlay;
         return this;
     }
 

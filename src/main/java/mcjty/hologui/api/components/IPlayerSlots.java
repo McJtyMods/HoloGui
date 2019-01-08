@@ -3,7 +3,9 @@ package mcjty.hologui.api.components;
 import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.api.IStackEvent;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 
 public interface IPlayerSlots extends IGuiComponent<IPlayerSlots> {
@@ -16,6 +18,8 @@ public interface IPlayerSlots extends IGuiComponent<IPlayerSlots> {
     IPlayerSlots doubleClickEvent(IStackEvent event);
 
     IPlayerSlots withAmount();
+
+    IPlayerSlots overlay(BiFunction<ItemStack, Integer, ResourceLocation> overlay);
 
     // Get the index (in the player inventory) of the selected stack. -1 if nothing is selected
     int getSelected();

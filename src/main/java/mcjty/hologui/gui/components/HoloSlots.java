@@ -4,11 +4,13 @@ import mcjty.hologui.api.IStackEvent;
 import mcjty.hologui.api.components.ISlots;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.IItemHandler;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 
 public class HoloSlots extends AbstractSlots<ISlots> implements ISlots {
@@ -50,6 +52,12 @@ public class HoloSlots extends AbstractSlots<ISlots> implements ISlots {
     @Override
     public ISlots filter(BiPredicate<ItemStack, Integer> filter) {
         this.filter = filter;
+        return this;
+    }
+
+    @Override
+    public ISlots overlay(BiFunction<ItemStack, Integer, ResourceLocation> overlay) {
+        this.overlay = overlay;
         return this;
     }
 

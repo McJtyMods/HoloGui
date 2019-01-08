@@ -16,11 +16,13 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 
 public abstract class AbstractSlots<P extends IGuiComponent<P>> extends AbstractHoloComponent<P> {
 
     protected BiPredicate<ItemStack, Integer> filter = (stack, index) -> true;
+    protected BiFunction<ItemStack, Integer, ResourceLocation> overlay = (itemStack, integer) -> null;
     protected IStackEvent hitEvent;
     protected IStackEvent doubleClickEvent;
     protected int selected = -1;

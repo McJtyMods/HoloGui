@@ -147,6 +147,8 @@ public class HoloGuiRenderTools {
 
                 GlStateManager.disableBlend();
                 GlStateManager.enableTexture2D();
+
+
             }
         }
         GlStateManager.popMatrix();
