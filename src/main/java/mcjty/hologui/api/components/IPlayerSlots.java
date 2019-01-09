@@ -21,6 +21,12 @@ public interface IPlayerSlots extends IGuiComponent<IPlayerSlots> {
 
     IPlayerSlots overlay(BiFunction<ItemStack, Integer, IImage> overlay);
 
+    /**
+     * If exactView is enabled empty slots will be shown as well as non-empty slots.
+     * By default empty slots are skipped
+     */
+    IPlayerSlots exactView();
+
     // Get the index (in the player inventory) of the selected stack. -1 if nothing is selected
     int getSelected();
 

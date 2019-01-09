@@ -29,11 +29,6 @@ public class HoloPlayerSlots extends AbstractSlots<IPlayerSlots> implements IPla
     }
 
     @Override
-    public IPlayerSlots withAmount() {
-        return super.withAmount();
-    }
-
-    @Override
     protected List<Pair<ItemStack, Integer>> getStacks(EntityPlayer player) {
         List<Pair<ItemStack, Integer>> stacks = new ArrayList<>();
         for (int i = 0 ; i < player.inventory.getSizeInventory() ; i++) {

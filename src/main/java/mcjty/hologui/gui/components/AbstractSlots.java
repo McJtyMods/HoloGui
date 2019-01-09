@@ -28,6 +28,7 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
     protected IStackEvent doubleClickEvent;
     protected int selected = -1;
     private boolean withAmount = false;
+    private boolean exactView = false;
 
     private int previousSelected = -1;
     private long previousTime = -1;
@@ -68,6 +69,11 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
         return (P) this;
     }
 
+    public P exactView() {
+        this.exactView = true;
+        return (P) this;
+    }
+
     @Override
     public void render(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         HoloGuiRenderTools.renderBorder(x, y, w, h, 128, 200, 255, 255);
@@ -78,24 +84,32 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
 
         for (Pair<ItemStack, Integer> pair : getStacks(player)) {
             ItemStack stack = pair.getLeft();
-            ResourceLocation lightmap = null;
-            if (selected != pair.getRight()) {
-                lightmap = HoloStackToggle.DARKEN;
-            }
-            HoloGuiRenderTools.renderItem(xx, yy, stack, lightmap, cursorPair.getRight() == pair.getRight(), 0.9);
-            if (withAmount && stack.getCount() > 1) {
-                GlStateManager.pushMatrix();
-                GlStateManager.scale(.5f, .5f, .5f);
-                String s = Integer.toString(stack.getCount());
-                HoloGuiRenderTools.renderTextShadow(xx*2-4+.4, yy*2 -4 + .9, s, 0xffffffff);
-                GlStateManager.popMatrix();
-            }
-            xx++;
-            if (xx >= x+w) {
-                yy++;
-                xx = x;
-                if (yy >= y+h) {
-                    break;
+            if (exactView || !stack.isEmpty()) {
+                ResourceLocation lightmap = null;
+                if (selected != pair.getRight()) {
+                    lightmap = HoloStackToggle.DARKEN;
+                }
+                HoloGuiRenderTools.renderItem(xx, yy, stack, lightmap, cursorPair.getRight() == pair.getRight(), 0.9);
+                if (withAmount && stack.getCount() > 1) {
+                    GlStateManager.pushMatrix();
+                    GlStateManager.scale(.5f, .5f, .5f);
+                    String s = Integer.toString(stack.getCount());
+                    HoloGuiRenderTools.renderTextShadow(xx * 2 - 4 + .4, yy * 2 - 4 + .9, s, 0xffffffff);
+                    GlStateManager.popMatrix();
+                }
+
+                IImage image = overlay.apply(stack, pair.getRight());
+                if (image != null) {
+                    HoloGuiRenderTools.renderImage(x, y, image.getU(), image.getV(), 16, 16, image.getWidth(), image.getHeight(), image.getImage());
+                }
+
+                xx++;
+                if (xx >= x + w) {
+                    yy++;
+                    xx = x;
+                    if (yy >= y + h) {
+                        break;
+                    }
                 }
             }
         }

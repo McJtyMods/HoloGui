@@ -24,6 +24,12 @@ public interface ISlots extends IGuiComponent<ISlots> {
 
     ISlots overlay(BiFunction<ItemStack, Integer, IImage> overlay);
 
+    /**
+     * If exactView is enabled empty slots will be shown as well as non-empty slots.
+     * By default empty slots are skipped
+     */
+    ISlots exactView();
+
     // Get the index (in the itemhandler) of the selected stack. -1 if nothing is selected
     int getSelected();
 
