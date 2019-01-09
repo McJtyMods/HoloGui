@@ -1,27 +1,20 @@
 package mcjty.hologui.gui.components;
 
-import mcjty.hologui.HoloGui;
 import mcjty.hologui.api.IEvent;
 import mcjty.hologui.api.IHoloGuiEntity;
-import mcjty.hologui.api.Icons;
+import mcjty.hologui.api.IImage;
 import mcjty.hologui.api.components.IIconButton;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 
 public class HoloButton extends AbstractHoloComponent<IIconButton> implements IIconButton {
 
-    private ResourceLocation image = new ResourceLocation(HoloGui.MODID, "textures/gui/guielements.png");
-    private int image_w = 256;
-    private int image_h = 256;
+    private IImage image;
+    private IImage hover;
 
-    private int normal_u;
-    private int normal_v;
-    private int hover_u;
-    private int hover_v;
     private IEvent hitEvent;
     private IEvent hitClientEvent;
 
@@ -30,35 +23,15 @@ public class HoloButton extends AbstractHoloComponent<IIconButton> implements II
     }
 
     @Override
-    public IIconButton image(ResourceLocation resource, int w, int h) {
-        this.image = resource;
-        this.image_w = w;
-        this.image_h = h;
+    public IIconButton icon(IImage image) {
+        this.image = image;
         return this;
     }
 
     @Override
-    public IIconButton icon(int u, int v) {
-        this.normal_u = u;
-        this.normal_v = v;
+    public IIconButton hover(IImage image) {
+        this.hover = hover;
         return this;
-    }
-
-    @Override
-    public IIconButton icon(Icons icon) {
-        return icon(icon.getU(), icon.getV());
-    }
-
-    @Override
-    public IIconButton hover(int u, int v) {
-        this.hover_u = u;
-        this.hover_v = v;
-        return this;
-    }
-
-    @Override
-    public IIconButton hover(Icons icon) {
-        return hover(icon.getU(), icon.getV());
     }
 
     @Override
@@ -75,16 +48,13 @@ public class HoloButton extends AbstractHoloComponent<IIconButton> implements II
 
     @Override
     public void render(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY) {
-        int u;
-        int v;
-        if (isInside(cursorX, cursorY)) {
-            u = hover_u;
-            v = hover_v;
+        IImage i;
+        if (isInside(cursorX, cursorY) && hover != null) {
+            i = hover;
         } else {
-            u = normal_u;
-            v = normal_v;
+            i = image;
         }
-        HoloGuiRenderTools.renderImage(x, y, u, v, 16, 16, image_w, image_h, image);
+        HoloGuiRenderTools.renderImage(x, y, i.getU(), i.getV(), 16, 16, i.getWidth(), i.getHeight(), i.getImage());
 //        HoloGuiRenderTools.renderText(x, y, "x", 0xffffff);
     }
 

@@ -1,9 +1,16 @@
 package mcjty.hologui.gui.components;
 
+import mcjty.hologui.HoloGui;
 import mcjty.hologui.api.IGuiComponentRegistry;
+import mcjty.hologui.api.IImage;
+import mcjty.hologui.api.Icons;
 import mcjty.hologui.api.components.*;
+import net.minecraft.util.ResourceLocation;
 
 public class GuiComponentRegistry implements IGuiComponentRegistry {
+
+    private ResourceLocation STANDARD = new ResourceLocation(HoloGui.MODID, "textures/gui/guielements.png");
+
 
     @Override
     public IIconButton iconButton(double x, double y, double w, double h) {
@@ -63,5 +70,95 @@ public class GuiComponentRegistry implements IGuiComponentRegistry {
     @Override
     public IPlayerSlots playerSlots(double x, double y, double w, double h) {
         return new HoloPlayerSlots(x, y, w, h);
+    }
+
+    @Override
+    public IImage image(Icons icon) {
+        return new IImage() {
+            @Override
+            public ResourceLocation getImage() {
+                return STANDARD;
+            }
+
+            @Override
+            public int getWidth() {
+                return 256;
+            }
+
+            @Override
+            public int getHeight() {
+                return 256;
+            }
+
+            @Override
+            public int getU() {
+                return icon.getU();
+            }
+
+            @Override
+            public int getV() {
+                return icon.getV();
+            }
+        };
+    }
+
+    @Override
+    public IImage image(int u, int v) {
+        return new IImage() {
+            @Override
+            public ResourceLocation getImage() {
+                return STANDARD;
+            }
+
+            @Override
+            public int getWidth() {
+                return 256;
+            }
+
+            @Override
+            public int getHeight() {
+                return 256;
+            }
+
+            @Override
+            public int getU() {
+                return u;
+            }
+
+            @Override
+            public int getV() {
+                return v;
+            }
+        };
+    }
+
+    @Override
+    public IImage image(ResourceLocation image, int w, int h) {
+        return new IImage() {
+            @Override
+            public ResourceLocation getImage() {
+                return image;
+            }
+
+            @Override
+            public int getWidth() {
+                return w;
+            }
+
+            @Override
+            public int getHeight() {
+                return h;
+            }
+
+            @Override
+            public int getU() {
+                return 0;
+            }
+
+            @Override
+            public int getV() {
+                return 0;
+            }
+        };
     }
 }

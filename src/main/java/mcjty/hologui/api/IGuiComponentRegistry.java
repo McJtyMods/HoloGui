@@ -1,6 +1,7 @@
 package mcjty.hologui.api;
 
 import mcjty.hologui.api.components.*;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Use this interface to create basic components for a gui. Typically you call this in
@@ -71,4 +72,21 @@ public interface IGuiComponentRegistry {
      * A set of inventory slots for the player
      */
     IPlayerSlots playerSlots(double x, double y, double w, double h);
+
+
+
+    /**
+     * One of the standard icons
+     */
+    IImage image(Icons icon);
+
+    /**
+     * An icon from the standard icons palette
+     */
+    IImage image(int u, int v);
+
+    /**
+     * The resource location and dimension to use for this icon.
+     */
+    IImage image(ResourceLocation image, int w, int h);
 }
