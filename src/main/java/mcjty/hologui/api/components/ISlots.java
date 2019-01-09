@@ -1,9 +1,9 @@
 package mcjty.hologui.api.components;
 
 import mcjty.hologui.api.IGuiComponent;
+import mcjty.hologui.api.IImage;
 import mcjty.hologui.api.IStackEvent;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.function.BiFunction;
@@ -22,7 +22,7 @@ public interface ISlots extends IGuiComponent<ISlots> {
 
     ISlots withAmount();
 
-    ISlots overlay(BiFunction<ItemStack, Integer, ResourceLocation> overlay);
+    ISlots overlay(BiFunction<ItemStack, Integer, IImage> overlay);
 
     // Get the index (in the itemhandler) of the selected stack. -1 if nothing is selected
     int getSelected();

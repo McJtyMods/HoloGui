@@ -1,11 +1,10 @@
 package mcjty.hologui.gui.components;
 
+import mcjty.hologui.api.IImage;
 import mcjty.hologui.api.IStackEvent;
 import mcjty.hologui.api.components.IPlayerSlots;
-import mcjty.hologui.api.components.ISlots;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
@@ -53,7 +52,7 @@ public class HoloPlayerSlots extends AbstractSlots<IPlayerSlots> implements IPla
     }
 
     @Override
-    public IPlayerSlots overlay(BiFunction<ItemStack, Integer, ResourceLocation> overlay) {
+    public IPlayerSlots overlay(BiFunction<ItemStack, Integer, IImage> overlay) {
         this.overlay = overlay;
         return this;
     }

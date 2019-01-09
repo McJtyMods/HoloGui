@@ -49,7 +49,7 @@ public class HoloButton extends AbstractHoloComponent<IIconButton> implements II
     @Override
     public void render(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         IImage i;
-        if (isInside(cursorX, cursorY) && hover != null) {
+        if (hover != null && isInside(cursorX, cursorY)) {
             i = hover;
         } else {
             i = image;

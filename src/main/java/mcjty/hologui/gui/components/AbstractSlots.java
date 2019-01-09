@@ -2,6 +2,7 @@ package mcjty.hologui.gui.components;
 
 import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.api.IHoloGuiEntity;
+import mcjty.hologui.api.IImage;
 import mcjty.hologui.api.IStackEvent;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
@@ -22,7 +23,7 @@ import java.util.function.BiPredicate;
 public abstract class AbstractSlots<P extends IGuiComponent<P>> extends AbstractHoloComponent<P> {
 
     protected BiPredicate<ItemStack, Integer> filter = (stack, index) -> true;
-    protected BiFunction<ItemStack, Integer, ResourceLocation> overlay = (itemStack, integer) -> null;
+    protected BiFunction<ItemStack, Integer, IImage> overlay = (itemStack, integer) -> null;
     protected IStackEvent hitEvent;
     protected IStackEvent doubleClickEvent;
     protected int selected = -1;

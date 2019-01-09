@@ -1,43 +1,28 @@
 package mcjty.hologui.gui.components;
 
-import mcjty.hologui.HoloGui;
 import mcjty.hologui.api.IEvent;
 import mcjty.hologui.api.IHoloGuiEntity;
-import mcjty.hologui.api.Icons;
+import mcjty.hologui.api.IImage;
 import mcjty.hologui.api.components.IIconToggle;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 
 import java.util.function.Function;
 
 public class HoloToggleIcon extends AbstractHoloComponent<IIconToggle> implements IIconToggle {
 
-    private ResourceLocation image = new ResourceLocation(HoloGui.MODID, "textures/gui/guielements.png");
-    private int image_w = 256;
-    private int image_h = 256;
+    private IImage image;
+    private IImage selected;
 
-    private int normal_u;
-    private int normal_v;
-    private int selected_u;
-    private int selected_v;
     private Function<EntityPlayer, Boolean> currentValue;
     private IEvent hitEvent;
 
     HoloToggleIcon(double x, double y, double w, double h) {
         super(x, y, w, h);
-    }
-
-    @Override
-    public IIconToggle image(ResourceLocation resource, int w, int h) {
-        this.image = resource;
-        this.image_w = w;
-        this.image_h = h;
-        return this;
     }
 
     @Override
@@ -47,27 +32,15 @@ public class HoloToggleIcon extends AbstractHoloComponent<IIconToggle> implement
     }
 
     @Override
-    public IIconToggle icon(int u, int v) {
-        this.normal_u = u;
-        this.normal_v = v;
+    public IIconToggle icon(IImage icon) {
+        this.image = icon;
         return this;
     }
 
     @Override
-    public IIconToggle icon(Icons icon) {
-        return icon(icon.getU(), icon.getV());
-    }
-
-    @Override
-    public IIconToggle selected(int u, int v) {
-        this.selected_u = u;
-        this.selected_v = v;
+    public IIconToggle selected(IImage icon) {
+        this.selected = icon;
         return this;
-    }
-
-    @Override
-    public IIconToggle selected(Icons icon) {
-        return selected(icon.getU(), icon.getV());
     }
 
     @Override
@@ -79,14 +52,12 @@ public class HoloToggleIcon extends AbstractHoloComponent<IIconToggle> implement
 
     @Override
     public void render(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY) {
-        int u = normal_u;
-        int v = normal_v;
-        if (currentValue.apply(player)) {
-            u = selected_u;
-            v = selected_v;
+        IImage i = image;
+        if (selected != null && currentValue.apply(player)) {
+            i = selected;
         }
         GlStateManager.color(1, 1, 1, 1);
-        HoloGuiRenderTools.renderImage(x, y, u, v, 16, 16, image_w, image_h, image);
+        HoloGuiRenderTools.renderImage(x, y, i.getU(), i.getV(), 16, 16, i.getWidth(), i.getHeight(), i.getImage());
     }
 
     @Override
