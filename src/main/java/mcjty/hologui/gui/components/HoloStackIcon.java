@@ -52,7 +52,7 @@ public class HoloStackIcon extends AbstractHoloComponent<IStackIcon> implements 
         GlStateManager.rotate(180, 0, 0, 1);
         GlStateManager.translate(0, 0, -10);
         GlStateManager.scale(0.4, 0.4, 0.0);
-        HoloGuiRenderTools.renderToolTip(stackSupplier.get(), (int) (x * 30 - 120), (int) (y * 30 - 120));
+        HoloGuiRenderTools.renderToolTip(stackSupplier.get(), (int) (x * 30 - 120), (int) (y * 30 - 120), (itemStack, strings) -> {});
         RenderHelper.enableStandardItemLighting();
         GlStateManager.popMatrix();
     }

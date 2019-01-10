@@ -18,6 +18,7 @@ import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 public class HoloGuiRenderTools {
 
@@ -193,7 +194,7 @@ public class HoloGuiRenderTools {
     }
 
 
-    public static void renderToolTip(ItemStack stack, int x, int y) {
+    public static void renderToolTip(ItemStack stack, int x, int y, BiConsumer<ItemStack, List<String>> tooltipHandler) {
         GuiUtils.preItemToolTip(stack);
 
         net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
@@ -209,6 +210,7 @@ public class HoloGuiRenderTools {
                 list.set(i, TextFormatting.GRAY + list.get(i));
             }
         }
+        tooltipHandler.accept(stack, list);
 
         FontRenderer font = stack.getItem().getFontRenderer(stack);
         FontRenderer font1 = (font == null ? mc.fontRenderer : font);

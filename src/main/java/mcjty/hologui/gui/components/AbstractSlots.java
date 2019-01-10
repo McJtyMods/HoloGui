@@ -17,6 +17,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 
@@ -29,9 +30,11 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
     protected int selected = -1;
     private boolean withAmount = false;
     private boolean exactView = false;
+    private boolean fullBright = false;
 
     private int previousSelected = -1;
     private long previousTime = -1;
+    private BiConsumer<ItemStack, List<String>> tooltipHandler = (itemStack, strings) -> {};
 
     public AbstractSlots(double x, double y, double w, double h) {
         super(x, y, w, h);
@@ -64,6 +67,11 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
         selected = pair.getRight();
     }
 
+    public P tooltipHandler(BiConsumer<ItemStack, List<String>> tooltipHandler) {
+        this.tooltipHandler = tooltipHandler;
+        return (P) this;
+    }
+
     public P withAmount() {
         this.withAmount = true;
         return (P) this;
@@ -71,6 +79,11 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
 
     public P exactView() {
         this.exactView = true;
+        return (P) this;
+    }
+
+    public P fullBright() {
+        this.fullBright = true;
         return (P) this;
     }
 
@@ -86,7 +99,7 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
             ItemStack stack = pair.getLeft();
             if (exactView || !stack.isEmpty()) {
                 ResourceLocation lightmap = null;
-                if (selected != pair.getRight()) {
+                if ((!fullBright) && selected != pair.getRight()) {
                     lightmap = HoloStackToggle.DARKEN;
                 }
                 HoloGuiRenderTools.renderItem(xx, yy, stack, lightmap, cursorPair.getRight() == pair.getRight(), 0.9);
@@ -100,7 +113,7 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
 
                 IImage image = overlay.apply(stack, pair.getRight());
                 if (image != null) {
-                    HoloGuiRenderTools.renderImage(x, y, image.getU(), image.getV(), 16, 16, image.getWidth(), image.getHeight(), image.getImage());
+                    HoloGuiRenderTools.renderImage(xx+.13, yy+.13, image.getU(), image.getV(), 16, 16, image.getWidth(), image.getHeight(), image.getImage());
                 }
 
                 xx++;
@@ -125,16 +138,27 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
         }
         List<Pair<ItemStack, Integer>> stacks = getStacks(player);
 
-        int xx = (int) (cursorX - x);
-        int yy = (int) (cursorY - y);
-        int ww = (int) w;
+        double yy = y;
+        double xx = x;
 
-        int index = yy * ww + xx % ww;
-        if (index >= 0 && index < stacks.size()) {
-            return stacks.get(index);
-        } else {
-            return Pair.of(ItemStack.EMPTY, -1);
+        for (Pair<ItemStack, Integer> pair : stacks) {
+            ItemStack stack = pair.getLeft();
+            if (exactView || !stack.isEmpty()) {
+                if (cursorX >= xx && cursorX <= xx+1 && cursorY >= yy && cursorY <= yy+1) {
+                    return pair;
+                }
+                xx++;
+                if (xx >= x + w) {
+                    yy++;
+                    xx = x;
+                    if (yy >= y + h) {
+                        break;
+                    }
+                }
+            }
         }
+        return Pair.of(ItemStack.EMPTY, -1);
+
     }
 
     @Nonnull
@@ -154,7 +178,7 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
             GlStateManager.scale(0.4, 0.4, 0.0);
             int xx = (int) (cursorX - x);
             int yy = (int) (cursorY - y);
-            HoloGuiRenderTools.renderToolTip(stack, (int) ((xx+x) * 30 - 120), (int) ((yy+y) * 30 - 120 + 25));
+            HoloGuiRenderTools.renderToolTip(stack, (int) ((xx+x) * 30 - 120), (int) ((yy+y) * 30 - 120 + 25), tooltipHandler);
             RenderHelper.enableStandardItemLighting();
             GlStateManager.popMatrix();
         }

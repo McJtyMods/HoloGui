@@ -5,6 +5,8 @@ import mcjty.hologui.api.IImage;
 import mcjty.hologui.api.IStackEvent;
 import net.minecraft.item.ItemStack;
 
+import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 
@@ -21,11 +23,18 @@ public interface IPlayerSlots extends IGuiComponent<IPlayerSlots> {
 
     IPlayerSlots overlay(BiFunction<ItemStack, Integer, IImage> overlay);
 
+    IPlayerSlots tooltipHandler(BiConsumer<ItemStack, List<String>> tooltipHandler);
+
     /**
      * If exactView is enabled empty slots will be shown as well as non-empty slots.
      * By default empty slots are skipped
      */
     IPlayerSlots exactView();
+
+    /**
+     * Always render slots fullbright (ignoring selection)
+     */
+    IPlayerSlots fullBright();
 
     // Get the index (in the player inventory) of the selected stack. -1 if nothing is selected
     int getSelected();
