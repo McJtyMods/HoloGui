@@ -107,7 +107,7 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
                     GlStateManager.pushMatrix();
                     GlStateManager.scale(.5f, .5f, .5f);
                     String s = Integer.toString(stack.getCount());
-                    HoloGuiRenderTools.renderTextShadow(xx * 2 - 4 + .4, yy * 2 - 4 + .9, s, 0xffffffff);
+                    HoloGuiRenderTools.renderTextShadow(xx * 2 - 4 + .4, yy * 2 - 4 + .9, s, 0xffffffff, 1.0f);
                     GlStateManager.popMatrix();
                 }
 

@@ -62,7 +62,7 @@ public class HoloTextButton extends AbstractHoloComponent<IButton> implements IB
             color = this.color;
         }
         RenderHelper.disableStandardItemLighting();
-        HoloGuiRenderTools.renderText(x, y, text, color);
+        HoloGuiRenderTools.renderText(x, y, text, color, 1.0f);
     }
 
     @Override

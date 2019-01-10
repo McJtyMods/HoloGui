@@ -10,4 +10,6 @@ public interface IText extends IGuiComponent<IText> {
     IText text(Supplier<String> text);
 
     IText color(int color);
+
+    IText scale(float scale);
 }

@@ -22,18 +22,18 @@ import java.util.function.BiConsumer;
 
 public class HoloGuiRenderTools {
 
-    public static void renderText(double x, double y, String text, int color) {
+    public static void renderText(double x, double y, String text, int color, float scale) {
         GlStateManager.pushMatrix();
-        GlStateManager.scale(0.01, 0.01, 0.01);
+        GlStateManager.scale(0.01*scale, 0.01*scale, 0.01);
         GlStateManager.rotate(180, 0, 1, 0);
         GlStateManager.rotate(180, 0, 0, 1);
         Minecraft.getMinecraft().fontRenderer.drawString(text, (int) (x * 10 - 40), (int) (y * 10 - 40), color);
         GlStateManager.popMatrix();
     }
 
-    public static void renderTextShadow(double x, double y, String text, int color) {
+    public static void renderTextShadow(double x, double y, String text, int color, float scale) {
         GlStateManager.pushMatrix();
-        GlStateManager.scale(0.01, 0.01, 0.01);
+        GlStateManager.scale(0.01*scale, 0.01*scale, 0.01);
         GlStateManager.rotate(180, 0, 1, 0);
         GlStateManager.rotate(180, 0, 0, 1);
         Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(text, (int) (x * 10 - 40), (int) (y * 10 - 40), color);

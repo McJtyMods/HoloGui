@@ -30,7 +30,7 @@ public class HoloButton extends AbstractHoloComponent<IIconButton> implements II
 
     @Override
     public IIconButton hover(IImage image) {
-        this.hover = hover;
+        this.hover = image;
         return this;
     }
 

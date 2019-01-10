@@ -12,6 +12,7 @@ public class HoloText extends AbstractHoloComponent<IText> implements IText {
 
     private Supplier<String> text;
     private int color;
+    private float scale = 1.0f;
 
     HoloText(double x, double y, double w, double h) {
         super(x, y, w, h);
@@ -35,10 +36,16 @@ public class HoloText extends AbstractHoloComponent<IText> implements IText {
         return this;
     }
 
+    @Override
+    public IText scale(float scale) {
+        this.scale = scale;
+        return this;
+    }
 
     @Override
     public void render(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         RenderHelper.disableStandardItemLighting();
-        HoloGuiRenderTools.renderText(x, y, text.get(), color);
+        // @todo fix!
+        HoloGuiRenderTools.renderText(x / scale, y / scale, text.get(), color, scale);
     }
 }

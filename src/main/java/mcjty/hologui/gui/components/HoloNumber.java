@@ -43,6 +43,6 @@ public class HoloNumber extends AbstractHoloComponent<INumber> implements INumbe
     @Override
     public void render(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         String text = Integer.toString(getter.apply(player, holo));
-        HoloGuiRenderTools.renderText(x, y+.1, text, colorGetter.apply(player));
+        HoloGuiRenderTools.renderText(x, y+.1, text, colorGetter.apply(player), 1.0f);
     }
 }
