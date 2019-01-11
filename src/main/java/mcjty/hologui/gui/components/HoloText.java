@@ -46,6 +46,6 @@ public class HoloText extends AbstractHoloComponent<IText> implements IText {
     public void render(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         RenderHelper.disableStandardItemLighting();
         // @todo fix!
-        HoloGuiRenderTools.renderText(x / scale, y / scale, text.get(), color, scale);
+        HoloGuiRenderTools.renderText(x, y, text.get(), color, scale);
     }
 }

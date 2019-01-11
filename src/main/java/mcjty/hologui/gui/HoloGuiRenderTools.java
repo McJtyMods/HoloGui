@@ -27,7 +27,7 @@ public class HoloGuiRenderTools {
         GlStateManager.scale(0.01*scale, 0.01*scale, 0.01);
         GlStateManager.rotate(180, 0, 1, 0);
         GlStateManager.rotate(180, 0, 0, 1);
-        Minecraft.getMinecraft().fontRenderer.drawString(text, (int) (x * 10 - 40), (int) (y * 10 - 40), color);
+        Minecraft.getMinecraft().fontRenderer.drawString(text, (int) (x * 10 / scale - 40 / scale), (int) (y * 10 / scale - 40 / scale), color);
         GlStateManager.popMatrix();
     }
 

@@ -6,6 +6,9 @@ import mcjty.hologui.api.IImage;
 import mcjty.hologui.api.components.IIconButton;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundCategory;
@@ -54,8 +57,8 @@ public class HoloButton extends AbstractHoloComponent<IIconButton> implements II
         } else {
             i = image;
         }
+        GlStateManager.color(1, 1, 1);
         HoloGuiRenderTools.renderImage(x, y, i.getU(), i.getV(), 16, 16, i.getWidth(), i.getHeight(), i.getImage());
-//        HoloGuiRenderTools.renderText(x, y, "x", 0xffffff);
     }
 
     @Override
