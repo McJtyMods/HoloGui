@@ -6,6 +6,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public interface IStackToggle extends IGuiComponent<IStackToggle> {
@@ -17,4 +19,6 @@ public interface IStackToggle extends IGuiComponent<IStackToggle> {
     IStackToggle hitEvent(IEvent event);
 
     IStackToggle scale(double scale);
+
+    IStackToggle tooltipHandler(BiConsumer<ItemStack, List<String>> tooltipHandler);
 }

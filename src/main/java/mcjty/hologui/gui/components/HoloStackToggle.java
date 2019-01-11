@@ -15,6 +15,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 
 import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> implements IStackToggle {
@@ -23,6 +25,7 @@ public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> impleme
     private Function<EntityPlayer, Boolean> currentValue;
     private IEvent hitEvent;
     double scale = 1.0;
+    private BiConsumer<ItemStack, List<String>> tooltipHandler = (itemStack, strings) -> {};
 
     public static final ResourceLocation DARKEN = new ResourceLocation(HoloGui.MODID, "textures/gui/darken.png");
     public static final ResourceLocation INVALID = new ResourceLocation(HoloGui.MODID, "textures/gui/darken_red.png");
@@ -50,6 +53,12 @@ public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> impleme
     }
 
     @Override
+    public IStackToggle tooltipHandler(BiConsumer<ItemStack, List<String>> tooltipHandler) {
+        this.tooltipHandler = tooltipHandler;
+        return this;
+    }
+
+    @Override
     public void render(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         Boolean state = currentValue.apply(player);
         ResourceLocation lightmap = null;
@@ -72,7 +81,7 @@ public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> impleme
         GlStateManager.rotate(180, 0, 0, 1);
         GlStateManager.translate(0, 0, -10);
         GlStateManager.scale(0.4, 0.4, 0.0);
-        HoloGuiRenderTools.renderToolTip(stack, (int) (x * 30 - 120), (int) (y * 30 - 120), (itemStack, strings) -> {});
+        HoloGuiRenderTools.renderToolTip(stack, (int) (x * 30 - 120), (int) (y * 30 - 120), tooltipHandler);
         RenderHelper.enableStandardItemLighting();
         GlStateManager.popMatrix();
     }
