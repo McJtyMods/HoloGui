@@ -29,9 +29,9 @@ import java.util.function.Function;
 public class HoloGui implements ModBase {
     public static final String MODID = "hologui";
     public static final String MODNAME = "HoloGui";
-    public static final String VERSION = "0.0.3-beta";
+    public static final String VERSION = "0.0.4-beta";
     public static final String MIN_FORGE11_VER = "14.23.3.2694";
-    public static final String MIN_MCJTYLIB_VER = "3.0.4";
+    public static final String MIN_MCJTYLIB_VER = "3.1.0";
 
     @SidedProxy(clientSide = "mcjty.hologui.proxy.ClientProxy", serverSide = "mcjty.hologui.proxy.ServerProxy")
     public static CommonProxy proxy;

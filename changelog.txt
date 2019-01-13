@@ -4,6 +4,7 @@
 - Added support for switching tags for an open GUI. This allows for creating menus for IGuiTile based gui's
 - IHoloGuiHandler.openHoloGui() now returns true on client
 - There are now predefined icons (and an Icons class to use them)
+- Better support for rendering inventory slots
 
 0.0.3-beta:
 - Several api cleanups and improvements
