@@ -1,3 +1,6 @@
+0.0.5-beta:
+- Fixed a server-side problem in HoloGui
+
 0.0.4-beta:
 - Some support for inventory handling (both for player and blocks)
 - Fixed a bug with holo tooltips not completely correcting GL state

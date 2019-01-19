@@ -16,11 +16,11 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
+import javax.vecmath.Vector2d;
 
 public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 
@@ -195,7 +195,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     private boolean playerLooksAtMe(EntityPlayer player) {
         Vec3d lookVec = getLookVec();
         Vec3d v = getIntersect3D(player, lookVec);
-        Vec2f vec2d = get2DProjection(lookVec, v);
+        Vector2d vec2d = get2DProjection(lookVec, v);
 
         double cx;
         double cy;
@@ -214,7 +214,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         EntityPlayer player = HoloGui.proxy.getClientPlayer();
         Vec3d lookVec = getLookVec();
         Vec3d v = getIntersect3D(player, lookVec);
-        Vec2f vec2d = get2DProjection(lookVec, v);
+        Vector2d vec2d = get2DProjection(lookVec, v);
 
         float scale = getScale();
 
@@ -292,7 +292,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     }
 
 
-    private Vec2f intersect(EntityPlayer player) {
+    private Vector2d intersect(EntityPlayer player) {
         Vec3d lookVec = getLookVec();
         Vec3d v = getIntersect3D(player, lookVec);
         return get2DProjection(lookVec, v);
@@ -303,7 +303,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         return true;
     }
 
-    private Vec2f get2DProjection(Vec3d lookVec, Vec3d v) {
+    private Vector2d get2DProjection(Vec3d lookVec, Vec3d v) {
         double x = v.x;
         double y = v.y;
         double z = v.z;
@@ -319,7 +319,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         double x2d = vx.x * x + vx.y * y + vx.z * z + .5;
         double y2d = vy.x * x + vy.y * y + vy.z * z + 1;
 
-        return new Vec2f((float) x2d, (float) y2d);
+        return new Vector2d(x2d, y2d);
     }
 
     private Vec3d getIntersect3D(EntityPlayer player, Vec3d lookVec) {
@@ -356,7 +356,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     public boolean hitByEntity(Entity entityIn) {
         if (entityIn instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entityIn;
-            Vec2f vec2d = intersect(player);
+            Vector2d vec2d = intersect(player);
             IGuiComponent gui = getGui(player);
             if (gui != null) {
                 double x;
