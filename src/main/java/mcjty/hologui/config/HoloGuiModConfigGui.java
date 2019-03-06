@@ -8,7 +8,7 @@ import net.minecraftforge.fml.client.config.GuiConfig;
 public class HoloGuiModConfigGui extends GuiConfig {
 
     public HoloGuiModConfigGui(GuiScreen parentScreen) {
-        super(parentScreen, new ConfigElement(HoloGui.proxy.getConfig().getCategory(GuiConfiguration.CATEGORY_GUI)).getChildElements(),
+        super(parentScreen, new ConfigElement(HoloGui.setup.getConfig().getCategory(GuiConfiguration.CATEGORY_GUI)).getChildElements(),
                 HoloGui.MODID, false, false, "HoloGui Config");
     }
 }

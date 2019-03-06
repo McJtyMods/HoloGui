@@ -16,10 +16,10 @@ public class ForgeEventHandlers {
 
     @SubscribeEvent
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-        GuiConfiguration.init(HoloGui.proxy.getConfig());
+        GuiConfiguration.init(HoloGui.setup.getConfig());
 
-        if (HoloGui.proxy.getConfig().hasChanged()) {
-            HoloGui.proxy.getConfig().save();
+        if (HoloGui.setup.getConfig().hasChanged()) {
+            HoloGui.setup.getConfig().save();
         }
     }
 }

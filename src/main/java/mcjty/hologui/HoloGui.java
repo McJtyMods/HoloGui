@@ -3,9 +3,10 @@ package mcjty.hologui;
 
 import mcjty.hologui.api.IHoloGuiHandler;
 import mcjty.hologui.gui.HoloGuiHandler;
-import mcjty.hologui.proxy.CommonProxy;
+import mcjty.hologui.proxy.CommonSetup;
 import mcjty.lib.base.ModBase;
 import mcjty.lib.compat.MainCompatHandler;
+import mcjty.lib.proxy.IProxy;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -13,7 +14,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -34,30 +34,29 @@ public class HoloGui implements ModBase {
     public static final String MIN_MCJTYLIB_VER = "3.1.0";
 
     @SidedProxy(clientSide = "mcjty.hologui.proxy.ClientProxy", serverSide = "mcjty.hologui.proxy.ServerProxy")
-    public static CommonProxy proxy;
+    public static IProxy proxy;
+    public static CommonSetup setup = new CommonSetup();
 
     @Mod.Instance
     public static HoloGui instance;
 
     public static IHoloGuiHandler guiHandler = new HoloGuiHandler();
 
-    public static Logger logger;
-
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event){
-        logger = event.getModLog();
+        setup.preInit(event);
         proxy.preInit(event);
-        MainCompatHandler.registerWaila();
-        MainCompatHandler.registerTOP();
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent e) {
+        setup.init(e);
         proxy.init(e);
     }
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent e) {
+        setup.postInit(e);
         proxy.postInit(e);
     }
 
@@ -74,7 +73,7 @@ public class HoloGui implements ModBase {
                 if (value.isPresent()) {
                     value.get().apply(guiHandler);
                 } else {
-                    logger.warn("Some mod didn't return a valid result with getHoloHandler!");
+                    setup.getLogger().warn("Some mod didn't return a valid result with getHoloHandler!");
                 }
             }
         }

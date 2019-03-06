@@ -1,12 +1,9 @@
 package mcjty.hologui.proxy;
 
+import mcjty.lib.setup.DefaultServerProxy;
+
 /**
  * Created by jorrit on 16.12.16.
  */
-public class ServerProxy extends CommonProxy {
-
-    @Override
-    public boolean isJumpKeyDown() {
-        throw new IllegalStateException("Only call this client-side!");
-    }
+public class ServerProxy extends DefaultServerProxy {
 }

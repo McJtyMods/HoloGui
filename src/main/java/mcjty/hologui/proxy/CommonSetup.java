@@ -4,7 +4,8 @@ import mcjty.hologui.ForgeEventHandlers;
 import mcjty.hologui.ModEntities;
 import mcjty.hologui.config.HoloGuiConfiguration;
 import mcjty.lib.base.GeneralConfig;
-import mcjty.lib.proxy.AbstractCommonProxy;
+import mcjty.lib.compat.MainCompatHandler;
+import mcjty.lib.setup.DefaultCommonSetup;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -16,7 +17,7 @@ import java.io.File;
 /**
  * Created by jorrit on 16.12.16.
  */
-public abstract class CommonProxy extends AbstractCommonProxy {
+public class CommonSetup extends DefaultCommonSetup {
 
     @Override
     public void preInit(FMLPreInitializationEvent e) {
@@ -32,10 +33,13 @@ public abstract class CommonProxy extends AbstractCommonProxy {
         HoloGuiConfiguration.init(mainConfig);
 
         ModEntities.init();
+
+        MainCompatHandler.registerWaila();
+        MainCompatHandler.registerTOP();
     }
 
-    public Configuration getConfig() {
-        return mainConfig;
+    @Override
+    public void createTabs() {
     }
 
     @Override
@@ -51,6 +55,4 @@ public abstract class CommonProxy extends AbstractCommonProxy {
             mainConfig.save();
         }
     }
-
-    public abstract boolean isJumpKeyDown();
 }
