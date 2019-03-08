@@ -25,9 +25,8 @@ public class CommonSetup extends DefaultCommonSetup {
 
         MinecraftForge.EVENT_BUS.register(new ForgeEventHandlers());
 
-//        SimpleNetworkWrapper network = PacketHandler.registerMessages(Ariente.MODID, "ariente");
         GeneralConfig.preInit(e);
-//        ArienteMessages.registerNetworkMessages(network);
+//        HoloMessages.registerNetworkMessages("hologui");
 
         mainConfig = new Configuration(new File(modConfigDir.getPath(), "hologui.cfg"));
         HoloGuiConfiguration.init(mainConfig);
