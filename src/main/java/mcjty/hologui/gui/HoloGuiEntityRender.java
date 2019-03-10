@@ -71,7 +71,7 @@ public class HoloGuiEntityRender extends Render<HoloGuiEntity> {
         GlStateManager.enableTexture2D();
         GlStateManager.disableLighting();
 
-        int style = GuiConfiguration.GUI_STYLE;
+        int style = GuiConfiguration.GUI_STYLE.get().ordinal();
 
         if (style <= 8) {
             GlStateManager.enableBlend();

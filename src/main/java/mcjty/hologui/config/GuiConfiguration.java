@@ -1,16 +1,29 @@
 package mcjty.hologui.config;
 
+import mcjty.lib.thirteen.ConfigSpec;
 import net.minecraftforge.common.config.Configuration;
 
 public class GuiConfiguration {
 
     public static final String CATEGORY_GUI = "gui";
 
-    public static int GUI_STYLE = 3;
+    public static ConfigSpec.ConfigValue<GuiStyle> GUI_STYLE;
+
+    private static final ConfigSpec.Builder CLIENT_BUILDER = new ConfigSpec.Builder();
+
+    static {
+        CLIENT_BUILDER.comment("GUI settings").push(CATEGORY_GUI);
+
+        GUI_STYLE = CLIENT_BUILDER
+                .comment("The gui style")
+                .defineEnum("guiStyle", GuiStyle.TRANSP_BLUE_WHITE_SHARP, GuiStyle.values());
+
+        CLIENT_BUILDER.pop();
+    }
+
+    public static ConfigSpec CLIENT_CONFIG;
 
     public static void init(Configuration cfg) {
-        cfg.addCustomCategoryComment(CATEGORY_GUI, "GUI settings");
-
-        GUI_STYLE = cfg.getInt("guiStyle", CATEGORY_GUI, GUI_STYLE, 1, 16, "The gui style (1-8 are transparent, 9-16 are opaque)");
+        CLIENT_CONFIG = CLIENT_BUILDER.build(cfg);
     }
 }
