@@ -1,4 +1,4 @@
-package mcjty.hologui.proxy;
+package mcjty.hologui.setup;
 
 import mcjty.hologui.ForgeEventHandlers;
 import mcjty.hologui.ModEntities;

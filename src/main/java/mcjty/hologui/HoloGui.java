@@ -3,9 +3,8 @@ package mcjty.hologui;
 
 import mcjty.hologui.api.IHoloGuiHandler;
 import mcjty.hologui.gui.HoloGuiHandler;
-import mcjty.hologui.proxy.CommonSetup;
+import mcjty.hologui.setup.CommonSetup;
 import mcjty.lib.base.ModBase;
-import mcjty.lib.compat.MainCompatHandler;
 import mcjty.lib.proxy.IProxy;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.Mod;

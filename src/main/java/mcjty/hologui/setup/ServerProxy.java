@@ -1,4 +1,4 @@
-package mcjty.hologui.proxy;
+package mcjty.hologui.setup;
 
 import mcjty.lib.setup.DefaultServerProxy;
 
