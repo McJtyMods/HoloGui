@@ -3,7 +3,7 @@ package mcjty.hologui;
 
 import mcjty.hologui.api.IHoloGuiHandler;
 import mcjty.hologui.gui.HoloGuiHandler;
-import mcjty.hologui.setup.CommonSetup;
+import mcjty.hologui.setup.ModSetup;
 import mcjty.lib.base.ModBase;
 import mcjty.lib.proxy.IProxy;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,7 +34,7 @@ public class HoloGui implements ModBase {
 
     @SidedProxy(clientSide = "mcjty.hologui.setup.ClientProxy", serverSide = "mcjty.hologui.setup.ServerProxy")
     public static IProxy proxy;
-    public static CommonSetup setup = new CommonSetup();
+    public static ModSetup setup = new ModSetup();
 
     @Mod.Instance
     public static HoloGui instance;
