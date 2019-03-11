@@ -2,7 +2,7 @@ package mcjty.hologui.gui;
 
 import mcjty.hologui.HoloGui;
 import mcjty.hologui.api.IGuiComponent;
-import mcjty.hologui.config.GuiConfiguration;
+import mcjty.hologui.config.ConfigSetup;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -71,7 +71,7 @@ public class HoloGuiEntityRender extends Render<HoloGuiEntity> {
         GlStateManager.enableTexture2D();
         GlStateManager.disableLighting();
 
-        int style = GuiConfiguration.GUI_STYLE.get().ordinal();
+        int style = ConfigSetup.GUI_STYLE.get().ordinal();
 
         if (style <= 8) {
             GlStateManager.enableBlend();
