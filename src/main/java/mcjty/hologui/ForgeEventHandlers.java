@@ -1,6 +1,7 @@
 package mcjty.hologui;
 
 import mcjty.hologui.config.GuiConfiguration;
+import mcjty.hologui.config.HoloGuiConfiguration;
 import mcjty.hologui.gui.HoloGuiSounds;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.event.RegistryEvent;
@@ -16,10 +17,10 @@ public class ForgeEventHandlers {
 
     @SubscribeEvent
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-        GuiConfiguration.init(HoloGui.setup.getConfig());
+        GuiConfiguration.init(HoloGuiConfiguration.mainConfig);
 
-        if (HoloGui.setup.getConfig().hasChanged()) {
-            HoloGui.setup.getConfig().save();
+        if (HoloGuiConfiguration.mainConfig.hasChanged()) {
+            HoloGuiConfiguration.mainConfig.save();
         }
     }
 }

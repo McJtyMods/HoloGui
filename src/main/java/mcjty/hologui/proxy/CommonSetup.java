@@ -25,11 +25,9 @@ public class CommonSetup extends DefaultCommonSetup {
 
         MinecraftForge.EVENT_BUS.register(new ForgeEventHandlers());
 
-        GeneralConfig.preInit(e);
 //        HoloMessages.registerNetworkMessages("hologui");
 
-        mainConfig = new Configuration(new File(modConfigDir.getPath(), "hologui.cfg"));
-        HoloGuiConfiguration.init(mainConfig);
+        HoloGuiConfiguration.init();
 
         ModEntities.init();
 
@@ -50,8 +48,8 @@ public class CommonSetup extends DefaultCommonSetup {
     public void postInit(FMLPostInitializationEvent e) {
 //        ConfigSetup.postInit();
 //        ModBlocks.postInit();
-        if (mainConfig.hasChanged()) {
-            mainConfig.save();
+        if (HoloGuiConfiguration.mainConfig.hasChanged()) {
+            HoloGuiConfiguration.mainConfig.save();
         }
     }
 }
