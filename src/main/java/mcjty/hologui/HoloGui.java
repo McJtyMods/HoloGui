@@ -32,7 +32,7 @@ public class HoloGui implements ModBase {
     public static final String MIN_FORGE11_VER = "14.23.3.2694";
     public static final String MIN_MCJTYLIB_VER = "3.1.0";
 
-    @SidedProxy(clientSide = "mcjty.hologui.proxy.ClientProxy", serverSide = "mcjty.hologui.proxy.ServerProxy")
+    @SidedProxy(clientSide = "mcjty.hologui.setup.ClientProxy", serverSide = "mcjty.hologui.setup.ServerProxy")
     public static IProxy proxy;
     public static CommonSetup setup = new CommonSetup();
 
