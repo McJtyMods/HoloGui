@@ -20,8 +20,6 @@ public class ModSetup extends DefaultModSetup {
 
         MinecraftForge.EVENT_BUS.register(new ForgeEventHandlers());
 
-        ConfigSetup.init();
-
         //        HoloMessages.registerNetworkMessages("hologui");
 
         ModEntities.init();
@@ -31,6 +29,11 @@ public class ModSetup extends DefaultModSetup {
     protected void setupModCompat() {
         MainCompatHandler.registerWaila();
         MainCompatHandler.registerTOP();
+    }
+
+    @Override
+    protected void setupConfig() {
+        ConfigSetup.init();
     }
 
     @Override
