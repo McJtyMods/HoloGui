@@ -20,9 +20,10 @@ public class ModSetup extends DefaultModSetup {
 
         MinecraftForge.EVENT_BUS.register(new ForgeEventHandlers());
 
-//        HoloMessages.registerNetworkMessages("hologui");
-
         ConfigSetup.init();
+
+        //        HoloMessages.registerNetworkMessages("hologui");
+
         ModEntities.init();
     }
 
