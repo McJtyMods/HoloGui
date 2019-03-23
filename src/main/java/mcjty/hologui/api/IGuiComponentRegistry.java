@@ -73,6 +73,10 @@ public interface IGuiComponentRegistry {
      */
     IPlayerSlots playerSlots(double x, double y, double w, double h);
 
+    /**
+     * The player inventory (9x4 slots)
+     */
+    IPlayerInventory playerInventory(double y);
 
 
     /**

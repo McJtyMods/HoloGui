@@ -73,6 +73,11 @@ public class GuiComponentRegistry implements IGuiComponentRegistry {
     }
 
     @Override
+    public IPlayerInventory playerInventory(double y) {
+        return new HoloPlayerInventory(y);
+    }
+
+    @Override
     public IImage image(Icons icon) {
         return new IImage() {
             @Override
