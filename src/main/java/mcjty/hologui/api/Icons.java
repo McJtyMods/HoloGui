@@ -32,6 +32,12 @@ public enum Icons {
     BLUE_2_BUTTON(128+80, 128+32),
     BLUE_3_BUTTON(128+96, 128+32),
     BLUE_4_BUTTON(128+112, 128+32),
+    NBT_OFF(128-32, 128-16),
+    NBT_ON(128-16, 128-16),
+    DAM_OFF(128-32, 128),
+    DAM_ON(128-16, 128),
+    ORE_OFF(128-32, 128+16),
+    ORE_ON(128-16, 128+16),
     ;
 
     private final int u;
