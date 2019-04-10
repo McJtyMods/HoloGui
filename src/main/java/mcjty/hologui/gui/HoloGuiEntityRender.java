@@ -80,7 +80,7 @@ public class HoloGuiEntityRender extends Render<HoloGuiEntity> {
             style -= 8;
         }
 
-        GlStateManager.color(1.0f, 1.0f, 1.0f, 0.7f);
+        GlStateManager.color(1.0f, 1.0f, 1.0f, 0.8f);
 
         Minecraft mc = Minecraft.getMinecraft();
 
