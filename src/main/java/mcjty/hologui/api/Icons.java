@@ -38,6 +38,10 @@ public enum Icons {
     DAM_ON(128-16, 128),
     ORE_OFF(128-32, 128+16),
     ORE_ON(128-16, 128+16),
+    BOX_OFF(128-32, 128+32),
+    BOX_ON(128-16, 128+32),
+    ITEMFLOW_OFF(128-32, 128+48),
+    ITEMFLOW_ON(128-16, 128+48),
     ;
 
     private final int u;
