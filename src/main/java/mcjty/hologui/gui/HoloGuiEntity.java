@@ -207,7 +207,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         cx = vec2d.x * 10 / factor - offset;
         cy = vec2d.y * 10 / factor - offset;
 
-        return cx >= 0 && cx <= 10 && cy >= 0 && cy <= 10;
+        return cx >= -1 && cx <= 11 && cy >= -1 && cy <= 11;
     }
 
     private void onUpdateClient() {
