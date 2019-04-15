@@ -9,6 +9,11 @@ public interface IButton extends IGuiComponent<IButton> {
 
     IButton color(int color);
 
+    IButton hoverColor(int color);
+
+    // -1 to disable border
+    IButton borderColor(int color);
+
     IButton hitEvent(IEvent event);
 
     IButton hitClientEvent(IEvent event);

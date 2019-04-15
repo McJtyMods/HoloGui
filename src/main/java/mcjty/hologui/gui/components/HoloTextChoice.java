@@ -18,6 +18,8 @@ public class HoloTextChoice extends AbstractHoloComponent<ITextChoice> implement
 
     private List<String> texts = new ArrayList<>();
     private int color;
+    private int hoverColor;
+    private int borderColor;
     private float scale = 1.0f;
 
     private Function<EntityPlayer, Integer> currentValue;
@@ -25,6 +27,9 @@ public class HoloTextChoice extends AbstractHoloComponent<ITextChoice> implement
 
     HoloTextChoice(double x, double y, double w, double h) {
         super(x, y, w, h);
+        this.color = 0x888888;
+        this.hoverColor = 0xffffff;
+        this.borderColor = 0xff7fc9ff;
     }
 
     @Override
@@ -36,6 +41,18 @@ public class HoloTextChoice extends AbstractHoloComponent<ITextChoice> implement
     @Override
     public ITextChoice color(int color) {
         this.color = color;
+        return this;
+    }
+
+    @Override
+    public ITextChoice hoverColor(int color) {
+        this.hoverColor = color;
+        return this;
+    }
+
+    @Override
+    public ITextChoice borderColor(int color) {
+        this.borderColor = color;
         return this;
     }
 
@@ -66,6 +83,15 @@ public class HoloTextChoice extends AbstractHoloComponent<ITextChoice> implement
         }
         String i = texts.get(value);
         RenderHelper.disableStandardItemLighting();
+        int color;
+        if (isInside(cursorX, cursorY)) {
+            color = this.hoverColor;
+        } else {
+            color = this.color;
+        }
+        if (borderColor != -1) {
+            HoloGuiRenderTools.renderBorder(x, y, w, h, borderColor & 255, (borderColor >> 8) & 255, (borderColor >> 16) & 255, (borderColor >> 24) & 255);
+        }
         HoloGuiRenderTools.renderText(x, y, i, color, scale);
     }
 

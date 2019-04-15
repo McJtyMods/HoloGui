@@ -16,12 +16,14 @@ public class HoloTextButton extends AbstractHoloComponent<IButton> implements IB
     private IEvent hitClientEvent;
     private int color;
     private int hoverColor;
+    private int borderColor;
     private String text;
 
     HoloTextButton(double x, double y, double w, double h) {
         super(x, y, w, h);
         this.color = 0x888888;
         this.hoverColor = 0xffffff;
+        this.borderColor = 0xff7fc9ff;
     }
 
     @Override
@@ -36,8 +38,15 @@ public class HoloTextButton extends AbstractHoloComponent<IButton> implements IB
         return this;
     }
 
-    public IButton hover(int hoverColor) {
+    @Override
+    public IButton hoverColor(int hoverColor) {
         this.hoverColor = hoverColor;
+        return this;
+    }
+
+    @Override
+    public IButton borderColor(int borderColor) {
+        this.borderColor = borderColor;
         return this;
     }
 
@@ -62,6 +71,9 @@ public class HoloTextButton extends AbstractHoloComponent<IButton> implements IB
             color = this.color;
         }
         RenderHelper.disableStandardItemLighting();
+        if (borderColor != -1) {
+            HoloGuiRenderTools.renderBorder(x, y, w, h, borderColor & 255, (borderColor >> 8) & 255, (borderColor >> 16) & 255, (borderColor >> 24) & 255);
+        }
         HoloGuiRenderTools.renderText(x, y, text, color, 1.0f);
     }
 

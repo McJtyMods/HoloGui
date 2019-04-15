@@ -16,5 +16,10 @@ public interface ITextChoice extends IGuiComponent<ITextChoice> {
 
     ITextChoice color(int color);
 
+    ITextChoice hoverColor(int color);
+
+    // -1 to disable border
+    ITextChoice borderColor(int color);
+
     ITextChoice scale(float scale);
 }
