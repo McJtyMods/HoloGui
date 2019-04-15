@@ -2,11 +2,10 @@ package mcjty.hologui.gui.components;
 
 import mcjty.hologui.api.IEvent;
 import mcjty.hologui.api.IHoloGuiEntity;
-import mcjty.hologui.api.IImage;
-import mcjty.hologui.api.components.IIconChoice;
+import mcjty.hologui.api.components.ITextChoice;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundCategory;
@@ -15,31 +14,46 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public class HoloIcons extends AbstractHoloComponent<IIconChoice> implements IIconChoice {
+public class HoloTextChoice extends AbstractHoloComponent<ITextChoice> implements ITextChoice {
 
-    private List<IImage> images = new ArrayList<>();
+    private List<String> texts = new ArrayList<>();
+    private int color;
+    private float scale = 1.0f;
 
     private Function<EntityPlayer, Integer> currentValue;
     private IEvent hitEvent;
 
-    HoloIcons(double x, double y, double w, double h) {
+    HoloTextChoice(double x, double y, double w, double h) {
         super(x, y, w, h);
     }
 
     @Override
-    public IIconChoice addImage(IImage image) {
-        images.add(image);
+    public ITextChoice addText(String text) {
+        texts.add(text);
         return this;
     }
 
     @Override
-    public IIconChoice getter(Function<EntityPlayer, Integer> getter) {
+    public ITextChoice color(int color) {
+        this.color = color;
+        return this;
+    }
+
+    @Override
+    public ITextChoice scale(float scale) {
+        this.scale = scale;
+        return this;
+    }
+
+
+    @Override
+    public ITextChoice getter(Function<EntityPlayer, Integer> getter) {
         this.currentValue = getter;
         return this;
     }
 
     @Override
-    public IIconChoice hitEvent(IEvent event) {
+    public ITextChoice hitEvent(IEvent event) {
         this.hitEvent = event;
         return this;
     }
@@ -47,12 +61,12 @@ public class HoloIcons extends AbstractHoloComponent<IIconChoice> implements IIc
     @Override
     public void render(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         Integer value = currentValue.apply(player);
-        if (value < 0 || value >= images.size()) {
+        if (value < 0 || value >= texts.size()) {
             return;
         }
-        IImage i = images.get(value);
-        GlStateManager.color(1, 1, 1);
-        HoloGuiRenderTools.renderImage(x, y, i.getU(), i.getV(), 16, 16, i.getWidth(), i.getHeight(), i.getImage());
+        String i = texts.get(value);
+        RenderHelper.disableStandardItemLighting();
+        HoloGuiRenderTools.renderText(x, y, i, color, scale);
     }
 
     @Override

@@ -24,7 +24,7 @@ public class GuiComponentRegistry implements IGuiComponentRegistry {
 
     @Override
     public IIconChoice iconChoice(double x, double y, double w, double h) {
-        return new HoloIcons(x, y, w, h);
+        return new HoloIconChoice(x, y, w, h);
     }
 
     @Override
@@ -55,6 +55,11 @@ public class GuiComponentRegistry implements IGuiComponentRegistry {
     @Override
     public IText text(double x, double y, double w, double h) {
         return new HoloText(x, y, w, h);
+    }
+
+    @Override
+    public ITextChoice textChoice(double x, double y, double w, double h) {
+        return new HoloTextChoice(x, y, w, h);
     }
 
     @Override

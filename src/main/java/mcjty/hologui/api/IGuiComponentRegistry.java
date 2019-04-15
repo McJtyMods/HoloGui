@@ -59,6 +59,11 @@ public interface IGuiComponentRegistry {
     IText text(double x, double y, double w, double h);
 
     /**
+     * A choice of text
+     */
+    ITextChoice textChoice(double x, double y, double w, double h);
+
+    /**
      * A text button
      */
     IButton button(double x, double y, double w, double h);
