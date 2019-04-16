@@ -148,8 +148,6 @@ public class HoloGuiRenderTools {
 
                 GlStateManager.disableBlend();
                 GlStateManager.enableTexture2D();
-
-
             }
         }
         GlStateManager.popMatrix();
@@ -185,6 +183,7 @@ public class HoloGuiRenderTools {
         GlStateManager.popMatrix();
         GlStateManager.disableRescaleNormal();
         GlStateManager.disableBlend();
+        GlStateManager.depthMask(false);
         Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
         Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
 

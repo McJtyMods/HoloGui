@@ -52,6 +52,7 @@ public class HoloIconChoice extends AbstractHoloComponent<IIconChoice> implement
         }
         IImage i = images.get(value);
         GlStateManager.color(1, 1, 1);
+        GlStateManager.enableCull();
         HoloGuiRenderTools.renderImage(x, y, i.getU(), i.getV(), 16, 16, i.getWidth(), i.getHeight(), i.getImage());
     }
 
