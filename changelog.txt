@@ -1,3 +1,8 @@
+Upcoming:
+- New 'player inventory' component for HoloGui
+- Made the transparent hologui slightly less transparent to improve readability
+- Fixed a GL leak that could occur if a chest was being displayed in a slot
+
 0.0.5-beta:
 - Fixed a server-side problem in HoloGui
 
