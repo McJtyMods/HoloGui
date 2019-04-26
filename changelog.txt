@@ -1,4 +1,5 @@
-Upcoming:
+0.0.6-beta:
+- Depends on McJtyLib 3.5.0!
 - New 'player inventory' component for HoloGui
 - Made the transparent hologui slightly less transparent to improve readability
 - Fixed a GL leak that could occur if a chest was being displayed in a slot
