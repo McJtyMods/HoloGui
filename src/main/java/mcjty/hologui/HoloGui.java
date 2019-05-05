@@ -28,7 +28,7 @@ import java.util.function.Function;
 public class HoloGui implements ModBase {
     public static final String MODID = "hologui";
     public static final String MODNAME = "HoloGui";
-    public static final String VERSION = "0.0.6-beta";
+    public static final String VERSION = "0.0.7-beta";
     public static final String MIN_FORGE11_VER = "14.23.3.2694";
     public static final String MIN_MCJTYLIB_VER = "3.5.0";
 

@@ -1,4 +1,4 @@
-upcoming:
+0.0.7-beta:
 - Disabled the border color around text buttons by default. It doesn't look nice in many situations
 
 0.0.6-beta:
