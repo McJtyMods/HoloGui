@@ -1,3 +1,6 @@
+upcoming:
+- Disabled the border color around text buttons by default. It doesn't look nice in many situations
+
 0.0.6-beta:
 - Depends on McJtyLib 3.5.0!
 - New 'player inventory' component for HoloGui

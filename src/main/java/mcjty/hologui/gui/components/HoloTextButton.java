@@ -23,7 +23,8 @@ public class HoloTextButton extends AbstractHoloComponent<IButton> implements IB
         super(x, y, w, h);
         this.color = 0x888888;
         this.hoverColor = 0xffffff;
-        this.borderColor = 0xff7fc9ff;
+//        this.borderColor = 0xff7fc9ff;
+        this.borderColor = -1;
     }
 
     @Override
