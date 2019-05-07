@@ -100,7 +100,7 @@ public class HoloTextChoice extends AbstractHoloComponent<ITextChoice> implement
     @Override
     public ITextChoice hitEventClient(IEvent event) {
         this.hitEventClient = event;
-        return null;
+        return this;
     }
 
     @Override

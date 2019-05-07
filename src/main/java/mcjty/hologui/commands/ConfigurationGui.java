@@ -42,7 +42,7 @@ public class ConfigurationGui {
                 });
         for (GuiStyle value : GuiStyle.values()) {
             if (value != GuiStyle.NONE) {
-                styleChoices.addText(value.name());
+                styleChoices.addText(value.getName());
             }
         }
         return styleChoices;
@@ -50,7 +50,7 @@ public class ConfigurationGui {
 
     private static ITextChoice createTextStyleChoices(IGuiComponentRegistry registry) {
         ITextChoice styleChoices = registry
-                .textChoice(0, 1, 4, 1)
+                .textChoice(0, 2, 4, 1)
                 .getter(plr -> {
                     GuiTextStyle guiStyle = ConfigSetup.GUI_TEXT_STYLE.get();
                     return guiStyle.ordinal();
@@ -59,8 +59,8 @@ public class ConfigurationGui {
                     GuiTextStyle guiStyle = ConfigSetup.GUI_TEXT_STYLE.get();
                     int ordinal = guiStyle.ordinal();
                     ordinal++;
-                    if (ordinal >= GuiStyle.values().length) {
-                        ordinal = 1;
+                    if (ordinal >= GuiTextStyle.values().length) {
+                        ordinal = 0;
                     }
                     ConfigSetup.setGuiTextStyle(GuiTextStyle.values()[ordinal]);
                 });
