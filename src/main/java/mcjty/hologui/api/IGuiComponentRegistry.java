@@ -98,4 +98,14 @@ public interface IGuiComponentRegistry {
      * The resource location and dimension to use for this icon.
      */
     IImage image(ResourceLocation image, int w, int h);
+
+    /**
+     * A hardcoded color
+     */
+    IColor color(int color);
+
+    /**
+     * A styled color
+     */
+    IColor color(StyledColor color);
 }

@@ -1,8 +1,11 @@
 package mcjty.hologui.gui.components;
 
+import mcjty.hologui.api.IColor;
 import mcjty.hologui.api.IEvent;
 import mcjty.hologui.api.IHoloGuiEntity;
+import mcjty.hologui.api.StyledColor;
 import mcjty.hologui.api.components.IButton;
+import mcjty.hologui.gui.ColorFromStyle;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
 import net.minecraft.client.renderer.RenderHelper;
@@ -14,17 +17,16 @@ public class HoloTextButton extends AbstractHoloComponent<IButton> implements IB
 
     private IEvent hitEvent;
     private IEvent hitClientEvent;
-    private int color;
-    private int hoverColor;
-    private int borderColor;
+    private IColor color;
+    private IColor hoverColor;
+    private IColor borderColor;
     private String text;
 
     HoloTextButton(double x, double y, double w, double h) {
         super(x, y, w, h);
-        this.color = 0x888888;
-        this.hoverColor = 0xffffff;
-//        this.borderColor = 0xff7fc9ff;
-        this.borderColor = -1;
+        this.color = new ColorFromStyle(StyledColor.BUTTON);
+        this.hoverColor = new ColorFromStyle(StyledColor.BUTTON_HOVER);
+        this.borderColor = new ColorFromStyle(StyledColor.BUTTON_BORDER);
     }
 
     @Override
@@ -35,19 +37,37 @@ public class HoloTextButton extends AbstractHoloComponent<IButton> implements IB
 
     @Override
     public IButton color(int color) {
-        this.color = color;
+        this.color = () -> color;
         return this;
     }
 
     @Override
     public IButton hoverColor(int hoverColor) {
-        this.hoverColor = hoverColor;
+        this.hoverColor = () -> hoverColor;
         return this;
     }
 
     @Override
     public IButton borderColor(int borderColor) {
-        this.borderColor = borderColor;
+        this.borderColor = () -> borderColor;
+        return this;
+    }
+
+    @Override
+    public IButton color(IColor color) {
+        this.color = color;
+        return this;
+    }
+
+    @Override
+    public IButton hoverColor(IColor color) {
+        this.hoverColor = color;
+        return this;
+    }
+
+    @Override
+    public IButton borderColor(IColor color) {
+        this.borderColor = color;
         return this;
     }
 
@@ -67,13 +87,14 @@ public class HoloTextButton extends AbstractHoloComponent<IButton> implements IB
     public void render(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         int color;
         if (isInside(cursorX, cursorY)) {
-            color = this.hoverColor;
+            color = this.hoverColor.getColor();
         } else {
-            color = this.color;
+            color = this.color.getColor();
         }
         RenderHelper.disableStandardItemLighting();
-        if (borderColor != -1) {
-            HoloGuiRenderTools.renderBorder(x, y, w, h, borderColor & 255, (borderColor >> 8) & 255, (borderColor >> 16) & 255, (borderColor >> 24) & 255);
+        int bc = borderColor.getColor();
+        if (bc != -1) {
+            HoloGuiRenderTools.renderBorder(x, y, w, h, bc & 255, (bc >> 8) & 255, (bc >> 16) & 255, (bc >> 24) & 255);
         }
         HoloGuiRenderTools.renderText(x, y, text, color, 1.0f);
     }

@@ -1,9 +1,7 @@
 package mcjty.hologui.gui.components;
 
-import mcjty.hologui.api.IGuiComponent;
-import mcjty.hologui.api.IHoloGuiEntity;
-import mcjty.hologui.api.IImage;
-import mcjty.hologui.api.IStackEvent;
+import mcjty.hologui.api.*;
+import mcjty.hologui.gui.ColorFromStyle;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
 import net.minecraft.client.renderer.GlStateManager;
@@ -89,7 +87,11 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
 
     @Override
     public void render(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY) {
-        HoloGuiRenderTools.renderBorder(x, y, w, h, 128, 200, 255, 255);
+        IColor color = new ColorFromStyle(StyledColor.BORDER);
+        int bc = color.getColor();
+        if (bc != -1) {
+            HoloGuiRenderTools.renderBorder(x, y, w, h, bc & 255, (bc >> 8) & 255, (bc >> 16) & 255, (bc >> 24) & 255);
+        }
         double yy = y;
         double xx = x;
 

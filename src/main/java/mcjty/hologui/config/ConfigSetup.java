@@ -11,6 +11,7 @@ public class ConfigSetup {
     public static final String CATEGORY_GUI = "gui";
 
     public static ConfigSpec.ConfigValue<GuiStyle> GUI_STYLE;
+    public static ConfigSpec.ConfigValue<GuiTextStyle> GUI_TEXT_STYLE;
 
     static final ConfigSpec.Builder CLIENT_BUILDER = new ConfigSpec.Builder();
 
@@ -20,6 +21,9 @@ public class ConfigSetup {
         GUI_STYLE = CLIENT_BUILDER
                 .comment("The gui style")
                 .defineEnum("guiStyle", GuiStyle.TRANSP_BLUE_WHITE_SHARP, GuiStyle.values());
+        GUI_TEXT_STYLE = CLIENT_BUILDER
+                .comment("The gui text style")
+                .defineEnum("guiTextStyle", GuiTextStyle.DEFAULT, GuiTextStyle.values());
 
         CLIENT_BUILDER.pop();
     }

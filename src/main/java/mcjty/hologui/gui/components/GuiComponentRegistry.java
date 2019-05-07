@@ -1,10 +1,9 @@
 package mcjty.hologui.gui.components;
 
 import mcjty.hologui.HoloGui;
-import mcjty.hologui.api.IGuiComponentRegistry;
-import mcjty.hologui.api.IImage;
-import mcjty.hologui.api.Icons;
+import mcjty.hologui.api.*;
 import mcjty.hologui.api.components.*;
+import mcjty.hologui.gui.ColorFromStyle;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiComponentRegistry implements IGuiComponentRegistry {
@@ -170,5 +169,15 @@ public class GuiComponentRegistry implements IGuiComponentRegistry {
                 return 0;
             }
         };
+    }
+
+    @Override
+    public IColor color(int color) {
+        return () -> color;
+    }
+
+    @Override
+    public IColor color(StyledColor color) {
+        return new ColorFromStyle(color);
     }
 }

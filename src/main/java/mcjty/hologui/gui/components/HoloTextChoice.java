@@ -1,8 +1,11 @@
 package mcjty.hologui.gui.components;
 
+import mcjty.hologui.api.IColor;
 import mcjty.hologui.api.IEvent;
 import mcjty.hologui.api.IHoloGuiEntity;
+import mcjty.hologui.api.StyledColor;
 import mcjty.hologui.api.components.ITextChoice;
+import mcjty.hologui.gui.ColorFromStyle;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
 import net.minecraft.client.renderer.RenderHelper;
@@ -17,9 +20,9 @@ import java.util.function.Function;
 public class HoloTextChoice extends AbstractHoloComponent<ITextChoice> implements ITextChoice {
 
     private List<String> texts = new ArrayList<>();
-    private int color;
-    private int hoverColor;
-    private int borderColor;
+    private IColor color;
+    private IColor hoverColor;
+    private IColor borderColor;
     private float scale = 1.0f;
 
     private Function<EntityPlayer, Integer> currentValue;
@@ -27,9 +30,9 @@ public class HoloTextChoice extends AbstractHoloComponent<ITextChoice> implement
 
     HoloTextChoice(double x, double y, double w, double h) {
         super(x, y, w, h);
-        this.color = 0x888888;
-        this.hoverColor = 0xffffff;
-        this.borderColor = 0xff7fc9ff;
+        this.color = new ColorFromStyle(StyledColor.BUTTON);
+        this.hoverColor = new ColorFromStyle(StyledColor.BUTTON_HOVER);
+        this.borderColor = new ColorFromStyle(StyledColor.BUTTON_BORDER);
     }
 
     @Override
@@ -40,18 +43,36 @@ public class HoloTextChoice extends AbstractHoloComponent<ITextChoice> implement
 
     @Override
     public ITextChoice color(int color) {
-        this.color = color;
+        this.color = () -> color;
         return this;
     }
 
     @Override
     public ITextChoice hoverColor(int color) {
-        this.hoverColor = color;
+        this.hoverColor = () -> color;
         return this;
     }
 
     @Override
     public ITextChoice borderColor(int color) {
+        this.borderColor = () -> color;
+        return this;
+    }
+
+    @Override
+    public ITextChoice color(IColor color) {
+        this.color = color;
+        return this;
+    }
+
+    @Override
+    public ITextChoice hoverColor(IColor color) {
+        this.hoverColor = color;
+        return this;
+    }
+
+    @Override
+    public ITextChoice borderColor(IColor color) {
         this.borderColor = color;
         return this;
     }
@@ -85,12 +106,13 @@ public class HoloTextChoice extends AbstractHoloComponent<ITextChoice> implement
         RenderHelper.disableStandardItemLighting();
         int color;
         if (isInside(cursorX, cursorY)) {
-            color = this.hoverColor;
+            color = this.hoverColor.getColor();
         } else {
-            color = this.color;
+            color = this.color.getColor();
         }
-        if (borderColor != -1) {
-            HoloGuiRenderTools.renderBorder(x, y, w, h, borderColor & 255, (borderColor >> 8) & 255, (borderColor >> 16) & 255, (borderColor >> 24) & 255);
+        int bc = borderColor.getColor();
+        if (bc != -1) {
+            HoloGuiRenderTools.renderBorder(x, y, w, h, bc & 255, (bc >> 8) & 255, (bc >> 16) & 255, (bc >> 24) & 255);
         }
         HoloGuiRenderTools.renderText(x, y, i, color, scale);
     }
