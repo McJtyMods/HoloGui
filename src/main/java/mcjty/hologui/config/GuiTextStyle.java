@@ -103,9 +103,9 @@ public enum GuiTextStyle {
         public static final int WHITE_WARNING = 0xffdd9900;
         public static final int WARNING_LABEL = 0xffdddddd;
         public static final int WARNING_INFO = 0xfffffffe;        // Not ffffffff because that's -1
-        public static final int DEFAULT_BUTTON = 0xff888888;
-        public static final int BLACK_BUTTON = 0xff888888;
-        public static final int WHITE_BUTTON = 0xff888888;
+        public static final int DEFAULT_BUTTON = 0xff88ffff;
+        public static final int BLACK_BUTTON = 0xff88ffff;
+        public static final int WHITE_BUTTON = 0xff88ffff;
         public static final int DEFAULT_BUTTON_HOVER = 0xfffffffe;
         public static final int BLACK_BUTTON_HOVER = 0xfffffffe;
         public static final int WHITE_BUTTON_HOVER = 0xfffffffe;        // Not ffffffff because that's -1

@@ -26,7 +26,7 @@ public class ConfigurationGui {
 
     private static ITextChoice createStyleChoices(IGuiComponentRegistry registry) {
         ITextChoice styleChoices = registry
-                .textChoice(0, 1, 4, 1)
+                .textChoice(0, 1, 8, 1)
                 .getter(plr -> {
                     GuiStyle guiStyle = ConfigSetup.GUI_STYLE.get();
                     return guiStyle.ordinal()-1;
@@ -50,7 +50,7 @@ public class ConfigurationGui {
 
     private static ITextChoice createTextStyleChoices(IGuiComponentRegistry registry) {
         ITextChoice styleChoices = registry
-                .textChoice(0, 2, 4, 1)
+                .textChoice(0, 2, 8, 1)
                 .getter(plr -> {
                     GuiTextStyle guiStyle = ConfigSetup.GUI_TEXT_STYLE.get();
                     return guiStyle.ordinal();
