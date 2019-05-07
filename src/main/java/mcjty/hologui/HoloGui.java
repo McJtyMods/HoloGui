@@ -2,6 +2,7 @@ package mcjty.hologui;
 
 
 import mcjty.hologui.api.IHoloGuiHandler;
+import mcjty.hologui.commands.CommandHoloCfg;
 import mcjty.hologui.gui.HoloGuiHandler;
 import mcjty.hologui.setup.ModSetup;
 import mcjty.lib.base.ModBase;
@@ -9,10 +10,7 @@ import mcjty.lib.proxy.IProxy;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLInterModComms;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.*;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -58,6 +56,12 @@ public class HoloGui implements ModBase {
         setup.postInit(e);
         proxy.postInit(e);
     }
+
+    @Mod.EventHandler
+    public void serverLoad(FMLServerStartingEvent event) {
+        event.registerServerCommand(new CommandHoloCfg());
+    }
+
 
     @Override
     public String getModId() {

@@ -14,6 +14,7 @@ public interface ITextChoice extends IGuiComponent<ITextChoice> {
     ITextChoice getter(Function<EntityPlayer, Integer> getter);
 
     ITextChoice hitEvent(IEvent event);
+    ITextChoice hitEventClient(IEvent event);
 
     @Deprecated
     ITextChoice color(int color);

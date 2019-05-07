@@ -1,7 +1,9 @@
 package mcjty.hologui.setup;
 
 import mcjty.hologui.ForgeEventHandlers;
+import mcjty.hologui.HoloGui;
 import mcjty.hologui.ModEntities;
+import mcjty.hologui.commands.ConfigurationGui;
 import mcjty.hologui.config.ConfigSetup;
 import mcjty.lib.compat.MainCompatHandler;
 import mcjty.lib.setup.DefaultModSetup;
@@ -23,6 +25,8 @@ public class ModSetup extends DefaultModSetup {
         //        HoloMessages.registerNetworkMessages("hologui");
 
         ModEntities.init();
+
+        HoloGui.guiHandler.getGuiRegistry().registerGui(ConfigurationGui.GUI_CONFIGURATION, ConfigurationGui::create);
     }
 
     @Override

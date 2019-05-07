@@ -43,6 +43,20 @@ public class ConfigSetup {
         }
     }
 
+    public static void setGuiStyle(GuiStyle style) {
+        GUI_STYLE.set(style);
+        Configuration cfg = mainConfig;
+        cfg.get(CATEGORY_GUI, "guiStyle", GuiStyle.TRANSP_BLUE_WHITE_SHARP.name()).set(style.name());
+        cfg.save();
+    }
+
+    public static void setGuiTextStyle(GuiTextStyle style) {
+        GUI_TEXT_STYLE.set(style);
+        Configuration cfg = mainConfig;
+        cfg.get(CATEGORY_GUI, "guiTextStyle", GuiTextStyle.DEFAULT.name()).set(style.name());
+        cfg.save();
+    }
+
     public static void init(Configuration cfg) {
         CLIENT_CONFIG = CLIENT_BUILDER.build(cfg);
     }

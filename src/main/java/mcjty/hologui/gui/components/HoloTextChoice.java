@@ -27,6 +27,7 @@ public class HoloTextChoice extends AbstractHoloComponent<ITextChoice> implement
 
     private Function<EntityPlayer, Integer> currentValue;
     private IEvent hitEvent;
+    private IEvent hitEventClient;
 
     HoloTextChoice(double x, double y, double w, double h) {
         super(x, y, w, h);
@@ -97,6 +98,12 @@ public class HoloTextChoice extends AbstractHoloComponent<ITextChoice> implement
     }
 
     @Override
+    public ITextChoice hitEventClient(IEvent event) {
+        this.hitEventClient = event;
+        return null;
+    }
+
+    @Override
     public void render(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         Integer value = currentValue.apply(player);
         if (value < 0 || value >= texts.size()) {
@@ -128,6 +135,9 @@ public class HoloTextChoice extends AbstractHoloComponent<ITextChoice> implement
     public void hitClient(EntityPlayer player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         Entity ent = entity.getEntity();
         player.world.playSound(ent.posX, ent.posY, ent.posZ, HoloGuiSounds.guiclick, SoundCategory.PLAYERS, 1.0f, 1.0f, true);
+        if (hitEventClient != null) {
+            hitEventClient.hit(this, player, entity, cursorX, cursorY);
+        }
     }
 
 }
