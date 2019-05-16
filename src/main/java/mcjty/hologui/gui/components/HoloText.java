@@ -2,7 +2,9 @@ package mcjty.hologui.gui.components;
 
 import mcjty.hologui.api.IColor;
 import mcjty.hologui.api.IHoloGuiEntity;
+import mcjty.hologui.api.StyledColor;
 import mcjty.hologui.api.components.IText;
+import mcjty.hologui.gui.ColorFromStyle;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,12 +13,13 @@ import java.util.function.Supplier;
 
 public class HoloText extends AbstractHoloComponent<IText> implements IText {
 
-    private Supplier<String> text;
+    private Supplier<String> text = () -> "";
     private IColor color;
     private float scale = 1.0f;
 
     HoloText(double x, double y, double w, double h) {
         super(x, y, w, h);
+        this.color = new ColorFromStyle(StyledColor.LABEL);
     }
 
     @Override
