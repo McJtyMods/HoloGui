@@ -1,3 +1,6 @@
+Upcoming:
+- Fix some issues with text component crashing in some situations
+
 0.0.8-beta:
 - New guiTextStyle config option to control how text looks
 - Support for 'styled colors' in component so that the colors can be configured
