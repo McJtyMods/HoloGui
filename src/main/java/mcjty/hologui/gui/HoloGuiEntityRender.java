@@ -75,12 +75,12 @@ public class HoloGuiEntityRender extends Render<HoloGuiEntity> {
 
         if (style <= 8) {
             GlStateManager.enableBlend();
+            GlStateManager.color(1.0f, 1.0f, 1.0f, 0.8f);
         } else {
             GlStateManager.disableBlend();
+            GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
             style -= 8;
         }
-
-        GlStateManager.color(1.0f, 1.0f, 1.0f, 0.8f);
 
         Minecraft mc = Minecraft.getMinecraft();
 
