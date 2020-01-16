@@ -1,20 +1,28 @@
 package mcjty.hologui;
 
 import mcjty.hologui.gui.HoloGuiEntity;
-import mcjty.hologui.gui.HoloGuiEntityRender;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.EntityType;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class ModEntities {
 
-    public static void init() {
-        int id = 1;
-        // @todo 1.14
-//        EntityRegistry.registerModEntity(new ResourceLocation(HoloGui.MODID, "hologui_hologui"), HoloGuiEntity.class,
-//                "hologui_hologui", id++, HoloGui.instance, 64, 1, false);
+    public static final DeferredRegister<EntityType<?>> ENTITIES = new DeferredRegister<>(ForgeRegistries.ENTITIES, HoloGui.MODID);
+
+    public static void register() {
+        ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
-    public static void initModels() {
-        RenderingRegistry.registerEntityRenderingHandler(HoloGuiEntity.class, new HoloGuiEntityRender.Factory());
+
+    public static final RegistryObject<EntityType<HoloGuiEntity>> HOLOGUI_ENTITY_TYPE = ENTITIES.register("hologui", ModEntities::createHoloGuiType);
+
+    private static EntityType<HoloGuiEntity> createHoloGuiType() {
+        return EntityType.Builder.create(HoloGuiEntity::new, EntityClassification.MISC)
+                .size(1, 1)
+                .setShouldReceiveVelocityUpdates(false)
+                .build("hologui");
     }
 }

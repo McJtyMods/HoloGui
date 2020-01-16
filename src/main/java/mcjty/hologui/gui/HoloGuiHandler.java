@@ -1,6 +1,7 @@
 package mcjty.hologui.gui;
 
 import mcjty.hologui.HoloGui;
+import mcjty.hologui.ModEntities;
 import mcjty.hologui.api.*;
 import mcjty.hologui.gui.components.GuiComponentRegistry;
 import net.minecraft.entity.Entity;
@@ -106,7 +107,7 @@ public class HoloGuiHandler implements IHoloGuiHandler {
     }
 
     private static HoloGuiEntity createHoloGui(World world, PlayerEntity player, String tag, double distance) {
-        HoloGuiEntity entity = new HoloGuiEntity(world);
+        HoloGuiEntity entity = new HoloGuiEntity(ModEntities.HOLOGUI_ENTITY_TYPE.get(), world);
         entity.setTag(tag);
         double x = player.posX;
         double y = player.posY+player.getEyeHeight() - .5;
@@ -124,7 +125,7 @@ public class HoloGuiHandler implements IHoloGuiHandler {
 
     private static HoloGuiEntity createHoloGuiRelative(World world, Entity parent, Vec3d offset, String tag) {
 //        HoloGuiEntity entity = new HoloGuiEntitySmall(world);
-        HoloGuiEntity entity = new HoloGuiEntity(world);
+        HoloGuiEntity entity = new HoloGuiEntity(ModEntities.HOLOGUI_ENTITY_TYPE.get(), world);
         entity.setTag(tag);
         double x = parent.posX + offset.x;
         double y = parent.posY + offset.y;

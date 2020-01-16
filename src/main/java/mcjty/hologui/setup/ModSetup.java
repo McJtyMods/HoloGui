@@ -19,8 +19,6 @@ public class ModSetup extends DefaultModSetup {
 
         //        HoloMessages.registerNetworkMessages("hologui");
 
-        ModEntities.init();
-
         HoloGui.guiHandler.getGuiRegistry().registerGui(ConfigurationGui.GUI_CONFIGURATION, ConfigurationGui::create);
     }
 

@@ -7,6 +7,7 @@ import mcjty.hologui.api.IGuiTile;
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.lib.McJtyLib;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
@@ -49,8 +50,8 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     public int tooltipTimeout = 10;
     public IGuiComponent<?> tooltipComponent = null;
 
-    public HoloGuiEntity(World worldIn) {
-        super(null, worldIn);   // @todo 1.14 TODODODODODODODOD
+    public HoloGuiEntity(EntityType<? extends HoloGuiEntity> type, World worldIn) {
+        super(type, worldIn);
         maxTimeout = 20 * 4;
         timeout = maxTimeout;
         ticks = 5;

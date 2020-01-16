@@ -3,10 +3,12 @@ package mcjty.hologui;
 
 import mcjty.hologui.api.IHoloGuiHandler;
 import mcjty.hologui.gui.HoloGuiHandler;
+import mcjty.hologui.setup.ClientRegistration;
 import mcjty.hologui.setup.ModSetup;
 import mcjty.lib.base.ModBase;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -26,9 +28,10 @@ public class HoloGui implements ModBase {
 //        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_CONFIG);
 //        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.COMMON_CONFIG);
 
-//        VariousSetup.register();
+        ModEntities.register();
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLCommonSetupEvent event) -> setup.init(event));
+        FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLClientSetupEvent event) -> ClientRegistration.init());
 
 //        Config.loadConfig(Config.CLIENT_CONFIG, FMLPaths.CONFIGDIR.get().resolve("xnet-client.toml"));
 //        Config.loadConfig(Config.COMMON_CONFIG, FMLPaths.CONFIGDIR.get().resolve("xnet-common.toml"));
