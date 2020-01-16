@@ -3,7 +3,7 @@ package mcjty.hologui.gui.components;
 import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.components.IPanel;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,7 +25,7 @@ public class HoloPanel extends AbstractHoloComponent<IPanel> implements IPanel {
     }
 
     @Override
-    public void render(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void render(PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         for (IGuiComponent<?> child : children) {
             child.render(player, holo, cursorX, cursorY);
         }
@@ -53,7 +53,7 @@ public class HoloPanel extends AbstractHoloComponent<IPanel> implements IPanel {
     }
 
     @Override
-    public void hit(EntityPlayer player, IHoloGuiEntity entity, double cursorX, double cursorY) {
+    public void hit(PlayerEntity player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         for (IGuiComponent<?> child : children) {
             if (child.isInside(cursorX, cursorY)) {
                 child.hit(player, entity, cursorX, cursorY);
@@ -62,7 +62,7 @@ public class HoloPanel extends AbstractHoloComponent<IPanel> implements IPanel {
     }
 
     @Override
-    public void hitClient(EntityPlayer player, IHoloGuiEntity entity, double cursorX, double cursorY) {
+    public void hitClient(PlayerEntity player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         for (IGuiComponent<?> child : children) {
             if (child.isInside(cursorX, cursorY)) {
                 child.hitClient(player, entity, cursorX, cursorY);

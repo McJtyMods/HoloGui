@@ -1,11 +1,11 @@
 package mcjty.hologui.gui.components;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.components.IStackIcon;
 import mcjty.hologui.gui.HoloGuiRenderTools;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -48,19 +48,19 @@ public class HoloStackIcon extends AbstractHoloComponent<IStackIcon> implements 
     }
 
     @Override
-    public void render(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void render(PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         HoloGuiRenderTools.renderItem(x, y, stackSupplier.get(), null, false, scale);
         RenderHelper.enableStandardItemLighting();
     }
 
     @Override
-    public void renderTooltip(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void renderTooltip(PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         GlStateManager.pushMatrix();
-        GlStateManager.scale(0.01, 0.01, 0.01);
-        GlStateManager.rotate(180, 0, 1, 0);
-        GlStateManager.rotate(180, 0, 0, 1);
-        GlStateManager.translate(0, 0, -10);
-        GlStateManager.scale(0.4, 0.4, 0.0);
+        GlStateManager.scaled(0.01, 0.01, 0.01);
+        GlStateManager.rotatef(180, 0, 1, 0);
+        GlStateManager.rotatef(180, 0, 0, 1);
+        GlStateManager.translatef(0, 0, -10);
+        GlStateManager.scaled(0.4, 0.4, 0.0);
         HoloGuiRenderTools.renderToolTip(stackSupplier.get(), (int) (x * 30 - 120), (int) (y * 30 - 120), tooltipHandler);
         RenderHelper.enableStandardItemLighting();
         GlStateManager.popMatrix();

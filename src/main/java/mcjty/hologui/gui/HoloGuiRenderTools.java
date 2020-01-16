@@ -1,17 +1,21 @@
 package mcjty.hologui.gui;
 
+import com.mojang.blaze3d.platform.GLX;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.sun.prism.TextureMap;
 import mcjty.lib.client.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import org.lwjgl.opengl.GL11;
@@ -19,34 +23,35 @@ import org.lwjgl.opengl.GL11;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 public class HoloGuiRenderTools {
 
     public static void renderText(double x, double y, String text, int color, float scale) {
         GlStateManager.pushMatrix();
-        GlStateManager.scale(0.01*scale, 0.01*scale, 0.01);
-        GlStateManager.rotate(180, 0, 1, 0);
-        GlStateManager.rotate(180, 0, 0, 1);
-        Minecraft.getMinecraft().fontRenderer.drawString(text, (int) (x * 10 / scale - 40 / scale), (int) (y * 10 / scale - 40 / scale), color);
+        GlStateManager.scaled(0.01*scale, 0.01*scale, 0.01);
+        GlStateManager.rotatef(180, 0, 1, 0);
+        GlStateManager.rotatef(180, 0, 0, 1);
+        Minecraft.getInstance().fontRenderer.drawString(text, (int) (x * 10 / scale - 40 / scale), (int) (y * 10 / scale - 40 / scale), color);
         GlStateManager.popMatrix();
     }
 
     public static void renderTextShadow(double x, double y, String text, int color, float scale) {
         GlStateManager.pushMatrix();
-        GlStateManager.scale(0.01*scale, 0.01*scale, 0.01);
-        GlStateManager.rotate(180, 0, 1, 0);
-        GlStateManager.rotate(180, 0, 0, 1);
-        Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(text, (int) (x * 10 - 40), (int) (y * 10 - 40), color);
+        GlStateManager.scaled(0.01*scale, 0.01*scale, 0.01);
+        GlStateManager.rotatef(180, 0, 1, 0);
+        GlStateManager.rotatef(180, 0, 0, 1);
+        Minecraft.getInstance().fontRenderer.drawStringWithShadow(text, (int) (x * 10 - 40), (int) (y * 10 - 40), color);
         GlStateManager.popMatrix();
     }
 
     public static void renderImage(double x, double y, int u, int v, int w, int h, int txtw, int txth, ResourceLocation image) {
         GlStateManager.pushMatrix();
-        GlStateManager.scale(0.01, 0.01, 0.01);
-        GlStateManager.rotate(180, 0, 1, 0);
-        GlStateManager.rotate(180, 0, 0, 1);
-        GlStateManager.scale(1, 1, 0.01);
-        Minecraft.getMinecraft().getTextureManager().bindTexture(image);
+        GlStateManager.scaled(0.01, 0.01, 0.01);
+        GlStateManager.rotatef(180, 0, 1, 0);
+        GlStateManager.rotatef(180, 0, 0, 1);
+        GlStateManager.scaled(1, 1, 0.01);
+        Minecraft.getInstance().getTextureManager().bindTexture(image);
         RenderHelper.drawTexturedModalRect((int) (x * 10 - 46), (int) (y * 10 - 44), u, v, w, h, txtw, txth);
         GlStateManager.popMatrix();
     }
@@ -54,8 +59,8 @@ public class HoloGuiRenderTools {
     public static void renderBox(double x, double y, double w, double h, int color) {
         GlStateManager.pushMatrix();
 
-        GlStateManager.scale(0.10, 0.10, 0.10);
-        GlStateManager.rotate(180, 0, 1, 0);
+        GlStateManager.scaled(0.10, 0.10, 0.10);
+        GlStateManager.rotatef(180, 0, 1, 0);
 
         RenderHelper.drawFlatBox(3 - (int) x, 3 - (int) y, (int) (3 - x + w), (int) (3 - y + h), color, color);
 //        RenderHelper.drawHorizontalLine((int) x, (int) y, (int) (x + w), color);
@@ -75,9 +80,9 @@ public class HoloGuiRenderTools {
         y += .45;
 
         GlStateManager.pushMatrix();
-        GlStateManager.scale(0.1, 0.1, 0.1);
-        GlStateManager.translate(x * 0.95 - 3.7, 4.2 - y * 1.2, 0);
-        GlStateManager.scale(1, 1, 0.1);
+        GlStateManager.scaled(0.1, 0.1, 0.1);
+        GlStateManager.translated(x * 0.95 - 3.7, 4.2 - y * 1.2, 0);
+        GlStateManager.scaled(1, 1, 0.1);
 
         GlStateManager.disableLighting();
         net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
@@ -90,9 +95,9 @@ public class HoloGuiRenderTools {
         y -= 0.5;
 
         GlStateManager.enableBlend();
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        GlStateManager.glLineWidth(2.0F);
-        GlStateManager.disableTexture2D();
+        GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        GlStateManager.lineWidth(2.0F);
+        GlStateManager.disableTexture();
 
         double z = 0.3;
         builder.pos(x, y, z).color(r, g, b, a).endVertex();
@@ -103,7 +108,7 @@ public class HoloGuiRenderTools {
         tessellator.draw();
 
         GlStateManager.disableBlend();
-        GlStateManager.enableTexture2D();
+        GlStateManager.enableTexture();
         GlStateManager.popMatrix();
     }
 
@@ -114,12 +119,12 @@ public class HoloGuiRenderTools {
         y += .45;
 
         GlStateManager.pushMatrix();
-        GlStateManager.scale(0.1 * scale, 0.1 * scale, 0.1 * scale);
-        GlStateManager.translate((x * 0.95 - 3.7) / scale, (4.2 - y * 1.2) / scale, 0);
-        GlStateManager.scale(1, 1, 0.1);
+        GlStateManager.scaled(0.1 * scale, 0.1 * scale, 0.1 * scale);
+        GlStateManager.translated((x * 0.95 - 3.7) / scale, (4.2 - y * 1.2) / scale, 0);
+        GlStateManager.scaled(1, 1, 0.1);
         if (!stack.isEmpty()) {
             GlStateManager.disableLighting();
-            RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
+            ItemRenderer renderItem = Minecraft.getInstance().getItemRenderer();
             IBakedModel ibakedmodel = renderItem.getItemModelWithOverrides(stack, null, null);
             renderItemModel(stack, ibakedmodel, ItemCameraTransforms.TransformType.GUI, lightmap);
             if (border) {
@@ -133,9 +138,9 @@ public class HoloGuiRenderTools {
                 y -= 0.5;
 
                 GlStateManager.enableBlend();
-                GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-                GlStateManager.glLineWidth(2.0F);
-                GlStateManager.disableTexture2D();
+                GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+                GlStateManager.lineWidth(2.0F);
+                GlStateManager.disableTexture();
 
                 double z = 0.3;
                 double w = 0.9;
@@ -147,7 +152,7 @@ public class HoloGuiRenderTools {
                 tessellator.draw();
 
                 GlStateManager.disableBlend();
-                GlStateManager.enableTexture2D();
+                GlStateManager.enableTexture();
             }
         }
         GlStateManager.popMatrix();
@@ -156,22 +161,22 @@ public class HoloGuiRenderTools {
     }
 
     private static void renderItemModel(ItemStack stack, IBakedModel bakedmodel, ItemCameraTransforms.TransformType transform, @Nullable ResourceLocation lightmap) {
-        RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
-        TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
-        textureManager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-        textureManager.getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        ItemRenderer renderItem = Minecraft.getInstance().getItemRenderer();
+        TextureManager textureManager = Minecraft.getInstance().getTextureManager();
+        textureManager.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+        textureManager.getTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.enableRescaleNormal();
         GlStateManager.alphaFunc(516, 0.1F);
         GlStateManager.enableBlend();
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 
         if (lightmap != null) {
-            Minecraft.getMinecraft().entityRenderer.enableLightmap();
-            GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-//            Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation(Ariente.MODID, "textures/gui/darken.png"));
-            Minecraft.getMinecraft().getTextureManager().bindTexture(lightmap);
-            GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+            Minecraft.getInstance().gameRenderer.enableLightmap();
+            GlStateManager.activeTexture(GLX.GL_TEXTURE1);
+//            Minecraft.getInstance()().getTextureManager().bindTexture(new ResourceLocation(Ariente.MODID, "textures/gui/darken.png"));
+            Minecraft.getInstance().getTextureManager().bindTexture(lightmap);
+            GlStateManager.activeTexture(GLX.GL_TEXTURE0);
         }
 
         GlStateManager.pushMatrix();
@@ -184,11 +189,11 @@ public class HoloGuiRenderTools {
         GlStateManager.disableRescaleNormal();
         GlStateManager.disableBlend();
         GlStateManager.depthMask(false);
-        Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-        Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
+        Minecraft.getInstance().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+        Minecraft.getInstance().getTextureManager().getTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
 
         if (lightmap != null) {
-            Minecraft.getMinecraft().entityRenderer.disableLightmap();
+            Minecraft.getInstance().gameRenderer.disableLightmap();
         }
     }
 
@@ -198,13 +203,16 @@ public class HoloGuiRenderTools {
 
         net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
 
-        Minecraft mc = Minecraft.getMinecraft();
+        Minecraft mc = Minecraft.getInstance();
         ITooltipFlag flag = mc.gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL;
-        List<String> list = stack.getTooltip(mc.player, flag);
+        // @todo 1.14 check?
+        List<String> list = stack.getTooltip(mc.player, flag).stream().map(ITextComponent::getFormattedText).collect(Collectors.toList());
 
         for (int i = 0; i < list.size(); ++i) {
             if (i == 0) {
-                list.set(i, stack.getRarity().rarityColor + list.get(i));
+//                list.set(i, stack.getRarity().rarityColor + list.get(i));
+                // @todo 1.14
+                list.set(i, list.get(i));
             } else {
                 list.set(i, TextFormatting.GRAY + list.get(i));
             }

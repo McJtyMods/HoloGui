@@ -10,7 +10,7 @@ import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.SoundCategory;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class HoloTextChoice extends AbstractHoloComponent<ITextChoice> implement
     private IColor borderColor;
     private float scale = 1.0f;
 
-    private Function<EntityPlayer, Integer> currentValue;
+    private Function<PlayerEntity, Integer> currentValue;
     private IEvent hitEvent;
     private IEvent hitEventClient;
 
@@ -86,7 +86,7 @@ public class HoloTextChoice extends AbstractHoloComponent<ITextChoice> implement
 
 
     @Override
-    public ITextChoice getter(Function<EntityPlayer, Integer> getter) {
+    public ITextChoice getter(Function<PlayerEntity, Integer> getter) {
         this.currentValue = getter;
         return this;
     }
@@ -104,7 +104,7 @@ public class HoloTextChoice extends AbstractHoloComponent<ITextChoice> implement
     }
 
     @Override
-    public void render(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void render(PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         Integer value = currentValue.apply(player);
         if (value < 0 || value >= texts.size()) {
             return;
@@ -125,14 +125,14 @@ public class HoloTextChoice extends AbstractHoloComponent<ITextChoice> implement
     }
 
     @Override
-    public void hit(EntityPlayer player, IHoloGuiEntity entity, double cursorX, double cursorY) {
+    public void hit(PlayerEntity player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         if (hitEvent != null) {
             hitEvent.hit(this, player, entity, cursorX, cursorY);
         }
     }
 
     @Override
-    public void hitClient(EntityPlayer player, IHoloGuiEntity entity, double cursorX, double cursorY) {
+    public void hitClient(PlayerEntity player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         Entity ent = entity.getEntity();
         player.world.playSound(ent.posX, ent.posY, ent.posZ, HoloGuiSounds.guiclick, SoundCategory.PLAYERS, 1.0f, 1.0f, true);
         if (hitEventClient != null) {

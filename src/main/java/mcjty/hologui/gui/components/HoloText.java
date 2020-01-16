@@ -7,7 +7,7 @@ import mcjty.hologui.api.components.IText;
 import mcjty.hologui.gui.ColorFromStyle;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 import java.util.function.Supplier;
 
@@ -53,7 +53,7 @@ public class HoloText extends AbstractHoloComponent<IText> implements IText {
     }
 
     @Override
-    public void render(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void render(PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         RenderHelper.disableStandardItemLighting();
         // @todo fix!
         HoloGuiRenderTools.renderText(x, y, text.get(), color.getColor(), scale);

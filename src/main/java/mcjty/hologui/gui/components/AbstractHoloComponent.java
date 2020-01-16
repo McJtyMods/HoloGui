@@ -2,7 +2,7 @@ package mcjty.hologui.gui.components;
 
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.IGuiComponent;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 import java.util.Optional;
 
@@ -28,7 +28,7 @@ public abstract class AbstractHoloComponent<P extends IGuiComponent<P>> implemen
     }
 
     @Override
-    public void renderTooltip(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void renderTooltip(PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
 
     }
 
@@ -67,12 +67,12 @@ public abstract class AbstractHoloComponent<P extends IGuiComponent<P>> implemen
     }
 
     @Override
-    public void hit(EntityPlayer player, IHoloGuiEntity entity, double cursorX, double cursorY) {
+    public void hit(PlayerEntity player, IHoloGuiEntity entity, double cursorX, double cursorY) {
 
     }
 
     @Override
-    public void hitClient(EntityPlayer player, IHoloGuiEntity entity, double cursorX, double cursorY) {
+    public void hitClient(PlayerEntity player, IHoloGuiEntity entity, double cursorX, double cursorY) {
 
     }
 

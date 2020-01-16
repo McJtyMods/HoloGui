@@ -1,7 +1,7 @@
 package mcjty.hologui.api;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -29,7 +29,7 @@ public interface IHoloGuiHandler {
      * On the server this returns false if no holo gui was found. On the
      * client this will always return true.
      */
-    boolean openHoloGui(World world, BlockPos pos, EntityPlayer player);
+    boolean openHoloGui(World world, BlockPos pos, PlayerEntity player);
 
     /**
      * Open a holo gui for a given block (using the IGuiTile gotten from
@@ -37,13 +37,13 @@ public interface IHoloGuiHandler {
      * this will always return null (and just play a sound)
      */
     @Nullable
-    IHoloGuiEntity openHoloGuiEntity(World world, BlockPos pos, EntityPlayer player, String tag, double distance);
+    IHoloGuiEntity openHoloGuiEntity(World world, BlockPos pos, PlayerEntity player, String tag, double distance);
 
     /**
      * Open a specific gui (registered with the IGuiRegistry). This is not tied
      * to a specific block in the world.
      */
-    IHoloGuiEntity openHoloGui(EntityPlayer player, String guiId, double distance);
+    IHoloGuiEntity openHoloGui(PlayerEntity player, String guiId, double distance);
 
     /**
      * Open a holo gui relative to another entity (the holo gui will be

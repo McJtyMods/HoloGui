@@ -1,12 +1,6 @@
 package mcjty.hologui.config;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraftforge.fml.client.IModGuiFactory;
-
-import java.util.Set;
-
-public class HoloGuiModGuiFactory implements IModGuiFactory {
+public class HoloGuiModGuiFactory {} /*implements IModGuiFactory {
 
     @Override
     public void initialize(Minecraft minecraftInstance) {
@@ -28,3 +22,4 @@ public class HoloGuiModGuiFactory implements IModGuiFactory {
         return null;
     }
 }
+*/

@@ -1,18 +1,20 @@
 package mcjty.hologui.gui;
 
-import com.google.common.base.Optional;
 import mcjty.hologui.HoloGui;
 import mcjty.hologui.api.CloseStrategy;
 import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.api.IGuiTile;
 import mcjty.hologui.api.IHoloGuiEntity;
+import mcjty.lib.McJtyLib;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.EnumHand;
+import net.minecraft.network.play.server.SSpawnObjectPacket;
+import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -21,6 +23,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.vecmath.Vector2d;
+import java.util.Optional;
 
 public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 
@@ -47,11 +50,18 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     public IGuiComponent<?> tooltipComponent = null;
 
     public HoloGuiEntity(World worldIn) {
-        super(worldIn);
+        super(null, worldIn);   // @todo 1.14 TODODODODODODODOD
         maxTimeout = 20 * 4;
         timeout = maxTimeout;
         ticks = 5;
-        setSize(1f, 1f);
+        // @todo 1.14
+        setScale(1);
+//        setSize(1f, 1f);
+    }
+
+    @Override
+    public IPacket<?> createSpawnPacket() {
+        return new SSpawnObjectPacket(this);
     }
 
     @Override
@@ -93,11 +103,11 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         this.dataManager.set(SCALE, scale);
     }
     public void setGuiTile(BlockPos guiTile) {
-        this.dataManager.set(GUITILE, Optional.fromNullable(guiTile));
+        this.dataManager.set(GUITILE, Optional.ofNullable(guiTile));
     }
 
     public BlockPos getGuiTile() {
-        return (BlockPos) ((Optional) this.dataManager.get(GUITILE)).orNull();
+        return (BlockPos) ((Optional) this.dataManager.get(GUITILE)).orElse(null);
     }
 
     @Override
@@ -128,9 +138,10 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     }
 
     @Override
-    public void onUpdate() {
-        super.onUpdate();
-        setSize(getScale(), getScale());
+    public void tick() {
+        super.tick();
+        // @todo 1.14?
+        setScale(getScale());
 
         if (world.isRemote) {
             String id = getGuiId();
@@ -179,10 +190,10 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
             timeout--;
             if (timeout <= 0) {
                 world.playSound(null, posX, posY, posZ, HoloGuiSounds.guiopen, SoundCategory.PLAYERS, 0.2f, 1.0f);
-                this.setDead();
+                this.remove();
             }
             if (hasCloseStrategy(CloseStrategy.TIMEOUT_RESET)) {
-                if (world.getEntitiesWithinAABB(EntityPlayer.class, playerDetectionBox)
+                if (world.getEntitiesWithinAABB(PlayerEntity.class, playerDetectionBox)
                         .stream()
                         .anyMatch(this::playerLooksAtMe)) {
                     timeout = maxTimeout;
@@ -192,7 +203,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     }
 
 
-    private boolean playerLooksAtMe(EntityPlayer player) {
+    private boolean playerLooksAtMe(PlayerEntity player) {
         Vec3d lookVec = getLookVec();
         Vec3d v = getIntersect3D(player, lookVec);
         Vector2d vec2d = get2DProjection(lookVec, v);
@@ -211,7 +222,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     }
 
     private void onUpdateClient() {
-        EntityPlayer player = HoloGui.proxy.getClientPlayer();
+        PlayerEntity player = McJtyLib.proxy.getClientPlayer();
         Vec3d lookVec = getLookVec();
         Vec3d v = getIntersect3D(player, lookVec);
         Vector2d vec2d = get2DProjection(lookVec, v);
@@ -243,7 +254,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         return panel.findChild(name);
     }
 
-    public IGuiComponent<?> getGui(EntityPlayer player) {
+    public IGuiComponent<?> getGui(PlayerEntity player) {
         if (panel == null) {
             String id = getGuiId();
             if (id != null && !id.isEmpty()) {
@@ -282,17 +293,17 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     }
 
     @Override
-    public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
+    public boolean processInitialInteract(PlayerEntity player, Hand hand) {
         // The small holo is used as a child on the flux levitator. It doesn't close like this
         if (hasCloseStrategy(CloseStrategy.RIGHTCLICK)) {
             world.playSound(posX, posY, posZ, HoloGuiSounds.guiopen, SoundCategory.PLAYERS, 0.2f, 1.0f, true);  // @todo config
-            setDead();
+            remove();
         }
         return false;
     }
 
 
-    private Vector2d intersect(EntityPlayer player) {
+    private Vector2d intersect(PlayerEntity player) {
         Vec3d lookVec = getLookVec();
         Vec3d v = getIntersect3D(player, lookVec);
         return get2DProjection(lookVec, v);
@@ -322,7 +333,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         return new Vector2d(x2d, y2d);
     }
 
-    private Vec3d getIntersect3D(EntityPlayer player, Vec3d lookVec) {
+    private Vec3d getIntersect3D(PlayerEntity player, Vec3d lookVec) {
         // Center point of plane: posX, posY, posZ
         // Perpendicular to the plane: getLookVec()
         double xn = lookVec.x;
@@ -337,7 +348,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 
         // Line (from player): (x = x1 + at, y = y1 + bt, z = z1 + ct)
         double x1 = player.posX;
-        double y1 = player.posY + player.eyeHeight;
+        double y1 = player.posY + player.getEyeHeight();
         double z1 = player.posZ;
         Vec3d playerLookVec = player.getLookVec();
         double a = playerLookVec.x;
@@ -354,8 +365,8 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 
     @Override
     public boolean hitByEntity(Entity entityIn) {
-        if (entityIn instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) entityIn;
+        if (entityIn instanceof PlayerEntity) {
+            PlayerEntity player = (PlayerEntity) entityIn;
             Vector2d vec2d = intersect(player);
             IGuiComponent gui = getGui(player);
             if (gui != null) {
@@ -379,14 +390,16 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         return true;
     }
 
-    @Override
-    public boolean shouldRenderInPass(int pass) {
-        return pass == 1;
-    }
+// @todo 1.14: check EntityRenderer.isMultipass
+//    @Override
+//    public boolean shouldRenderInPass(int pass) {
+//        return pass == 1;
+//    }
+
 
     @Override
-    protected void entityInit() {
-        this.dataManager.register(GUITILE, Optional.absent());
+    protected void registerData() {
+        this.dataManager.register(GUITILE, Optional.empty());
         this.dataManager.register(TAG, "");
         this.dataManager.register(GUIID, "");
         this.dataManager.register(SCALE, 1.0f);
@@ -394,44 +407,44 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     }
 
     @Override
-    protected void readEntityFromNBT(NBTTagCompound compound) {
-        this.timeout = compound.getInteger("timeout");
-        this.maxTimeout = compound.getInteger("maxTimeout");
-        if (compound.hasKey("guix")) {
-            int x = compound.getInteger("guix");
-            int y = compound.getInteger("guiy");
-            int z = compound.getInteger("guiz");
+    public void readAdditional(CompoundNBT compound) {
+        this.timeout = compound.getInt("timeout");
+        this.maxTimeout = compound.getInt("maxTimeout");
+        if (compound.contains("guix")) {
+            int x = compound.getInt("guix");
+            int y = compound.getInt("guiy");
+            int z = compound.getInt("guiz");
             setGuiTile(new BlockPos(x, y, z));
         }
         setTag(compound.getString("tag"));
         setGuiId(compound.getString("guiId"));
-        if (compound.hasKey("scale")) {
+        if (compound.contains("scale")) {
             setScale(compound.getFloat("scale"));
         }
-        if (compound.hasKey("closeStrategy")) {
-            setCloseStrategy(compound.getInteger("closeStrategy"));
+        if (compound.contains("closeStrategy")) {
+            setCloseStrategy(compound.getInt("closeStrategy"));
         }
     }
 
     @Override
-    protected void writeEntityToNBT(NBTTagCompound compound) {
-        compound.setInteger("timeout", timeout);
-        compound.setInteger("maxTimeout", maxTimeout);
+    protected void writeAdditional(CompoundNBT compound) {
+        compound.putInt("timeout", timeout);
+        compound.putInt("maxTimeout", maxTimeout);
         BlockPos tile = getGuiTile();
         if (tile != null) {
-            compound.setInteger("guix", tile.getX());
-            compound.setInteger("guiy", tile.getY());
-            compound.setInteger("guiz", tile.getZ());
+            compound.putInt("guix", tile.getX());
+            compound.putInt("guiy", tile.getY());
+            compound.putInt("guiz", tile.getZ());
         }
         String tag = getTag();
         if (tag != null) {
-            compound.setString("tag", tag);
+            compound.putString("tag", tag);
         }
         String guiid = getGuiId();
         if (guiid != null) {
-            compound.setString("guiId", guiid);
+            compound.putString("guiId", guiid);
         }
-        compound.setFloat("scale", getScale());
-        compound.setInteger("closeStrategy", getCloseStrategy());
+        compound.putFloat("scale", getScale());
+        compound.putInt("closeStrategy", getCloseStrategy());
     }
 }

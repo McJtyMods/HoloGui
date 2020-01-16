@@ -1,13 +1,13 @@
 package mcjty.hologui.gui.components;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import mcjty.hologui.api.*;
 import mcjty.hologui.gui.ColorFromStyle;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
@@ -39,7 +39,7 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
     }
 
     @Override
-    public void hit(EntityPlayer player, IHoloGuiEntity entity, double cursorX, double cursorY) {
+    public void hit(PlayerEntity player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         Pair<ItemStack, Integer> pair = getSelectedPair(player, cursorX, cursorY);
         if (hitEvent != null) {
             hitEvent.hit(this, player, entity, cursorX, cursorY, pair.getLeft(), pair.getRight());
@@ -58,7 +58,7 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
     }
 
     @Override
-    public void hitClient(EntityPlayer player, IHoloGuiEntity entity, double cursorX, double cursorY) {
+    public void hitClient(PlayerEntity player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         Entity ent = entity.getEntity();
         player.world.playSound(ent.posX, ent.posY, ent.posZ, HoloGuiSounds.guiclick, SoundCategory.PLAYERS, 1.0f, 1.0f, true);
         Pair<ItemStack, Integer> pair = getSelectedPair(player, cursorX, cursorY);
@@ -86,7 +86,7 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
     }
 
     @Override
-    public void render(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void render(PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         IColor color = new ColorFromStyle(StyledColor.BORDER);
         int bc = color.getColor();
         if (bc != -1) {
@@ -107,7 +107,7 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
                 HoloGuiRenderTools.renderItem(xx, yy, stack, lightmap, cursorPair.getRight() == pair.getRight(), 0.9);
                 if (withAmount && stack.getCount() > 1) {
                     GlStateManager.pushMatrix();
-                    GlStateManager.scale(.5f, .5f, .5f);
+                    GlStateManager.scalef(.5f, .5f, .5f);
                     String s = Integer.toString(stack.getCount());
                     HoloGuiRenderTools.renderTextShadow(xx * 2 - 4 + .4, yy * 2 - 4 + .9, s, 0xffffffff, 1.0f);
                     GlStateManager.popMatrix();
@@ -131,10 +131,10 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
         RenderHelper.enableStandardItemLighting();
     }
 
-    protected abstract List<Pair<ItemStack, Integer>> getStacks(EntityPlayer player);
+    protected abstract List<Pair<ItemStack, Integer>> getStacks(PlayerEntity player);
 
     @Nonnull
-    protected Pair<ItemStack, Integer> getSelectedPair(EntityPlayer player, double cursorX, double cursorY) {
+    protected Pair<ItemStack, Integer> getSelectedPair(PlayerEntity player, double cursorX, double cursorY) {
         if (!isInside(cursorX, cursorY)) {
             return Pair.of(ItemStack.EMPTY, -1);
         }
@@ -164,20 +164,20 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
     }
 
     @Nonnull
-    protected ItemStack getSelectedStack(EntityPlayer player, double cursorX, double cursorY) {
+    protected ItemStack getSelectedStack(PlayerEntity player, double cursorX, double cursorY) {
         return getSelectedPair(player, cursorX, cursorY).getLeft();
     }
 
     @Override
-    public void renderTooltip(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void renderTooltip(PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         ItemStack stack = getSelectedStack(player, cursorX, cursorY);
         if (!stack.isEmpty()) {
             GlStateManager.pushMatrix();
-            GlStateManager.scale(0.01, 0.01, 0.01);
-            GlStateManager.rotate(180, 0, 1, 0);
-            GlStateManager.rotate(180, 0, 0, 1);
-            GlStateManager.translate(0, 0, -10);
-            GlStateManager.scale(0.4, 0.4, 0.0);
+            GlStateManager.scaled(0.01, 0.01, 0.01);
+            GlStateManager.rotatef(180, 0, 1, 0);
+            GlStateManager.rotatef(180, 0, 0, 1);
+            GlStateManager.translatef(0, 0, -10);
+            GlStateManager.scaled(0.4, 0.4, 0.0);
             int xx = (int) (cursorX - x);
             int yy = (int) (cursorY - y);
             HoloGuiRenderTools.renderToolTip(stack, (int) ((xx+x) * 30 - 120), (int) ((yy+y) * 30 - 120 + 25), tooltipHandler);

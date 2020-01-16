@@ -1,16 +1,14 @@
 package mcjty.hologui.commands;
 
 import mcjty.hologui.HoloGui;
-import net.minecraft.command.ICommand;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.Collections;
 import java.util.List;
 
-public class CommandHoloCfg implements ICommand {
+public class CommandHoloCfg {} /*implements ICommand {
 
 
     @Override
@@ -30,8 +28,8 @@ public class CommandHoloCfg implements ICommand {
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
-        if (sender instanceof EntityPlayer) {
-            HoloGui.guiHandler.openHoloGui((EntityPlayer) sender, ConfigurationGui.GUI_CONFIGURATION, 1.0);
+        if (sender instanceof PlayerEntity) {
+            HoloGui.guiHandler.openHoloGui((PlayerEntity) sender, ConfigurationGui.GUI_CONFIGURATION, 1.0);
         }
     }
 
@@ -56,3 +54,4 @@ public class CommandHoloCfg implements ICommand {
         return getName().compareTo(o.getName());
     }
 }
+*/

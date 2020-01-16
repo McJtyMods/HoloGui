@@ -1,15 +1,15 @@
 package mcjty.hologui.gui.components;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import mcjty.hologui.HoloGui;
 import mcjty.hologui.api.IEvent;
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.components.IStackToggle;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
@@ -22,7 +22,7 @@ import java.util.function.Function;
 public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> implements IStackToggle {
 
     private ItemStack stack;
-    private Function<EntityPlayer, Boolean> currentValue;
+    private Function<PlayerEntity, Boolean> currentValue;
     private IEvent hitEvent;
     double scale = 1.0;
     private BiConsumer<ItemStack, List<String>> tooltipHandler = (itemStack, strings) -> {};
@@ -47,7 +47,7 @@ public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> impleme
     }
 
     @Override
-    public IStackToggle getter(Function<EntityPlayer, Boolean> getter) {
+    public IStackToggle getter(Function<PlayerEntity, Boolean> getter) {
         this.currentValue = getter;
         return this;
     }
@@ -59,7 +59,7 @@ public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> impleme
     }
 
     @Override
-    public void render(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void render(PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         Boolean state = currentValue.apply(player);
         ResourceLocation lightmap = null;
         boolean border = false;
@@ -74,13 +74,13 @@ public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> impleme
     }
 
     @Override
-    public void renderTooltip(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void renderTooltip(PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         GlStateManager.pushMatrix();
-        GlStateManager.scale(0.01, 0.01, 0.01);
-        GlStateManager.rotate(180, 0, 1, 0);
-        GlStateManager.rotate(180, 0, 0, 1);
-        GlStateManager.translate(0, 0, -10);
-        GlStateManager.scale(0.4, 0.4, 0.0);
+        GlStateManager.scaled(0.01, 0.01, 0.01);
+        GlStateManager.rotatef(180, 0, 1, 0);
+        GlStateManager.rotatef(180, 0, 0, 1);
+        GlStateManager.translatef(0, 0, -10);
+        GlStateManager.scaled(0.4, 0.4, 0.0);
         HoloGuiRenderTools.renderToolTip(stack, (int) (x * 30 - 120), (int) (y * 30 - 120), tooltipHandler);
         RenderHelper.enableStandardItemLighting();
         GlStateManager.popMatrix();
@@ -93,14 +93,14 @@ public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> impleme
     }
 
     @Override
-    public void hit(EntityPlayer player, IHoloGuiEntity entity, double cursorX, double cursorY) {
+    public void hit(PlayerEntity player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         if (hitEvent != null) {
             hitEvent.hit(this, player, entity, cursorX, cursorY);
         }
     }
 
     @Override
-    public void hitClient(EntityPlayer player, IHoloGuiEntity entity, double cursorX, double cursorY) {
+    public void hitClient(PlayerEntity player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         Entity ent = entity.getEntity();
         player.world.playSound(ent.posX, ent.posY, ent.posZ, HoloGuiSounds.guiclick, SoundCategory.PLAYERS, 1.0f, 1.0f, true);
     }

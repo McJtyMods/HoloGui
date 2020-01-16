@@ -3,13 +3,13 @@ package mcjty.hologui.api.components;
 import mcjty.hologui.api.IEvent;
 import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.api.IImage;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 import java.util.function.Function;
 
 public interface IIconToggle extends IGuiComponent<IIconToggle> {
 
-    IIconToggle getter(Function<EntityPlayer, Boolean> getter);
+    IIconToggle getter(Function<PlayerEntity, Boolean> getter);
 
     IIconToggle icon(IImage icon);
 

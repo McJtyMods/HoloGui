@@ -3,7 +3,7 @@ package mcjty.hologui.gui.components;
 import mcjty.hologui.api.IImage;
 import mcjty.hologui.api.IStackEvent;
 import mcjty.hologui.api.components.IPlayerSlots;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -29,7 +29,7 @@ public class HoloPlayerSlots extends AbstractSlots<IPlayerSlots> implements IPla
     }
 
     @Override
-    protected List<Pair<ItemStack, Integer>> getStacks(EntityPlayer player) {
+    protected List<Pair<ItemStack, Integer>> getStacks(PlayerEntity player) {
         List<Pair<ItemStack, Integer>> stacks = new ArrayList<>();
         for (int i = 0 ; i < player.inventory.getSizeInventory() ; i++) {
             ItemStack stack = player.inventory.getStackInSlot(i);

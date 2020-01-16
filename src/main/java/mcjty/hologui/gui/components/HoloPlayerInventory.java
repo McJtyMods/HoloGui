@@ -4,7 +4,7 @@ import mcjty.hologui.api.*;
 import mcjty.hologui.api.components.IPlayerInventory;
 import mcjty.hologui.gui.ColorFromStyle;
 import mcjty.hologui.gui.HoloGuiRenderTools;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -32,7 +32,7 @@ public class HoloPlayerInventory extends AbstractSlots<IPlayerInventory> impleme
     }
 
     @Override
-    protected List<Pair<ItemStack, Integer>> getStacks(EntityPlayer player) {
+    protected List<Pair<ItemStack, Integer>> getStacks(PlayerEntity player) {
         List<Pair<ItemStack, Integer>> stacks = new ArrayList<>();
         for (int i = 9 ; i < 9 + 3*9 ; i++) {
             ItemStack stack = player.inventory.getStackInSlot(i);
@@ -64,7 +64,7 @@ public class HoloPlayerInventory extends AbstractSlots<IPlayerInventory> impleme
     }
 
     @Override
-    public void render(EntityPlayer player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void render(PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         IColor color = new ColorFromStyle(StyledColor.BORDER);
         int bc = color.getColor();
         if (bc != -1) {

@@ -1,19 +1,15 @@
 package mcjty.hologui.config;
 
-import mcjty.hologui.HoloGui;
-import mcjty.lib.thirteen.ConfigSpec;
-import net.minecraftforge.common.config.Configuration;
-
-import java.io.File;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ConfigSetup {
 
     public static final String CATEGORY_GUI = "gui";
 
-    public static ConfigSpec.ConfigValue<GuiStyle> GUI_STYLE;
-    public static ConfigSpec.ConfigValue<GuiTextStyle> GUI_TEXT_STYLE;
+    public static ForgeConfigSpec.ConfigValue<GuiStyle> GUI_STYLE;
+    public static ForgeConfigSpec.ConfigValue<GuiTextStyle> GUI_TEXT_STYLE;
 
-    static final ConfigSpec.Builder CLIENT_BUILDER = new ConfigSpec.Builder();
+    static final ForgeConfigSpec.Builder CLIENT_BUILDER = new ForgeConfigSpec.Builder();
 
     static {
         CLIENT_BUILDER.comment("GUI settings").push(CATEGORY_GUI);
@@ -28,36 +24,37 @@ public class ConfigSetup {
         CLIENT_BUILDER.pop();
     }
 
-    private static ConfigSpec CLIENT_CONFIG;
+    private static ForgeConfigSpec CLIENT_CONFIG;
 
-    public static Configuration mainConfig;
+    // @todo 1.14
+//    public static Configuration mainConfig;
 
     public static void init() {
-        mainConfig = new Configuration(new File(HoloGui.setup.getModConfigDir().getPath(), "hologui.cfg"));
-        init(mainConfig);
+//        mainConfig = new Configuration(new File(HoloGui.setup.getModConfigDir().getPath(), "hologui.cfg"));
+//        init(mainConfig);
     }
 
     public static void postInit() {
-        if (mainConfig.hasChanged()) {
-            mainConfig.save();
-        }
+//        if (mainConfig.hasChanged()) {
+//            mainConfig.save();
+//        }
     }
 
     public static void setGuiStyle(GuiStyle style) {
         GUI_STYLE.set(style);
-        Configuration cfg = mainConfig;
-        cfg.get(CATEGORY_GUI, "guiStyle", GuiStyle.TRANSP_BLUE_WHITE_SHARP.name()).set(style.name());
-        cfg.save();
+//        Configuration cfg = mainConfig;
+//        cfg.get(CATEGORY_GUI, "guiStyle", GuiStyle.TRANSP_BLUE_WHITE_SHARP.name()).set(style.name());
+//        cfg.save();
     }
 
     public static void setGuiTextStyle(GuiTextStyle style) {
         GUI_TEXT_STYLE.set(style);
-        Configuration cfg = mainConfig;
-        cfg.get(CATEGORY_GUI, "guiTextStyle", GuiTextStyle.DEFAULT.name()).set(style.name());
-        cfg.save();
+//        Configuration cfg = mainConfig;
+//        cfg.get(CATEGORY_GUI, "guiTextStyle", GuiTextStyle.DEFAULT.name()).set(style.name());
+//        cfg.save();
     }
 
-    public static void init(Configuration cfg) {
-        CLIENT_CONFIG = CLIENT_BUILDER.build(cfg);
-    }
+//    public static void init(Configuration cfg) {
+//        CLIENT_CONFIG = CLIENT_BUILDER.build(cfg);
+//    }
 }

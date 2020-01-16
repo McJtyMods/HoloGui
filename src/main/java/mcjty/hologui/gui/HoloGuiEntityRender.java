@@ -1,14 +1,14 @@
 package mcjty.hologui.gui;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import mcjty.hologui.HoloGui;
 import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.config.ConfigSetup;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -17,7 +17,7 @@ import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
 
-public class HoloGuiEntityRender extends Render<HoloGuiEntity> {
+public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
 
     private static final ResourceLocation guiBackground1 = new ResourceLocation(HoloGui.MODID, "textures/gui/hologui_blue_softwhite.png");
     private static final ResourceLocation guiBackground2 = new ResourceLocation(HoloGui.MODID, "textures/gui/hologui_blue.png");
@@ -28,7 +28,7 @@ public class HoloGuiEntityRender extends Render<HoloGuiEntity> {
     private static final ResourceLocation guiBackground7 = new ResourceLocation(HoloGui.MODID, "textures/gui/hologui_gray_sharpwhite.png");
     private static final ResourceLocation guiBackground8 = new ResourceLocation(HoloGui.MODID, "textures/gui/hologui_gray_softblack.png");
 
-    public HoloGuiEntityRender(RenderManager renderManager) {
+    public HoloGuiEntityRender(EntityRendererManager renderManager) {
         super(renderManager);
     }
 
@@ -43,7 +43,7 @@ public class HoloGuiEntityRender extends Render<HoloGuiEntity> {
 
     @Override
     public void doRender(HoloGuiEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
-        if (entity.isRiding()) {
+        if (entity.isPassenger()) {
             return;
         }
 
@@ -54,45 +54,45 @@ public class HoloGuiEntityRender extends Render<HoloGuiEntity> {
         Tessellator t = Tessellator.getInstance();
         BufferBuilder builder = t.getBuffer();
 
-        Minecraft.getMinecraft().entityRenderer.disableLightmap();
+        Minecraft.getInstance().gameRenderer.disableLightmap();
 
         GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, z);
+        GlStateManager.translated(x, y, z);
 
 //        renderDebugOutline(entity, t, builder);
 
-        GlStateManager.rotate(180.0F - entityYaw, 0.0F, 1.0F, 0.0F);
-        GlStateManager.translate(0, .5, 0);
+        GlStateManager.rotatef(180.0F - entityYaw, 0.0F, 1.0F, 0.0F);
+        GlStateManager.translated(0, .5, 0);
         float scale = entity.getScale();
         scale = 1f - (1f-scale) * (.4f / .25f);
 
-        GlStateManager.scale(scale, scale, scale);
+        GlStateManager.scalef(scale, scale, scale);
 
-        GlStateManager.enableTexture2D();
+        GlStateManager.enableTexture();
         GlStateManager.disableLighting();
 
         int style = ConfigSetup.GUI_STYLE.get().ordinal();
 
         if (style <= 8) {
             GlStateManager.enableBlend();
-            GlStateManager.color(1.0f, 1.0f, 1.0f, 0.8f);
+            GlStateManager.color4f(1.0f, 1.0f, 1.0f, 0.8f);
         } else {
             GlStateManager.disableBlend();
-            GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+            GlStateManager.color4f(1.0f, 1.0f, 1.0f, 1.0f);
             style -= 8;
         }
 
-        Minecraft mc = Minecraft.getMinecraft();
+        Minecraft mc = Minecraft.getInstance();
 
         switch (style) {
-            case 1: mc.renderEngine.bindTexture(guiBackground1); break;
-            case 2: mc.renderEngine.bindTexture(guiBackground2); break;
-            case 3: mc.renderEngine.bindTexture(guiBackground3); break;
-            case 4: mc.renderEngine.bindTexture(guiBackground4); break;
-            case 5: mc.renderEngine.bindTexture(guiBackground5); break;
-            case 6: mc.renderEngine.bindTexture(guiBackground6); break;
-            case 7: mc.renderEngine.bindTexture(guiBackground7); break;
-            case 8: mc.renderEngine.bindTexture(guiBackground8); break;
+            case 1: mc.getTextureManager().bindTexture(guiBackground1); break;
+            case 2: mc.getTextureManager().bindTexture(guiBackground2); break;
+            case 3: mc.getTextureManager().bindTexture(guiBackground3); break;
+            case 4: mc.getTextureManager().bindTexture(guiBackground4); break;
+            case 5: mc.getTextureManager().bindTexture(guiBackground5); break;
+            case 6: mc.getTextureManager().bindTexture(guiBackground6); break;
+            case 7: mc.getTextureManager().bindTexture(guiBackground7); break;
+            case 8: mc.getTextureManager().bindTexture(guiBackground8); break;
         }
 
         builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
@@ -103,14 +103,14 @@ public class HoloGuiEntityRender extends Render<HoloGuiEntity> {
 
         t.draw();
 
-        GlStateManager.disableDepth();
+        GlStateManager.disableDepthTest();
 
         double cursorX = entity.getCursorX();
         double cursorY = entity.getCursorY();
 
-        IGuiComponent gui = entity.getGui(Minecraft.getMinecraft().player);
+        IGuiComponent gui = entity.getGui(Minecraft.getInstance().player);
         if (gui != null) {
-            gui.render(Minecraft.getMinecraft().player, entity, cursorX, cursorY);
+            gui.render(Minecraft.getInstance().player, entity, cursorX, cursorY);
             IGuiComponent hovering = gui.findHoveringWidget(cursorX, cursorY);
             if (hovering != entity.tooltipComponent) {
                 entity.tooltipComponent = hovering;
@@ -120,14 +120,14 @@ public class HoloGuiEntityRender extends Render<HoloGuiEntity> {
                     entity.tooltipTimeout--;
                 } else {
                     if (hovering != null) {
-                        hovering.renderTooltip(Minecraft.getMinecraft().player, entity, cursorX, cursorY);
+                        hovering.renderTooltip(Minecraft.getInstance().player, entity, cursorX, cursorY);
                     }
                 }
             }
         }
 
         if (cursorX >= 0 && cursorX <= 10 && cursorY >= 0 && cursorY <= 10) {
-            GlStateManager.disableTexture2D();
+            GlStateManager.disableTexture();
             GlStateManager.enableBlend();
             builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
             double offset = .01;
@@ -139,10 +139,10 @@ public class HoloGuiEntityRender extends Render<HoloGuiEntity> {
         GlStateManager.popMatrix();
 
 
-        GlStateManager.enableTexture2D();
-        GlStateManager.enableDepth();
+        GlStateManager.enableTexture();
+        GlStateManager.enableDepthTest();
         GlStateManager.enableLighting();
-        Minecraft.getMinecraft().entityRenderer.enableLightmap();
+        Minecraft.getInstance().gameRenderer.enableLightmap();
     }
 
     private static void renderQuad(BufferBuilder builder, double minX, double maxX, double minY, double maxY) {
@@ -168,8 +168,8 @@ public class HoloGuiEntityRender extends Render<HoloGuiEntity> {
     }
 
     private void renderDebugOutline(HoloGuiEntity entity, Tessellator t, BufferBuilder builder) {
-        AxisAlignedBB box = entity.getEntityBoundingBox();
-        GlStateManager.disableTexture2D();
+        AxisAlignedBB box = entity.getRenderBoundingBox();
+        GlStateManager.disableTexture();
         GlStateManager.disableLighting();
         builder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
         double minX = box.minX - entity.posX;
@@ -228,9 +228,8 @@ public class HoloGuiEntityRender extends Render<HoloGuiEntity> {
     public static class Factory implements IRenderFactory<HoloGuiEntity> {
 
         @Override
-        public Render<? super HoloGuiEntity> createRenderFor(RenderManager manager) {
+        public EntityRenderer<? super HoloGuiEntity> createRenderFor(EntityRendererManager manager) {
             return new HoloGuiEntityRender(manager);
         }
-
     }
 }

@@ -4,7 +4,7 @@ import mcjty.hologui.HoloGui;
 import mcjty.hologui.api.*;
 import mcjty.hologui.gui.components.GuiComponentRegistry;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -45,13 +45,13 @@ public class HoloGuiHandler implements IHoloGuiHandler {
     }
 
     @Override
-    public boolean openHoloGui(World world, BlockPos pos, EntityPlayer player) {
+    public boolean openHoloGui(World world, BlockPos pos, PlayerEntity player) {
         IHoloGuiEntity entity = openHoloGuiEntity(world, pos, player, TAG_DEFAULT, 1.0);
         return world.isRemote ? true : entity != null;
     }
 
     @Override
-    public IHoloGuiEntity openHoloGuiEntity(World world, BlockPos pos, EntityPlayer player, String tag, double distance) {
+    public IHoloGuiEntity openHoloGuiEntity(World world, BlockPos pos, PlayerEntity player, String tag, double distance) {
         if (world.isRemote) {
             world.playSound(pos.getX(), pos.getY(), pos.getZ(), HoloGuiSounds.guiopen, SoundCategory.PLAYERS, 1.0f, 1.0f, true);
             return null;
@@ -77,7 +77,7 @@ public class HoloGuiHandler implements IHoloGuiHandler {
     }
 
     @Override
-    public IHoloGuiEntity openHoloGui(EntityPlayer player, String guiId, double distance) {
+    public IHoloGuiEntity openHoloGui(PlayerEntity player, String guiId, double distance) {
         // @todo, check what's wrong with sound
 
         World world = player.getEntityWorld();
@@ -105,11 +105,11 @@ public class HoloGuiHandler implements IHoloGuiHandler {
         return entity;
     }
 
-    private static HoloGuiEntity createHoloGui(World world, EntityPlayer player, String tag, double distance) {
+    private static HoloGuiEntity createHoloGui(World world, PlayerEntity player, String tag, double distance) {
         HoloGuiEntity entity = new HoloGuiEntity(world);
         entity.setTag(tag);
         double x = player.posX;
-        double y = player.posY+player.eyeHeight - .5;
+        double y = player.posY+player.getEyeHeight() - .5;
         double z = player.posZ;
         Vec3d lookVec = player.getLookVec();
         lookVec = new Vec3d(lookVec.x, 0, lookVec.z).normalize();
@@ -118,7 +118,7 @@ public class HoloGuiHandler implements IHoloGuiHandler {
         z += lookVec.z * distance;
         entity.setPosition(x, y, z);
         entity.setLocationAndAngles(x, y, z, player.rotationYaw, 0);
-        world.spawnEntity(entity);
+        world.addEntity(entity);
         return entity;
     }
 
@@ -131,7 +131,7 @@ public class HoloGuiHandler implements IHoloGuiHandler {
         double z = parent.posZ + offset.z;
         entity.setPosition(x, y, z);
         entity.setLocationAndAngles(x, y, z, parent.rotationYaw+90, parent.rotationPitch);
-        world.spawnEntity(entity);
+        world.addEntity(entity);
         return entity;
     }
 

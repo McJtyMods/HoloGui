@@ -8,13 +8,13 @@ import mcjty.hologui.api.components.ITextChoice;
 import mcjty.hologui.config.ConfigSetup;
 import mcjty.hologui.config.GuiStyle;
 import mcjty.hologui.config.GuiTextStyle;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 public class ConfigurationGui {
 
     public static final String GUI_CONFIGURATION = "hologui.configuration";
 
-    public static IGuiComponent<?> create(EntityPlayer player) {
+    public static IGuiComponent<?> create(PlayerEntity player) {
         IGuiComponentRegistry registry = HoloGui.guiHandler.getComponentRegistry();
         ITextChoice styleChoices = createStyleChoices(registry);
         ITextChoice textStyleChoices = createTextStyleChoices(registry);
