@@ -1,8 +1,12 @@
 package mcjty.hologui.config;
 
+import com.electronwill.nightconfig.core.file.CommentedFileConfig;
+import com.electronwill.nightconfig.core.io.WritingMode;
 import net.minecraftforge.common.ForgeConfigSpec;
 
-public class ConfigSetup {
+import java.nio.file.Path;
+
+public class Config {
 
     public static final String CATEGORY_GUI = "gui";
 
@@ -22,39 +26,29 @@ public class ConfigSetup {
                 .defineEnum("guiTextStyle", GuiTextStyle.DEFAULT, GuiTextStyle.values());
 
         CLIENT_BUILDER.pop();
+
+        CLIENT_CONFIG = CLIENT_BUILDER.build();
     }
 
-    private static ForgeConfigSpec CLIENT_CONFIG;
-
-    // @todo 1.14
-//    public static Configuration mainConfig;
-
-    public static void init() {
-//        mainConfig = new Configuration(new File(HoloGui.setup.getModConfigDir().getPath(), "hologui.cfg"));
-//        init(mainConfig);
-    }
-
-    public static void postInit() {
-//        if (mainConfig.hasChanged()) {
-//            mainConfig.save();
-//        }
-    }
+    public static ForgeConfigSpec CLIENT_CONFIG;
 
     public static void setGuiStyle(GuiStyle style) {
         GUI_STYLE.set(style);
-//        Configuration cfg = mainConfig;
-//        cfg.get(CATEGORY_GUI, "guiStyle", GuiStyle.TRANSP_BLUE_WHITE_SHARP.name()).set(style.name());
-//        cfg.save();
     }
 
     public static void setGuiTextStyle(GuiTextStyle style) {
         GUI_TEXT_STYLE.set(style);
-//        Configuration cfg = mainConfig;
-//        cfg.get(CATEGORY_GUI, "guiTextStyle", GuiTextStyle.DEFAULT.name()).set(style.name());
-//        cfg.save();
     }
 
-//    public static void init(Configuration cfg) {
-//        CLIENT_CONFIG = CLIENT_BUILDER.build(cfg);
-//    }
+    public static void loadConfig(ForgeConfigSpec spec, Path path) {
+
+        final CommentedFileConfig configData = CommentedFileConfig.builder(path)
+                .sync()
+                .autosave()
+                .writingMode(WritingMode.REPLACE)
+                .build();
+
+        configData.load();
+        spec.setConfig(configData);
+    }
 }

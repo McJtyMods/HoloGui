@@ -5,7 +5,7 @@ import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.api.IGuiComponentRegistry;
 import mcjty.hologui.api.StyledColor;
 import mcjty.hologui.api.components.ITextChoice;
-import mcjty.hologui.config.ConfigSetup;
+import mcjty.hologui.config.Config;
 import mcjty.hologui.config.GuiStyle;
 import mcjty.hologui.config.GuiTextStyle;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,17 +28,17 @@ public class ConfigurationGui {
         ITextChoice styleChoices = registry
                 .textChoice(0, 1, 8, 1)
                 .getter(plr -> {
-                    GuiStyle guiStyle = ConfigSetup.GUI_STYLE.get();
+                    GuiStyle guiStyle = Config.GUI_STYLE.get();
                     return guiStyle.ordinal()-1;
                 })
                 .hitEventClient((component, plr, entity, x, y) -> {
-                    GuiStyle guiStyle = ConfigSetup.GUI_STYLE.get();
+                    GuiStyle guiStyle = Config.GUI_STYLE.get();
                     int ordinal = guiStyle.ordinal();
                     ordinal++;
                     if (ordinal >= GuiStyle.values().length) {
                         ordinal = 1;
                     }
-                    ConfigSetup.setGuiStyle(GuiStyle.values()[ordinal]);
+                    Config.setGuiStyle(GuiStyle.values()[ordinal]);
                 });
         for (GuiStyle value : GuiStyle.values()) {
             if (value != GuiStyle.NONE) {
@@ -52,17 +52,17 @@ public class ConfigurationGui {
         ITextChoice styleChoices = registry
                 .textChoice(0, 2, 8, 1)
                 .getter(plr -> {
-                    GuiTextStyle guiStyle = ConfigSetup.GUI_TEXT_STYLE.get();
+                    GuiTextStyle guiStyle = Config.GUI_TEXT_STYLE.get();
                     return guiStyle.ordinal();
                 })
                 .hitEventClient((component, plr, entity, x, y) -> {
-                    GuiTextStyle guiStyle = ConfigSetup.GUI_TEXT_STYLE.get();
+                    GuiTextStyle guiStyle = Config.GUI_TEXT_STYLE.get();
                     int ordinal = guiStyle.ordinal();
                     ordinal++;
                     if (ordinal >= GuiTextStyle.values().length) {
                         ordinal = 0;
                     }
-                    ConfigSetup.setGuiTextStyle(GuiTextStyle.values()[ordinal]);
+                    Config.setGuiTextStyle(GuiTextStyle.values()[ordinal]);
                 });
         for (GuiTextStyle value : GuiTextStyle.values()) {
             styleChoices.addText(value.name());

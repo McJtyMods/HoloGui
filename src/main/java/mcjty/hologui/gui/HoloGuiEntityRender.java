@@ -3,7 +3,7 @@ package mcjty.hologui.gui;
 import com.mojang.blaze3d.platform.GlStateManager;
 import mcjty.hologui.HoloGui;
 import mcjty.hologui.api.IGuiComponent;
-import mcjty.hologui.config.ConfigSetup;
+import mcjty.hologui.config.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraftforge.fml.client.registry.IRenderFactory;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
@@ -71,7 +70,7 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
         GlStateManager.enableTexture();
         GlStateManager.disableLighting();
 
-        int style = ConfigSetup.GUI_STYLE.get().ordinal();
+        int style = Config.GUI_STYLE.get().ordinal();
 
         if (style <= 8) {
             GlStateManager.enableBlend();
@@ -222,14 +221,5 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
     @Override
     protected ResourceLocation getEntityTexture(HoloGuiEntity entity) {
         return null;
-    }
-
-
-    public static class Factory implements IRenderFactory<HoloGuiEntity> {
-
-        @Override
-        public EntityRenderer<? super HoloGuiEntity> createRenderFor(EntityRendererManager manager) {
-            return new HoloGuiEntityRender(manager);
-        }
     }
 }

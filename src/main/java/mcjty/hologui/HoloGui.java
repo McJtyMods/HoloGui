@@ -2,15 +2,22 @@ package mcjty.hologui;
 
 
 import mcjty.hologui.api.IHoloGuiHandler;
+import mcjty.hologui.config.Config;
 import mcjty.hologui.gui.HoloGuiHandler;
 import mcjty.hologui.setup.ClientRegistration;
 import mcjty.hologui.setup.ModSetup;
 import mcjty.lib.base.ModBase;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLPaths;
+
+import java.util.function.Consumer;
 
 @Mod(HoloGui.MODID)
 public class HoloGui implements ModBase {
@@ -25,16 +32,15 @@ public class HoloGui implements ModBase {
     public HoloGui() {
         instance = this;
 
-//        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_CONFIG);
-//        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.COMMON_CONFIG);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_CONFIG);
 
         ModEntities.register();
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLCommonSetupEvent event) -> setup.init(event));
         FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLClientSetupEvent event) -> ClientRegistration.init());
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::imcCallback);
 
-//        Config.loadConfig(Config.CLIENT_CONFIG, FMLPaths.CONFIGDIR.get().resolve("xnet-client.toml"));
-//        Config.loadConfig(Config.COMMON_CONFIG, FMLPaths.CONFIGDIR.get().resolve("xnet-common.toml"));
+        Config.loadConfig(Config.CLIENT_CONFIG, FMLPaths.CONFIGDIR.get().resolve("hologui-client.toml"));
     }
 
 
@@ -43,20 +49,15 @@ public class HoloGui implements ModBase {
         return HoloGui.MODID;
     }
 
-    // @todo 1.14
-//    @Mod.EventHandler
-//    public void imcCallback(FMLInterModComms.IMCEvent event) {
-//        for (FMLInterModComms.IMCMessage message : event.getMessages()) {
-//            if (message.key.equalsIgnoreCase("getHoloHandler")) {
-//                Optional<Function<IHoloGuiHandler, Void>> value = message.getFunctionValue(IHoloGuiHandler.class, Void.class);
-//                if (value.isPresent()) {
-//                    value.get().apply(guiHandler);
-//                } else {
-//                    setup.getLogger().warn("Some mod didn't return a valid result with getHoloHandler!");
-//                }
-//            }
-//        }
-//    }
+    private void imcCallback(InterModProcessEvent event) {
+        event.getIMCStream("getHoloHandler"::equalsIgnoreCase).forEach(msg -> {
+            try {
+                msg.<Consumer<IHoloGuiHandler>>getMessageSupplier().get().accept(guiHandler);
+            } catch (Exception e) {
+                setup.getLogger().warn("The mod '{}' caused an error while trying to get the hologui handler: {}", msg.getModId(), e.getMessage());
+            }
+        });
+    }
 
     @Override
     public void openManual(PlayerEntity player, int bookindex, String page) {

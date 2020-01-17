@@ -1,13 +1,13 @@
 package mcjty.hologui.gui;
 
 import mcjty.hologui.api.StyledColor;
-import mcjty.hologui.config.ConfigSetup;
+import mcjty.hologui.config.Config;
 import mcjty.hologui.config.GuiTextStyle;
 
 public class TextStyleSupport {
 
     public static int resolveColor(StyledColor styledColor) {
-        GuiTextStyle textStyle = ConfigSetup.GUI_TEXT_STYLE.get();
+        GuiTextStyle textStyle = Config.GUI_TEXT_STYLE.get();
         switch (styledColor) {
             case DISABLED:
                 return -1;

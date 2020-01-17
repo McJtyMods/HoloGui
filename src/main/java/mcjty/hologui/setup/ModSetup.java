@@ -2,7 +2,6 @@ package mcjty.hologui.setup;
 
 import mcjty.hologui.ForgeEventHandlers;
 import mcjty.hologui.HoloGui;
-import mcjty.hologui.ModEntities;
 import mcjty.hologui.commands.ConfigurationGui;
 import mcjty.lib.compat.MainCompatHandler;
 import mcjty.lib.setup.DefaultModSetup;
@@ -27,15 +26,4 @@ public class ModSetup extends DefaultModSetup {
         MainCompatHandler.registerWaila();
         MainCompatHandler.registerTOP();
     }
-
-    // @todo 1.14
-//    @Override
-//    protected void setupConfig() {
-//        ConfigSetup.init();
-//    }
-
-//    @Override
-//    public void postInit(FMLPostInitializationEvent e) {
-//        ConfigSetup.postInit();
-//    }
 }

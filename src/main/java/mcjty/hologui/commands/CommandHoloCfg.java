@@ -1,57 +1,31 @@
 package mcjty.hologui.commands;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.builder.ArgumentBuilder;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import mcjty.hologui.HoloGui;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.command.CommandSource;
+import net.minecraft.command.Commands;
+import net.minecraft.entity.player.ServerPlayerEntity;
 
-import java.util.Collections;
-import java.util.List;
+public class CommandHoloCfg implements Command<CommandSource> {
 
-public class CommandHoloCfg {} /*implements ICommand {
+    private static final CommandHoloCfg CMD = new CommandHoloCfg();
 
-
-    @Override
-    public String getName() {
-        return "holocfg";
+    public static ArgumentBuilder<CommandSource, ?> register(CommandDispatcher<CommandSource> dispatcher) {
+        return Commands.literal("cfg")
+                .requires(cs -> cs.hasPermissionLevel(0))
+                .executes(CMD);
     }
 
     @Override
-    public String getUsage(ICommandSender sender) {
-        return "topcfg";
-    }
-
-    @Override
-    public List<String> getAliases() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
-        if (sender instanceof PlayerEntity) {
-            HoloGui.guiHandler.openHoloGui((PlayerEntity) sender, ConfigurationGui.GUI_CONFIGURATION, 1.0);
+    public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
+        ServerPlayerEntity player = context.getSource().asPlayer();
+        if (player != null) {
+            HoloGui.guiHandler.openHoloGui(player, ConfigurationGui.GUI_CONFIGURATION, 1.0);
         }
-    }
-
-    @Override
-    public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
-        return true;
-    }
-
-
-    @Override
-    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public boolean isUsernameIndex(String[] args, int index) {
-        return false;
-    }
-
-    @Override
-    public int compareTo(ICommand o) {
-        return getName().compareTo(o.getName());
+        return 0;
     }
 }
-*/
