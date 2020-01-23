@@ -1,11 +1,13 @@
 package mcjty.hologui.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import mcjty.hologui.HoloGui;
 import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.config.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -13,8 +15,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import org.lwjgl.opengl.GL11;
-
-import javax.annotation.Nullable;
 
 public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
 
@@ -40,20 +40,27 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
     // Option 7: gray with sharp dark border: hologui5
     // Option 8: current: hologui
 
-    @Override
-    public void doRender(HoloGuiEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
-        if (entity.isPassenger()) {
-            return;
-        }
 
-        doActualRender(entity, x, y, z, entityYaw);
+    @Override
+    public void render(HoloGuiEntity entity, float p_225623_2_, float p_225623_3_, MatrixStack stack, IRenderTypeBuffer buffer, int p_225623_6_) {
+//        super.render(p_225623_1_, p_225623_2_, p_225623_3_, p_225623_4_, p_225623_5_, p_225623_6_);
     }
+
+    // @todo 1.15
+//    @Override
+//    public void doRender(HoloGuiEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
+//        if (entity.isPassenger()) {
+//            return;
+//        }
+//
+//        doActualRender(entity, x, y, z, entityYaw);
+//    }
 
     public static void doActualRender(HoloGuiEntity entity, double x, double y, double z, float entityYaw) {
         Tessellator t = Tessellator.getInstance();
         BufferBuilder builder = t.getBuffer();
 
-        Minecraft.getInstance().gameRenderer.disableLightmap();
+        Minecraft.getInstance().gameRenderer.getLightTexture().disableLightmap();
 
         GlStateManager.pushMatrix();
         GlStateManager.translated(x, y, z);
@@ -141,7 +148,7 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
         GlStateManager.enableTexture();
         GlStateManager.enableDepthTest();
         GlStateManager.enableLighting();
-        Minecraft.getInstance().gameRenderer.enableLightmap();
+        Minecraft.getInstance().gameRenderer.getLightTexture().enableLightmap();
     }
 
     private static void renderQuad(BufferBuilder builder, double minX, double maxX, double minY, double maxY) {
@@ -171,12 +178,12 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
         GlStateManager.disableTexture();
         GlStateManager.disableLighting();
         builder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
-        double minX = box.minX - entity.posX;
-        double minY = box.minY - entity.posY;
-        double minZ = box.minZ - entity.posZ;
-        double maxX = box.maxX - entity.posX;
-        double maxY = box.maxY - entity.posY;
-        double maxZ = box.maxZ - entity.posZ;
+        double minX = box.minX - entity.getPosX();
+        double minY = box.minY - entity.getPosY();
+        double minZ = box.minZ - entity.getPosZ();
+        double maxX = box.maxX - entity.getPosX();
+        double maxY = box.maxY - entity.getPosY();
+        double maxZ = box.maxZ - entity.getPosZ();
 
         renderDebugOutline(builder, minX, minY, minZ, maxX, maxY, maxZ);
         t.draw();
@@ -217,9 +224,8 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
     }
 
 
-    @Nullable
     @Override
-    protected ResourceLocation getEntityTexture(HoloGuiEntity entity) {
+    public ResourceLocation getEntityTexture(HoloGuiEntity entity) {
         return null;
     }
 }

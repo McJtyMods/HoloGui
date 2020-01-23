@@ -51,7 +51,7 @@ public class HoloIconChoice extends AbstractHoloComponent<IIconChoice> implement
             return;
         }
         IImage i = images.get(value);
-        GlStateManager.color3f(1, 1, 1);
+        GlStateManager.color4f(1, 1, 1, 1);
         HoloGuiRenderTools.renderImage(x, y, i.getU(), i.getV(), 16, 16, i.getWidth(), i.getHeight(), i.getImage());
     }
 
@@ -65,7 +65,7 @@ public class HoloIconChoice extends AbstractHoloComponent<IIconChoice> implement
     @Override
     public void hitClient(PlayerEntity player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         Entity ent = entity.getEntity();
-        player.world.playSound(ent.posX, ent.posY, ent.posZ, HoloGuiSounds.guiclick, SoundCategory.PLAYERS, 1.0f, 1.0f, true);
+        player.world.playSound(ent.getPosX(), ent.getPosY(), ent.getPosZ(), HoloGuiSounds.guiclick, SoundCategory.PLAYERS, 1.0f, 1.0f, true);
     }
 
 }

@@ -1,11 +1,12 @@
 package mcjty.hologui.gui;
 
-import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
 import mcjty.lib.client.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.AtlasTexture;
@@ -16,7 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.client.config.GuiUtils;
+import net.minecraftforge.fml.client.gui.GuiUtils;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
@@ -94,7 +95,7 @@ public class HoloGuiRenderTools {
         y -= 0.5;
 
         GlStateManager.enableBlend();
-        GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA.param, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA.param, GlStateManager.SourceFactor.ONE.param, GlStateManager.DestFactor.ZERO.param);
         GlStateManager.lineWidth(2.0F);
         GlStateManager.disableTexture();
 
@@ -137,7 +138,7 @@ public class HoloGuiRenderTools {
                 y -= 0.5;
 
                 GlStateManager.enableBlend();
-                GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+                GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA.param, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA.param, GlStateManager.SourceFactor.ONE.param, GlStateManager.DestFactor.ZERO.param);
                 GlStateManager.lineWidth(2.0F);
                 GlStateManager.disableTexture();
 
@@ -163,27 +164,33 @@ public class HoloGuiRenderTools {
         ItemRenderer renderItem = Minecraft.getInstance().getItemRenderer();
         TextureManager textureManager = Minecraft.getInstance().getTextureManager();
         textureManager.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-        textureManager.getTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
+        textureManager.getTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE).setBlurMipmapDirect(false, false);
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.enableRescaleNormal();
         GlStateManager.alphaFunc(516, 0.1F);
         GlStateManager.enableBlend();
-        GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA.param, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA.param, GlStateManager.SourceFactor.ONE.param, GlStateManager.DestFactor.ZERO.param);
 
         if (lightmap != null) {
-            Minecraft.getInstance().gameRenderer.enableLightmap();
-            GlStateManager.activeTexture(GLX.GL_TEXTURE1);
+            Minecraft.getInstance().gameRenderer.getLightTexture().enableLightmap();
+            // @todo 1.15
+//            GlStateManager.activeTexture(GLX.GL_TEXTURE1);
+
 //            Minecraft.getInstance()().getTextureManager().bindTexture(new ResourceLocation(Ariente.MODID, "textures/gui/darken.png"));
             Minecraft.getInstance().getTextureManager().bindTexture(lightmap);
-            GlStateManager.activeTexture(GLX.GL_TEXTURE0);
+            // @todo 1.15
+//            GlStateManager.activeTexture(GLX.GL_TEXTURE0);
         }
 
         GlStateManager.pushMatrix();
         // TODO: check if negative scale is a thing
-        bakedmodel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(bakedmodel, transform, false);
+        // @todo 1.15
+//        bakedmodel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(bakedmodel, transform, false);
 
-        renderItem.renderItem(stack, bakedmodel);
-        GlStateManager.cullFace(GlStateManager.CullFace.BACK);
+        // @todo 1.15
+//        renderItem.renderItem(stack, bakedmodel);
+        // @todo 1.15
+//        GlStateManager.cullFace(GlStateManager.CullFace.BACK);
         GlStateManager.popMatrix();
         GlStateManager.disableRescaleNormal();
         GlStateManager.disableBlend();
@@ -192,7 +199,7 @@ public class HoloGuiRenderTools {
         Minecraft.getInstance().getTextureManager().getTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
 
         if (lightmap != null) {
-            Minecraft.getInstance().gameRenderer.disableLightmap();
+            Minecraft.getInstance().gameRenderer.getLightTexture().disableLightmap();
         }
     }
 
@@ -200,7 +207,7 @@ public class HoloGuiRenderTools {
     public static void renderToolTip(ItemStack stack, int x, int y, BiConsumer<ItemStack, List<String>> tooltipHandler) {
         GuiUtils.preItemToolTip(stack);
 
-        net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
+        net.minecraft.client.renderer.RenderHelper.setupGuiFlatDiffuseLighting();
 
         Minecraft mc = Minecraft.getInstance();
         ITooltipFlag flag = mc.gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL;

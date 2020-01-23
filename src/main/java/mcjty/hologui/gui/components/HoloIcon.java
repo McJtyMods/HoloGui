@@ -25,7 +25,7 @@ public class HoloIcon extends AbstractHoloComponent<IIcon> implements IIcon {
 
     @Override
     public void render(PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
-        GlStateManager.color3f(1, 1, 1);
+        GlStateManager.color4f(1, 1, 1, 1);
         HoloGuiRenderTools.renderImage(x, y, image.getU(), image.getV(), 16, 16, image.getWidth(), image.getHeight(), image.getImage());
 //        HoloGuiRenderTools.renderText(x, y, "x", 0xffffff);
     }

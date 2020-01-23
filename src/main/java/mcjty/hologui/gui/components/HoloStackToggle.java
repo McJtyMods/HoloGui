@@ -70,7 +70,7 @@ public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> impleme
             border = true;
         }
         HoloGuiRenderTools.renderItem(x, y, stack, lightmap, border, scale);
-        RenderHelper.enableStandardItemLighting();
+        RenderHelper.func_227780_a_();
     }
 
     @Override
@@ -82,7 +82,7 @@ public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> impleme
         GlStateManager.translatef(0, 0, -10);
         GlStateManager.scaled(0.4, 0.4, 0.0);
         HoloGuiRenderTools.renderToolTip(stack, (int) (x * 30 - 120), (int) (y * 30 - 120), tooltipHandler);
-        RenderHelper.enableStandardItemLighting();
+        RenderHelper.func_227780_a_();
         GlStateManager.popMatrix();
     }
 
@@ -102,7 +102,7 @@ public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> impleme
     @Override
     public void hitClient(PlayerEntity player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         Entity ent = entity.getEntity();
-        player.world.playSound(ent.posX, ent.posY, ent.posZ, HoloGuiSounds.guiclick, SoundCategory.PLAYERS, 1.0f, 1.0f, true);
+        player.world.playSound(ent.getPosX(), ent.getPosY(), ent.getPosZ(), HoloGuiSounds.guiclick, SoundCategory.PLAYERS, 1.0f, 1.0f, true);
     }
 
 

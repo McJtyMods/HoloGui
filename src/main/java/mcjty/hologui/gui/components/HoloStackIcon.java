@@ -50,7 +50,7 @@ public class HoloStackIcon extends AbstractHoloComponent<IStackIcon> implements 
     @Override
     public void render(PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         HoloGuiRenderTools.renderItem(x, y, stackSupplier.get(), null, false, scale);
-        RenderHelper.enableStandardItemLighting();
+        RenderHelper.func_227780_a_();
     }
 
     @Override
@@ -62,7 +62,7 @@ public class HoloStackIcon extends AbstractHoloComponent<IStackIcon> implements 
         GlStateManager.translatef(0, 0, -10);
         GlStateManager.scaled(0.4, 0.4, 0.0);
         HoloGuiRenderTools.renderToolTip(stackSupplier.get(), (int) (x * 30 - 120), (int) (y * 30 - 120), tooltipHandler);
-        RenderHelper.enableStandardItemLighting();
+        RenderHelper.func_227780_a_();
         GlStateManager.popMatrix();
     }
 

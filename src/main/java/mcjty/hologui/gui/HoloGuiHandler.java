@@ -109,9 +109,9 @@ public class HoloGuiHandler implements IHoloGuiHandler {
     private static HoloGuiEntity createHoloGui(World world, PlayerEntity player, String tag, double distance) {
         HoloGuiEntity entity = new HoloGuiEntity(ModEntities.HOLOGUI_ENTITY_TYPE.get(), world);
         entity.setTag(tag);
-        double x = player.posX;
-        double y = player.posY+player.getEyeHeight() - .5;
-        double z = player.posZ;
+        double x = player.getPosX();
+        double y = player.getPosY()+player.getEyeHeight() - .5;
+        double z = player.getPosZ();
         Vec3d lookVec = player.getLookVec();
         lookVec = new Vec3d(lookVec.x, 0, lookVec.z).normalize();
         x += lookVec.x * distance;
@@ -127,9 +127,9 @@ public class HoloGuiHandler implements IHoloGuiHandler {
 //        HoloGuiEntity entity = new HoloGuiEntitySmall(world);
         HoloGuiEntity entity = new HoloGuiEntity(ModEntities.HOLOGUI_ENTITY_TYPE.get(), world);
         entity.setTag(tag);
-        double x = parent.posX + offset.x;
-        double y = parent.posY + offset.y;
-        double z = parent.posZ + offset.z;
+        double x = parent.getPosX() + offset.x;
+        double y = parent.getPosY() + offset.y;
+        double z = parent.getPosZ() + offset.z;
         entity.setPosition(x, y, z);
         entity.setLocationAndAngles(x, y, z, parent.rotationYaw+90, parent.rotationPitch);
         world.addEntity(entity);

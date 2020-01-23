@@ -14,17 +14,16 @@ import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.network.play.server.SSpawnObjectPacket;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
-import javax.vecmath.Vector2d;
 import java.util.Optional;
 
 public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
@@ -168,7 +167,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 
     private void onUpdateServer() {
         if (playerDetectionBox == null) {
-            playerDetectionBox = new AxisAlignedBB(posX - 10, posY - 10, posZ - 10, posX + 10, posY + 10, posZ + 10);
+            playerDetectionBox = new AxisAlignedBB(getPosX() - 10, getPosY() - 10, getPosZ() - 10, getPosX() + 10, getPosY() + 10, getPosZ() + 10);
         }
 
         ticks--;
@@ -191,7 +190,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         if (hasCloseStrategy(CloseStrategy.TIMEOUT)) {
             timeout--;
             if (timeout <= 0) {
-                world.playSound(null, posX, posY, posZ, HoloGuiSounds.guiopen, SoundCategory.PLAYERS, 0.2f, 1.0f);
+                world.playSound(null, getPosX(), getPosY(), getPosZ(), HoloGuiSounds.guiopen, SoundCategory.PLAYERS, 0.2f, 1.0f);
                 this.remove();
             }
             if (hasCloseStrategy(CloseStrategy.TIMEOUT_RESET)) {
@@ -208,7 +207,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     private boolean playerLooksAtMe(PlayerEntity player) {
         Vec3d lookVec = getLookVec();
         Vec3d v = getIntersect3D(player, lookVec);
-        Vector2d vec2d = get2DProjection(lookVec, v);
+        Vec2f vec2d = get2DProjection(lookVec, v);
 
         double cx;
         double cy;
@@ -227,7 +226,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         PlayerEntity player = McJtyLib.proxy.getClientPlayer();
         Vec3d lookVec = getLookVec();
         Vec3d v = getIntersect3D(player, lookVec);
-        Vector2d vec2d = get2DProjection(lookVec, v);
+        Vec2f vec2d = get2DProjection(lookVec, v);
 
         float scale = getScale();
 
@@ -298,14 +297,14 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     public boolean processInitialInteract(PlayerEntity player, Hand hand) {
         // The small holo is used as a child on the flux levitator. It doesn't close like this
         if (hasCloseStrategy(CloseStrategy.RIGHTCLICK)) {
-            world.playSound(posX, posY, posZ, HoloGuiSounds.guiopen, SoundCategory.PLAYERS, 0.2f, 1.0f, true);  // @todo config
+            world.playSound(getPosX(), getPosY(), getPosZ(), HoloGuiSounds.guiopen, SoundCategory.PLAYERS, 0.2f, 1.0f, true);  // @todo config
             remove();
         }
         return false;
     }
 
 
-    private Vector2d intersect(PlayerEntity player) {
+    private Vec2f intersect(PlayerEntity player) {
         Vec3d lookVec = getLookVec();
         Vec3d v = getIntersect3D(player, lookVec);
         return get2DProjection(lookVec, v);
@@ -316,42 +315,42 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         return true;
     }
 
-    private Vector2d get2DProjection(Vec3d lookVec, Vec3d v) {
+    private Vec2f get2DProjection(Vec3d lookVec, Vec3d v) {
         double x = v.x;
         double y = v.y;
         double z = v.z;
-        // Origin on plane is posX, posY, posZ
+        // Origin on plane is getPosX(), getPosY(), getPosZ()
         // Point on plane in 2D x direction: cross( (0,1,0), (xn,yn,zn) )
-        // Point on plane in 2D y direction: posX, posY-1, posZ
+        // Point on plane in 2D y direction: getPosX(), getPosY()-1, getPosZ()
         Vec3d vx = lookVec.crossProduct(new Vec3d(0, 1, 0));    // @todo optimize
         Vec3d vy = new Vec3d(0, -1, 0);
 //        Vec3d vy = vx.crossProduct(new Vec3d(1, 0, 0));
-        x -= posX;
-        y -= posY;
-        z -= posZ;
+        x -= getPosX();
+        y -= getPosY();
+        z -= getPosZ();
         double x2d = vx.x * x + vx.y * y + vx.z * z + .5;
         double y2d = vy.x * x + vy.y * y + vy.z * z + 1;
 
-        return new Vector2d(x2d, y2d);
+        return new Vec2f((float)x2d, (float)y2d);
     }
 
     private Vec3d getIntersect3D(PlayerEntity player, Vec3d lookVec) {
-        // Center point of plane: posX, posY, posZ
+        // Center point of plane: getPosX(), getPosY(), getPosZ()
         // Perpendicular to the plane: getLookVec()
         double xn = lookVec.x;
         double yn = lookVec.y;
         double zn = lookVec.z;
 
         // Plane: Ax + By + Cz + D = 0
-        double D = -(xn * posX + yn * posY + zn * posZ);
+        double D = -(xn * getPosX() + yn * getPosY() + zn * getPosZ());
         double A = xn;
         double B = yn;
         double C = zn;
 
         // Line (from player): (x = x1 + at, y = y1 + bt, z = z1 + ct)
-        double x1 = player.posX;
-        double y1 = player.posY + player.getEyeHeight();
-        double z1 = player.posZ;
+        double x1 = player.getPosX();
+        double y1 = player.getPosY() + player.getEyeHeight();
+        double z1 = player.getPosZ();
         Vec3d playerLookVec = player.getLookVec();
         double a = playerLookVec.x;
         double b = playerLookVec.y;
@@ -369,7 +368,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     public boolean hitByEntity(Entity entityIn) {
         if (entityIn instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) entityIn;
-            Vector2d vec2d = intersect(player);
+            Vec2f vec2d = intersect(player);
             IGuiComponent gui = getGui(player);
             if (gui != null) {
                 double x;
