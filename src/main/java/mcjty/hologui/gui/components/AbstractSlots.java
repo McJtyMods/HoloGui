@@ -60,7 +60,7 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
     @Override
     public void hitClient(PlayerEntity player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         Entity ent = entity.getEntity();
-        player.world.playSound(ent.posX, ent.posY, ent.posZ, HoloGuiSounds.guiclick, SoundCategory.PLAYERS, 1.0f, 1.0f, true);
+        player.world.playSound(ent.getPosX(), ent.getPosY(), ent.getPosZ(), HoloGuiSounds.guiclick, SoundCategory.PLAYERS, 1.0f, 1.0f, true);
         Pair<ItemStack, Integer> pair = getSelectedPair(player, cursorX, cursorY);
         selected = pair.getRight();
     }
@@ -128,7 +128,7 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
                 }
             }
         }
-        RenderHelper.enableStandardItemLighting();
+        RenderHelper.func_227780_a_();
     }
 
     protected abstract List<Pair<ItemStack, Integer>> getStacks(PlayerEntity player);
@@ -181,7 +181,7 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
             int xx = (int) (cursorX - x);
             int yy = (int) (cursorY - y);
             HoloGuiRenderTools.renderToolTip(stack, (int) ((xx+x) * 30 - 120), (int) ((yy+y) * 30 - 120 + 25), tooltipHandler);
-            RenderHelper.enableStandardItemLighting();
+            RenderHelper.func_227780_a_();
             GlStateManager.popMatrix();
         }
     }
