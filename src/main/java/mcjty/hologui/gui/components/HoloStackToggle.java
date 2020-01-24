@@ -70,7 +70,7 @@ public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> impleme
             border = true;
         }
         HoloGuiRenderTools.renderItem(x, y, stack, lightmap, border, scale);
-        RenderHelper.func_227780_a_();
+        RenderHelper.enableStandardItemLighting();
     }
 
     @Override
@@ -82,7 +82,7 @@ public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> impleme
         GlStateManager.translatef(0, 0, -10);
         GlStateManager.scaled(0.4, 0.4, 0.0);
         HoloGuiRenderTools.renderToolTip(stack, (int) (x * 30 - 120), (int) (y * 30 - 120), tooltipHandler);
-        RenderHelper.func_227780_a_();
+        RenderHelper.enableStandardItemLighting();
         GlStateManager.popMatrix();
     }
 

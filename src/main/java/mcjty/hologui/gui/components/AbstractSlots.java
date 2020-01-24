@@ -128,7 +128,7 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
                 }
             }
         }
-        RenderHelper.func_227780_a_();
+        RenderHelper.enableStandardItemLighting();
     }
 
     protected abstract List<Pair<ItemStack, Integer>> getStacks(PlayerEntity player);
@@ -181,7 +181,7 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
             int xx = (int) (cursorX - x);
             int yy = (int) (cursorY - y);
             HoloGuiRenderTools.renderToolTip(stack, (int) ((xx+x) * 30 - 120), (int) ((yy+y) * 30 - 120 + 25), tooltipHandler);
-            RenderHelper.func_227780_a_();
+            RenderHelper.enableStandardItemLighting();
             GlStateManager.popMatrix();
         }
     }
