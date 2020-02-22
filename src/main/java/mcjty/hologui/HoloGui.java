@@ -17,7 +17,8 @@ import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 
-import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 @Mod(HoloGui.MODID)
 public class HoloGui implements ModBase {
@@ -38,7 +39,7 @@ public class HoloGui implements ModBase {
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLCommonSetupEvent event) -> setup.init(event));
         FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLClientSetupEvent event) -> ClientRegistration.init());
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::imcCallback);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
 
         Config.loadConfig(Config.CLIENT_CONFIG, FMLPaths.CONFIGDIR.get().resolve("hologui-client.toml"));
     }
@@ -49,12 +50,11 @@ public class HoloGui implements ModBase {
         return HoloGui.MODID;
     }
 
-    private void imcCallback(InterModProcessEvent event) {
-        event.getIMCStream("getHoloHandler"::equalsIgnoreCase).forEach(msg -> {
-            try {
-                msg.<Consumer<IHoloGuiHandler>>getMessageSupplier().get().accept(guiHandler);
-            } catch (Exception e) {
-                setup.getLogger().warn("The mod '{}' caused an error while trying to get the hologui handler: {}", msg.getModId(), e.getMessage());
+    private void processIMC(final InterModProcessEvent event) {
+        event.getIMCStream().forEach(message -> {
+            if ("getHoloHandler".equalsIgnoreCase(message.getMethod())) {
+                Supplier<Function<IHoloGuiHandler, Void>> supplier = message.getMessageSupplier();
+                supplier.get().apply(guiHandler);
             }
         });
     }

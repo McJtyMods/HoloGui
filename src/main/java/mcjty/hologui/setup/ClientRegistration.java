@@ -1,16 +1,38 @@
 package mcjty.hologui.setup;
 
 
+import mcjty.hologui.HoloGui;
 import mcjty.hologui.ModEntities;
-import mcjty.hologui.gui.HoloGuiEntity;
 import mcjty.hologui.gui.HoloGuiEntityRender;
+import mcjty.hologui.gui.HoloGuiRenderType;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.Mod;
 
+import static mcjty.hologui.gui.HoloGuiEntityRender.*;
+
+@Mod.EventBusSubscriber(modid = HoloGui.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientRegistration {
 
     public static void init() {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.HOLOGUI_ENTITY_TYPE.get(), HoloGuiEntityRender::new);
-//        RenderingRegistry.registerEntityRenderingHandler(HoloGuiEntity.class, new HoloGuiEntityRender.Factory());
+    }
+
+    @SubscribeEvent
+    public static void onTextureStitch(TextureStitchEvent.Pre event) {
+        if (!event.getMap().getBasePath().equals(HoloGuiRenderType.HOLOGUI_ATLAS)) {
+            return;
+        }
+        event.addSprite(GUI_BACKGROUND_1);
+        event.addSprite(GUI_BACKGROUND_2);
+        event.addSprite(GUI_BACKGROUND_3);
+        event.addSprite(GUI_BACKGROUND_4);
+        event.addSprite(GUI_BACKGROUND_5);
+        event.addSprite(GUI_BACKGROUND_6);
+        event.addSprite(GUI_BACKGROUND_7);
+        event.addSprite(GUI_BACKGROUND_8);
     }
 
 }

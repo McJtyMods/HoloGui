@@ -148,7 +148,8 @@ public class HoloGuiHandler implements IHoloGuiHandler {
 
     @Override
     public void render(IHoloGuiEntity entity, double x, double y, double z, float entityYaw) {
-        HoloGuiEntityRender.doActualRender((HoloGuiEntity) entity, x, y, z, entityYaw);
+        // @todo 1.15
+//        HoloGuiEntityRender.doActualRender((HoloGuiEntity) entity, x, y, z, entityYaw);
     }
 
 }
