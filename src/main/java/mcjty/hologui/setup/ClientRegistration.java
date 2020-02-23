@@ -9,8 +9,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ColorHandlerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 
@@ -21,29 +19,11 @@ public class ClientRegistration {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.HOLOGUI_ENTITY_TYPE.get(), HoloGuiEntityRender::new);
     }
 
-    @SubscribeEvent
-    public static void onColorHandler(ColorHandlerEvent event) {
+    public static void setupSpriteUploader() {
         IResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
         if (resourceManager instanceof IReloadableResourceManager) {
-            HoloGuiSpriteUploader spriteUploader = new HoloGuiSpriteUploader(Minecraft.getInstance().getTextureManager());
-            ((IReloadableResourceManager) resourceManager).addReloadListener(spriteUploader);
+            HoloGuiSpriteUploader.INSTANCE = new HoloGuiSpriteUploader(Minecraft.getInstance().getTextureManager());
+            ((IReloadableResourceManager) resourceManager).addReloadListener(HoloGuiSpriteUploader.INSTANCE);
         }
-
     }
-
-//    @SubscribeEvent
-//    public static void onTextureStitch(TextureStitchEvent.Pre event) {
-//        if (!event.getMap().getBasePath().equals(HoloGuiSpriteUploader.HOLOGUI_ATLAS)) {
-//            return;
-//        }
-//        event.addSprite(GUI_BACKGROUND_1);
-//        event.addSprite(GUI_BACKGROUND_2);
-//        event.addSprite(GUI_BACKGROUND_3);
-//        event.addSprite(GUI_BACKGROUND_4);
-//        event.addSprite(GUI_BACKGROUND_5);
-//        event.addSprite(GUI_BACKGROUND_6);
-//        event.addSprite(GUI_BACKGROUND_7);
-//        event.addSprite(GUI_BACKGROUND_8);
-//    }
-//
 }

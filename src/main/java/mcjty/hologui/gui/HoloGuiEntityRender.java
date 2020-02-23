@@ -21,14 +21,14 @@ import org.lwjgl.opengl.GL11;
 
 public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
 
-    public static final ResourceLocation GUI_BACKGROUND_1 = new ResourceLocation(HoloGui.MODID, "gui/hologui_blue_softwhite");
-    public static final ResourceLocation GUI_BACKGROUND_2 = new ResourceLocation(HoloGui.MODID, "gui/hologui_blue");
-    public static final ResourceLocation GUI_BACKGROUND_3 = new ResourceLocation(HoloGui.MODID, "gui/hologui_blue_sharpwhite");
-    public static final ResourceLocation GUI_BACKGROUND_4 = new ResourceLocation(HoloGui.MODID, "gui/hologui_blue_sharpblack");
-    public static final ResourceLocation GUI_BACKGROUND_5 = new ResourceLocation(HoloGui.MODID, "gui/hologui_blue_softblack");
-    public static final ResourceLocation GUI_BACKGROUND_6 = new ResourceLocation(HoloGui.MODID, "gui/hologui_gray_sharpblack");
-    public static final ResourceLocation GUI_BACKGROUND_7 = new ResourceLocation(HoloGui.MODID, "gui/hologui_gray_sharpwhite");
-    public static final ResourceLocation GUI_BACKGROUND_8 = new ResourceLocation(HoloGui.MODID, "gui/hologui_gray_softblack");
+    public static final ResourceLocation GUI_BACKGROUND_1 = new ResourceLocation(HoloGui.MODID, "hologui_blue_softwhite");
+    public static final ResourceLocation GUI_BACKGROUND_2 = new ResourceLocation(HoloGui.MODID, "hologui_blue");
+    public static final ResourceLocation GUI_BACKGROUND_3 = new ResourceLocation(HoloGui.MODID, "hologui_blue_sharpwhite");
+    public static final ResourceLocation GUI_BACKGROUND_4 = new ResourceLocation(HoloGui.MODID, "hologui_blue_sharpblack");
+    public static final ResourceLocation GUI_BACKGROUND_5 = new ResourceLocation(HoloGui.MODID, "hologui_blue_softblack");
+    public static final ResourceLocation GUI_BACKGROUND_6 = new ResourceLocation(HoloGui.MODID, "hologui_gray_sharpblack");
+    public static final ResourceLocation GUI_BACKGROUND_7 = new ResourceLocation(HoloGui.MODID, "hologui_gray_sharpwhite");
+    public static final ResourceLocation GUI_BACKGROUND_8 = new ResourceLocation(HoloGui.MODID, "hologui_gray_softblack");
 
     public HoloGuiEntityRender(EntityRendererManager renderManager) {
         super(renderManager);
@@ -101,7 +101,8 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
             case 7: background = GUI_BACKGROUND_7; break;
             case 8: background = GUI_BACKGROUND_8; break;
         }
-        TextureAtlasSprite sprite = Minecraft.getInstance().getTextureGetter(HoloGuiSpriteUploader.HOLOGUI_ATLAS).apply(background);
+
+        TextureAtlasSprite sprite = HoloGuiSpriteUploader.INSTANCE.getSprite(background);
 
 
         float min = -.5f;

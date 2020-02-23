@@ -2,6 +2,7 @@ package mcjty.hologui.gui;
 
 import mcjty.hologui.HoloGui;
 import net.minecraft.client.renderer.texture.SpriteUploader;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.ResourceLocation;
 
@@ -10,9 +11,10 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static mcjty.hologui.gui.HoloGuiEntityRender.*;
-import static mcjty.hologui.gui.HoloGuiEntityRender.GUI_BACKGROUND_8;
 
 public class HoloGuiSpriteUploader extends SpriteUploader {
+
+    public static HoloGuiSpriteUploader INSTANCE;
 
     public static final ResourceLocation HOLOGUI_ATLAS = new ResourceLocation(HoloGui.MODID, "textures/atlas/hologui.png");
 
@@ -34,5 +36,10 @@ public class HoloGuiSpriteUploader extends SpriteUploader {
     @Override
     protected Stream<ResourceLocation> getResourceLocations() {
         return textures.stream();
+    }
+
+    @Override
+    public TextureAtlasSprite getSprite(ResourceLocation location) {
+        return super.getSprite(location);
     }
 }
