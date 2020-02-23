@@ -9,6 +9,7 @@ import mcjty.hologui.config.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -54,7 +55,7 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
             return;
         }
 
-//        doActualRender(entity, stack, buffer);
+        doActualRender(entity, stack, buffer);
     }
 
     public static void doActualRender(HoloGuiEntity entity, MatrixStack matrixStack, IRenderTypeBuffer buffer) {
@@ -100,17 +101,17 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
             case 7: background = GUI_BACKGROUND_7; break;
             case 8: background = GUI_BACKGROUND_8; break;
         }
-        TextureAtlasSprite sprite = Minecraft.getInstance().getTextureGetter(HoloGuiRenderType.HOLOGUI_ATLAS).apply(background);
+        TextureAtlasSprite sprite = Minecraft.getInstance().getTextureGetter(HoloGuiSpriteUploader.HOLOGUI_ATLAS).apply(background);
 
 
-        double min = -.5;
-        double max = .5;
-        renderQuadColor(builder, min, max, min, max, 255, 255, 255, 255, sprite);
+        float min = -.5f;
+        float max = .5f;
+        renderQuadColor(builder, matrixStack.getLast().getPositionMatrix(), min, max, min, max, 255, 255, 255, 255, sprite);
 
 //        GlStateManager.disableDepthTest();
 
-        double cursorX = entity.getCursorX();
-        double cursorY = entity.getCursorY();
+        float cursorX = (float) entity.getCursorX();
+        float cursorY = (float) entity.getCursorY();
 
         IGuiComponent gui = entity.getGui(Minecraft.getInstance().player);
         if (gui != null) {
@@ -133,9 +134,9 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
         if (cursorX >= 0 && cursorX <= 10 && cursorY >= 0 && cursorY <= 10) {
 //            GlStateManager.disableTexture();
 //            GlStateManager.enableBlend();
-            double offset = .01;
-            renderQuadColor(builder, (cursorX / 10.0) - .42 - offset, (cursorX / 10.0) - .42 + offset,
-                     - ((cursorY / 10) -.42 - offset),  - ((cursorY / 10) -.42 + offset),
+            float offset = .01f;
+            renderQuadColor(builder, matrixStack.getLast().getPositionMatrix(), (cursorX / 10.0f) - .42f - offset, (cursorX / 10.0f) - .42f + offset,
+                     - ((cursorY / 10) -.42f - offset),  - ((cursorY / 10) -.42f + offset),
                     60, 255, 128, 100, sprite);
 //            t.draw();
         }
@@ -159,16 +160,16 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
         builder.pos(minX, minY, 0).tex(0, 0).endVertex();
     }
 
-    private static void renderQuadColor(IVertexBuilder builder, double minX, double maxX, double minY, double maxY, int r, int g, int b, int a,
+    private static void renderQuadColor(IVertexBuilder builder, Matrix4f matrix, float minX, float maxX, float minY, float maxY, int r, int g, int b, int a,
                                         TextureAtlasSprite sprite) {
-        builder.pos(minX, minY, 0).color(r, g, b, a).tex(sprite.getMinU(), sprite.getMinV()).endVertex(); //1
-        builder.pos(maxX, minY, 0).color(r, g, b, a).tex(sprite.getMaxU(), sprite.getMinV()).endVertex();
-        builder.pos(maxX, maxY, 0).color(r, g, b, a).tex(sprite.getMaxU(), sprite.getMaxV()).endVertex();
-        builder.pos(minX, maxY, 0).color(r, g, b, a).tex(sprite.getMinU(), sprite.getMaxV()).endVertex();
-        builder.pos(minX, maxY, 0).color(r, g, b, a).tex(sprite.getMinU(), sprite.getMaxV()).endVertex(); //2
-        builder.pos(maxX, maxY, 0).color(r, g, b, a).tex(sprite.getMaxU(), sprite.getMaxV()).endVertex();
-        builder.pos(maxX, minY, 0).color(r, g, b, a).tex(sprite.getMaxU(), sprite.getMinV()).endVertex();
-        builder.pos(minX, minY, 0).color(r, g, b, a).tex(sprite.getMinU(), sprite.getMinV()).endVertex();
+        builder.pos(matrix, minX, minY, 0).color(r, g, b, a).tex(sprite.getMinU(), sprite.getMinV()).endVertex(); //1
+        builder.pos(matrix, maxX, minY, 0).color(r, g, b, a).tex(sprite.getMaxU(), sprite.getMinV()).endVertex();
+        builder.pos(matrix, maxX, maxY, 0).color(r, g, b, a).tex(sprite.getMaxU(), sprite.getMaxV()).endVertex();
+        builder.pos(matrix, minX, maxY, 0).color(r, g, b, a).tex(sprite.getMinU(), sprite.getMaxV()).endVertex();
+        builder.pos(matrix, minX, maxY, 0).color(r, g, b, a).tex(sprite.getMinU(), sprite.getMaxV()).endVertex(); //2
+        builder.pos(matrix, maxX, maxY, 0).color(r, g, b, a).tex(sprite.getMaxU(), sprite.getMaxV()).endVertex();
+        builder.pos(matrix, maxX, minY, 0).color(r, g, b, a).tex(sprite.getMaxU(), sprite.getMinV()).endVertex();
+        builder.pos(matrix, minX, minY, 0).color(r, g, b, a).tex(sprite.getMinU(), sprite.getMinV()).endVertex();
     }
 
     private void renderDebugOutline(HoloGuiEntity entity, Tessellator t, BufferBuilder builder) {

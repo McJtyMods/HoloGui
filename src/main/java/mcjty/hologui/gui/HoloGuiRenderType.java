@@ -1,11 +1,9 @@
 package mcjty.hologui.gui;
 
-import mcjty.hologui.HoloGui;
 import net.minecraft.client.renderer.RenderState;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
-import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 public class HoloGuiRenderType extends RenderType {
@@ -16,12 +14,10 @@ public class HoloGuiRenderType extends RenderType {
     }
 
 
-    public static final ResourceLocation HOLOGUI_ATLAS = new ResourceLocation(HoloGui.MODID, "textures/atlas/hologui.png");
-
     public static final RenderType HOLOGUI_BACKGROUND = get("hologui_background", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 262144, true, true,
             State.builder().shadeModel(SHADE_ENABLED)
                     .lightmap(RenderState.LIGHTMAP_DISABLED)
-                    .texture(new TextureState(HOLOGUI_ATLAS, false, false))
+                    .texture(new TextureState(HoloGuiSpriteUploader.HOLOGUI_ATLAS, false, false))
                     .transparency(TRANSLUCENT_TRANSPARENCY)
                     .writeMask(COLOR_WRITE)
                     .build(true));
