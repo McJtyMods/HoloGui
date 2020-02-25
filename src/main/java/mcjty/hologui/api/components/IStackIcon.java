@@ -14,7 +14,7 @@ public interface IStackIcon extends IGuiComponent<IStackIcon> {
 
     IStackIcon itemStack(Supplier<ItemStack> supplier);
 
-    IStackIcon scale(double scale);
+    IStackIcon scale(float scale);
 
     IStackIcon tooltipHandler(BiConsumer<ItemStack, List<String>> tooltipHandler);
 }

@@ -1,14 +1,16 @@
 package mcjty.hologui.api;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.player.PlayerEntity;
 
 import java.util.Optional;
 
 public interface IGuiComponent<P extends IGuiComponent<P>> {
 
-    void render(PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY);
+    void render(MatrixStack matrixStack, IRenderTypeBuffer buffer, PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY);
 
-    void renderTooltip(PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY);
+    void renderTooltip(MatrixStack matrixStack, IRenderTypeBuffer buffer, PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY);
 
     IGuiComponent<?> findHoveringWidget(double cursorX, double cursorY);
 

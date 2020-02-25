@@ -1,10 +1,12 @@
 package mcjty.hologui.gui.components;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.components.IStackIcon;
 import mcjty.hologui.gui.HoloGuiRenderTools;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 
@@ -16,7 +18,7 @@ import java.util.function.Supplier;
 public class HoloStackIcon extends AbstractHoloComponent<IStackIcon> implements IStackIcon {
 
     private Supplier<ItemStack> stackSupplier;
-    private double scale = 1.0;
+    private float scale = 1.0f;
     private BiConsumer<ItemStack, List<String>> tooltipHandler = (itemStack, strings) -> {};
 
     HoloStackIcon(double x, double y, double w, double h) {
@@ -24,7 +26,7 @@ public class HoloStackIcon extends AbstractHoloComponent<IStackIcon> implements 
     }
 
     @Override
-    public IStackIcon scale(double scale) {
+    public IStackIcon scale(float scale) {
         this.scale = scale;
         return this;
     }
@@ -48,22 +50,21 @@ public class HoloStackIcon extends AbstractHoloComponent<IStackIcon> implements 
     }
 
     @Override
-    public void render(PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
-        HoloGuiRenderTools.renderItem(x, y, stackSupplier.get(), null, false, scale);
+    public void render(MatrixStack matrixStack, IRenderTypeBuffer buffer, PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+        HoloGuiRenderTools.renderItem(matrixStack, buffer, x, y, stackSupplier.get(), null, false, scale);
         RenderHelper.enableStandardItemLighting();
     }
 
     @Override
-    public void renderTooltip(PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
-        GlStateManager.pushMatrix();
-        GlStateManager.scaled(0.01, 0.01, 0.01);
-        GlStateManager.rotatef(180, 0, 1, 0);
-        GlStateManager.rotatef(180, 0, 0, 1);
-        GlStateManager.translatef(0, 0, -10);
-        GlStateManager.scaled(0.4, 0.4, 0.0);
-        HoloGuiRenderTools.renderToolTip(stackSupplier.get(), (int) (x * 30 - 120), (int) (y * 30 - 120), tooltipHandler);
-        RenderHelper.enableStandardItemLighting();
-        GlStateManager.popMatrix();
+    public void renderTooltip(MatrixStack matrixStack, IRenderTypeBuffer buffer, PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+        matrixStack.push();
+        matrixStack.scale(0.01f, 0.01f, 0.01f);
+        matrixStack.rotate(Vector3f.YP.rotationDegrees(180));
+        matrixStack.rotate(Vector3f.ZP.rotationDegrees(180));
+        matrixStack.translate(0, 0, -10);
+        matrixStack.scale(0.4f, 0.4f, 0.0f);
+        HoloGuiRenderTools.renderToolTip(matrixStack, buffer, stackSupplier.get(), (int) (x * 30 - 120), (int) (y * 30 - 120), tooltipHandler);
+        matrixStack.pop();
     }
 
 }

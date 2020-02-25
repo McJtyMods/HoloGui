@@ -1,11 +1,13 @@
 package mcjty.hologui.gui.components;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mcjty.hologui.api.*;
 import mcjty.hologui.gui.ColorFromStyle;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -86,11 +88,11 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
     }
 
     @Override
-    public void render(PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void render(MatrixStack matrixStack, IRenderTypeBuffer buffer, PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         IColor color = new ColorFromStyle(StyledColor.BORDER);
         int bc = color.getColor();
         if (bc != -1) {
-            HoloGuiRenderTools.renderBorder(x, y, w, h, bc & 255, (bc >> 8) & 255, (bc >> 16) & 255, (bc >> 24) & 255);
+            HoloGuiRenderTools.renderBorder(matrixStack, buffer, x, y, w, h, bc & 255, (bc >> 8) & 255, (bc >> 16) & 255, (bc >> 24) & 255);
         }
         double yy = y;
         double xx = x;
@@ -104,18 +106,18 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
                 if ((!fullBright) && selected != pair.getRight()) {
                     lightmap = HoloStackToggle.DARKEN;
                 }
-                HoloGuiRenderTools.renderItem(xx, yy, stack, lightmap, cursorPair.getRight() == pair.getRight(), 0.9);
+                HoloGuiRenderTools.renderItem(matrixStack, buffer, xx, yy, stack, lightmap, cursorPair.getRight() == pair.getRight(), 0.9f);
                 if (withAmount && stack.getCount() > 1) {
-                    GlStateManager.pushMatrix();
-                    GlStateManager.scalef(.5f, .5f, .5f);
+                    matrixStack.push();
+                    matrixStack.scale(.5f, .5f, .5f);
                     String s = Integer.toString(stack.getCount());
-                    HoloGuiRenderTools.renderTextShadow(xx * 2 - 4 + .4, yy * 2 - 4 + .9, s, 0xffffffff, 1.0f);
-                    GlStateManager.popMatrix();
+                    HoloGuiRenderTools.renderTextShadow(matrixStack, buffer, xx * 2 - 4 + .4, yy * 2 - 4 + .9, s, 0xffffffff, 1.0f);
+                    matrixStack.pop();
                 }
 
                 IImage image = overlay.apply(stack, pair.getRight());
                 if (image != null) {
-                    HoloGuiRenderTools.renderImage(xx+.13, yy+.13, image.getU(), image.getV(), 16, 16, image.getWidth(), image.getHeight(), image.getImage());
+                    HoloGuiRenderTools.renderImage(matrixStack, buffer, xx+.13, yy+.13, image.getU(), image.getV(), 16, 16, image.getWidth(), image.getHeight(), image.getImage());
                 }
 
                 xx++;
@@ -169,20 +171,20 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
     }
 
     @Override
-    public void renderTooltip(PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void renderTooltip(MatrixStack matrixStack, IRenderTypeBuffer buffer, PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         ItemStack stack = getSelectedStack(player, cursorX, cursorY);
         if (!stack.isEmpty()) {
-            GlStateManager.pushMatrix();
-            GlStateManager.scaled(0.01, 0.01, 0.01);
-            GlStateManager.rotatef(180, 0, 1, 0);
-            GlStateManager.rotatef(180, 0, 0, 1);
-            GlStateManager.translatef(0, 0, -10);
-            GlStateManager.scaled(0.4, 0.4, 0.0);
+            matrixStack.push();
+            matrixStack.scale(0.01f, 0.01f, 0.01f);
+            matrixStack.rotate(Vector3f.YP.rotationDegrees(180));
+            matrixStack.rotate(Vector3f.ZP.rotationDegrees(180));
+            matrixStack.translate(0, 0, -10);
+            matrixStack.scale(0.4f, 0.4f, 0.0f);
             int xx = (int) (cursorX - x);
             int yy = (int) (cursorY - y);
-            HoloGuiRenderTools.renderToolTip(stack, (int) ((xx+x) * 30 - 120), (int) ((yy+y) * 30 - 120 + 25), tooltipHandler);
+            HoloGuiRenderTools.renderToolTip(matrixStack, buffer, stack, (int) ((xx+x) * 30 - 120), (int) ((yy+y) * 30 - 120 + 25), tooltipHandler);
             RenderHelper.enableStandardItemLighting();
-            GlStateManager.popMatrix();
+            matrixStack.pop();
         }
     }
 

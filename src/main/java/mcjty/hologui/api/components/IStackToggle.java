@@ -18,7 +18,7 @@ public interface IStackToggle extends IGuiComponent<IStackToggle> {
 
     IStackToggle hitEvent(IEvent event);
 
-    IStackToggle scale(double scale);
+    IStackToggle scale(float scale);
 
     IStackToggle tooltipHandler(BiConsumer<ItemStack, List<String>> tooltipHandler);
 }

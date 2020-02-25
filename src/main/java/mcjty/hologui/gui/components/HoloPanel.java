@@ -1,8 +1,10 @@
 package mcjty.hologui.gui.components;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.components.IPanel;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.player.PlayerEntity;
 
 import java.util.ArrayList;
@@ -25,9 +27,9 @@ public class HoloPanel extends AbstractHoloComponent<IPanel> implements IPanel {
     }
 
     @Override
-    public void render(PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void render(MatrixStack matrixStack, IRenderTypeBuffer buffer, PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         for (IGuiComponent<?> child : children) {
-            child.render(player, holo, cursorX, cursorY);
+            child.render(matrixStack, buffer, player, holo, cursorX, cursorY);
         }
     }
 

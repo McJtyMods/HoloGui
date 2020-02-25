@@ -1,7 +1,9 @@
 package mcjty.hologui.gui.components;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.IGuiComponent;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.player.PlayerEntity;
 
 import java.util.Optional;
@@ -28,7 +30,7 @@ public abstract class AbstractHoloComponent<P extends IGuiComponent<P>> implemen
     }
 
     @Override
-    public void renderTooltip(PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void renderTooltip(MatrixStack matrixStack, IRenderTypeBuffer buffer, PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
 
     }
 

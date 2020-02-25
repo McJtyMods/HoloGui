@@ -1,13 +1,15 @@
 package mcjty.hologui.gui.components;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mcjty.hologui.HoloGui;
 import mcjty.hologui.api.IEvent;
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.components.IStackToggle;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -24,7 +26,7 @@ public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> impleme
     private ItemStack stack;
     private Function<PlayerEntity, Boolean> currentValue;
     private IEvent hitEvent;
-    double scale = 1.0;
+    float scale = 1.0f;
     private BiConsumer<ItemStack, List<String>> tooltipHandler = (itemStack, strings) -> {};
 
     public static final ResourceLocation DARKEN = new ResourceLocation(HoloGui.MODID, "textures/gui/darken.png");
@@ -35,7 +37,7 @@ public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> impleme
     }
 
     @Override
-    public IStackToggle scale(double scale) {
+    public IStackToggle scale(float scale) {
         this.scale = scale;
         return this;
     }
@@ -59,7 +61,7 @@ public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> impleme
     }
 
     @Override
-    public void render(PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void render(MatrixStack matrixStack, IRenderTypeBuffer buffer, PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         Boolean state = currentValue.apply(player);
         ResourceLocation lightmap = null;
         boolean border = false;
@@ -69,21 +71,20 @@ public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> impleme
         } else {
             border = true;
         }
-        HoloGuiRenderTools.renderItem(x, y, stack, lightmap, border, scale);
+        HoloGuiRenderTools.renderItem(matrixStack, buffer, x, y, stack, lightmap, border, scale);
         RenderHelper.enableStandardItemLighting();
     }
 
     @Override
-    public void renderTooltip(PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
-        GlStateManager.pushMatrix();
-        GlStateManager.scaled(0.01, 0.01, 0.01);
-        GlStateManager.rotatef(180, 0, 1, 0);
-        GlStateManager.rotatef(180, 0, 0, 1);
-        GlStateManager.translatef(0, 0, -10);
-        GlStateManager.scaled(0.4, 0.4, 0.0);
-        HoloGuiRenderTools.renderToolTip(stack, (int) (x * 30 - 120), (int) (y * 30 - 120), tooltipHandler);
-        RenderHelper.enableStandardItemLighting();
-        GlStateManager.popMatrix();
+    public void renderTooltip(MatrixStack matrixStack, IRenderTypeBuffer buffer, PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+        matrixStack.push();
+        matrixStack.scale(0.01f, 0.01f, 0.01f);
+        matrixStack.rotate(Vector3f.YP.rotationDegrees(180));
+        matrixStack.rotate(Vector3f.ZP.rotationDegrees(180));
+        matrixStack.translate(0, 0, -10);
+        matrixStack.scale(0.4f, 0.4f, 0.0f);
+        HoloGuiRenderTools.renderToolTip(matrixStack, buffer, stack, (int) (x * 30 - 120), (int) (y * 30 - 120), tooltipHandler);
+        matrixStack.pop();
     }
 
     @Override

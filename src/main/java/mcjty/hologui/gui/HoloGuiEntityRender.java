@@ -1,23 +1,17 @@
 package mcjty.hologui.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import mcjty.hologui.HoloGui;
 import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.config.Config;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Matrix4f;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import org.lwjgl.opengl.GL11;
 
 public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
 
@@ -81,11 +75,12 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
         int style = Config.GUI_STYLE.get().ordinal();
 
         if (style <= 8) {
-            GlStateManager.enableBlend();
-            GlStateManager.color4f(1.0f, 1.0f, 1.0f, 0.8f);
+            // @todo 1.15
+//            GlStateManager.enableBlend();
+//            GlStateManager.color4f(1.0f, 1.0f, 1.0f, 0.8f);
         } else {
-            GlStateManager.disableBlend();
-            GlStateManager.color4f(1.0f, 1.0f, 1.0f, 1.0f);
+//            GlStateManager.disableBlend();
+//            GlStateManager.color4f(1.0f, 1.0f, 1.0f, 1.0f);
             style -= 8;
         }
 
@@ -114,10 +109,10 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
         float cursorX = (float) entity.getCursorX();
         float cursorY = (float) entity.getCursorY();
 
-        IGuiComponent gui = entity.getGui(Minecraft.getInstance().player);
+        IGuiComponent<?> gui = entity.getGui(Minecraft.getInstance().player);
         if (gui != null) {
-            gui.render(Minecraft.getInstance().player, entity, cursorX, cursorY);
-            IGuiComponent hovering = gui.findHoveringWidget(cursorX, cursorY);
+            gui.render(matrixStack, buffer, Minecraft.getInstance().player, entity, cursorX, cursorY);
+            IGuiComponent<?> hovering = gui.findHoveringWidget(cursorX, cursorY);
             if (hovering != entity.tooltipComponent) {
                 entity.tooltipComponent = hovering;
                 entity.tooltipTimeout = 10;
@@ -126,7 +121,7 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
                     entity.tooltipTimeout--;
                 } else {
                     if (hovering != null) {
-                        hovering.renderTooltip(Minecraft.getInstance().player, entity, cursorX, cursorY);
+                        hovering.renderTooltip(matrixStack, buffer, Minecraft.getInstance().player, entity, cursorX, cursorY);
                     }
                 }
             }
@@ -150,17 +145,6 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
 //        Minecraft.getInstance().gameRenderer.getLightTexture().enableLightmap();
     }
 
-    private static void renderQuad(IVertexBuilder builder, double minX, double maxX, double minY, double maxY) {
-        builder.pos(minX, minY, 0).tex(0, 0).endVertex(); //1
-        builder.pos(maxX, minY, 0).tex(1, 0).endVertex();
-        builder.pos(maxX, maxY, 0).tex(1, 1).endVertex();
-        builder.pos(minX, maxY, 0).tex(0, 1).endVertex();
-        builder.pos(minX, maxY, 0).tex(0, 1).endVertex(); //2
-        builder.pos(maxX, maxY, 0).tex(1, 1).endVertex();
-        builder.pos(maxX, minY, 0).tex(1, 0).endVertex();
-        builder.pos(minX, minY, 0).tex(0, 0).endVertex();
-    }
-
     private static void renderQuadColor(IVertexBuilder builder, Matrix4f matrix, float minX, float maxX, float minY, float maxY, int r, int g, int b, int a,
                                         TextureAtlasSprite sprite) {
         builder.pos(matrix, minX, minY, 0).color(r, g, b, a).tex(sprite.getMinU(), sprite.getMinV()).endVertex(); //1
@@ -171,42 +155,6 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
         builder.pos(matrix, maxX, maxY, 0).color(r, g, b, a).tex(sprite.getMaxU(), sprite.getMaxV()).endVertex();
         builder.pos(matrix, maxX, minY, 0).color(r, g, b, a).tex(sprite.getMaxU(), sprite.getMinV()).endVertex();
         builder.pos(matrix, minX, minY, 0).color(r, g, b, a).tex(sprite.getMinU(), sprite.getMinV()).endVertex();
-    }
-
-    private void renderDebugOutline(HoloGuiEntity entity, Tessellator t, BufferBuilder builder) {
-        AxisAlignedBB box = entity.getRenderBoundingBox();
-        GlStateManager.disableTexture();
-        GlStateManager.disableLighting();
-        builder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
-        double minX = box.minX - entity.getPosX();
-        double minY = box.minY - entity.getPosY();
-        double minZ = box.minZ - entity.getPosZ();
-        double maxX = box.maxX - entity.getPosX();
-        double maxY = box.maxY - entity.getPosY();
-        double maxZ = box.maxZ - entity.getPosZ();
-
-        renderDebugOutline(builder, minX, minY, minZ, maxX, maxY, maxZ);
-        t.draw();
-    }
-
-    private void renderDebugOutline(BufferBuilder builder, double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
-        builder.pos(minX, minY, minZ).color(255, 255, 255, 128).endVertex();
-        builder.pos(maxX, minY, minZ).color(255, 255, 255, 128).endVertex();
-
-        builder.pos(minX, minY, minZ).color(255, 255, 255, 128).endVertex();
-        builder.pos(minX, maxY, minZ).color(255, 255, 255, 128).endVertex();
-
-        builder.pos(minX, minY, minZ).color(255, 255, 255, 128).endVertex();
-        builder.pos(minX, minY, maxZ).color(255, 255, 255, 128).endVertex();
-
-        builder.pos(maxX, maxY, maxZ).color(255, 0, 0, 128).endVertex();
-        builder.pos(minX, maxY, maxZ).color(255, 0, 0, 128).endVertex();
-
-        builder.pos(maxX, maxY, maxZ).color(255, 0, 0, 128).endVertex();
-        builder.pos(maxX, minY, maxZ).color(255, 0, 0, 128).endVertex();
-
-        builder.pos(maxX, maxY, maxZ).color(255, 0, 0, 128).endVertex();
-        builder.pos(maxX, maxY, minZ).color(255, 0, 0, 128).endVertex();
     }
 
     protected float interpolateRotation(float prevYawOffset, float yawOffset, float partialTicks) {

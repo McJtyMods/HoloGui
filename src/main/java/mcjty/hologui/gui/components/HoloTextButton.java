@@ -1,5 +1,6 @@
 package mcjty.hologui.gui.components;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mcjty.hologui.api.IColor;
 import mcjty.hologui.api.IEvent;
 import mcjty.hologui.api.IHoloGuiEntity;
@@ -8,7 +9,7 @@ import mcjty.hologui.api.components.IButton;
 import mcjty.hologui.gui.ColorFromStyle;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
-import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.SoundCategory;
@@ -84,19 +85,18 @@ public class HoloTextButton extends AbstractHoloComponent<IButton> implements IB
     }
 
     @Override
-    public void render(PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void render(MatrixStack matrixStack, IRenderTypeBuffer buffer, PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         int color;
         if (isInside(cursorX, cursorY)) {
             color = this.hoverColor.getColor();
         } else {
             color = this.color.getColor();
         }
-        RenderHelper.disableStandardItemLighting();
         int bc = borderColor.getColor();
         if (bc != -1) {
-            HoloGuiRenderTools.renderBorder(x, y, w, h, bc & 255, (bc >> 8) & 255, (bc >> 16) & 255, (bc >> 24) & 255);
+            HoloGuiRenderTools.renderBorder(matrixStack, buffer, x, y, w, h, bc & 255, (bc >> 8) & 255, (bc >> 16) & 255, (bc >> 24) & 255);
         }
-        HoloGuiRenderTools.renderText(x, y, text, color, 1.0f);
+        HoloGuiRenderTools.renderText(matrixStack, buffer, x, y, text, color, 1.0f);
     }
 
     @Override
