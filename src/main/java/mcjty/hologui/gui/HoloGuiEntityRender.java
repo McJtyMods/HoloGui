@@ -8,6 +8,7 @@ import mcjty.hologui.config.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Matrix4f;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -62,7 +63,7 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
         matrixStack.push();
 //        GlStateManager.translated(x, y, z);
 
-//        matrixStack.rotate(Vector3f.YP.rotationDegrees(180.0F - entityYaw));
+        matrixStack.rotate(Vector3f.YP.rotationDegrees(180.0F - entity.getYaw(0)));
         matrixStack.translate(0, .5, 0);
         float scale = entity.getScale();
         scale = 1f - (1f-scale) * (.4f / .25f);
@@ -109,6 +110,16 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
         float cursorX = (float) entity.getCursorX();
         float cursorY = (float) entity.getCursorY();
 
+        if (cursorX >= 0 && cursorX <= 10 && cursorY >= 0 && cursorY <= 10) {
+//            GlStateManager.disableTexture();
+//            GlStateManager.enableBlend();
+            float offset = .01f;
+            renderQuadColor(builder, matrixStack.getLast().getPositionMatrix(), (cursorX / 10.0f) - .42f - offset, (cursorX / 10.0f) - .42f + offset,
+                    - ((cursorY / 10) -.42f - offset),  - ((cursorY / 10) -.42f + offset),
+                    60, 255, 128, 100, sprite);
+//            t.draw();
+        }
+
         IGuiComponent<?> gui = entity.getGui(Minecraft.getInstance().player);
         if (gui != null) {
             gui.render(matrixStack, buffer, Minecraft.getInstance().player, entity, cursorX, cursorY);
@@ -127,15 +138,6 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
             }
         }
 
-        if (cursorX >= 0 && cursorX <= 10 && cursorY >= 0 && cursorY <= 10) {
-//            GlStateManager.disableTexture();
-//            GlStateManager.enableBlend();
-            float offset = .01f;
-            renderQuadColor(builder, matrixStack.getLast().getPositionMatrix(), (cursorX / 10.0f) - .42f - offset, (cursorX / 10.0f) - .42f + offset,
-                     - ((cursorY / 10) -.42f - offset),  - ((cursorY / 10) -.42f + offset),
-                    60, 255, 128, 100, sprite);
-//            t.draw();
-        }
         matrixStack.pop();
 
 
