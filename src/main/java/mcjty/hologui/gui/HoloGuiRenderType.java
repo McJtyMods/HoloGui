@@ -14,16 +14,16 @@ public class HoloGuiRenderType extends RenderType {
     }
 
 
-    public static final RenderType HOLOGUI_BACKGROUND = get("hologui_background", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 262144, true, true,
-            State.builder().shadeModel(SHADE_ENABLED)
+    public static final RenderType HOLOGUI_BACKGROUND = makeType("hologui_background", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 262144, true, true,
+            State.getBuilder().shadeModel(SHADE_ENABLED)
                     .lightmap(RenderState.LIGHTMAP_DISABLED)
                     .texture(new TextureState(HoloGuiSpriteUploader.HOLOGUI_ATLAS, false, false))
                     .transparency(TRANSLUCENT_TRANSPARENCY)
                     .writeMask(COLOR_WRITE)
                     .build(true));
 
-    public static final RenderType HOLOGUI_ICONS = get("hologui_icons", DefaultVertexFormats.POSITION_TEX, GL11.GL_QUADS, 262144, true, true,
-            State.builder().shadeModel(SHADE_ENABLED)
+    public static final RenderType HOLOGUI_ICONS = makeType("hologui_icons", DefaultVertexFormats.POSITION_TEX, GL11.GL_QUADS, 262144, true, true,
+            State.getBuilder().shadeModel(SHADE_ENABLED)
                     .lightmap(RenderState.LIGHTMAP_DISABLED)
                     .texture(new TextureState(HoloGuiSpriteUploader.HOLOGUI_ATLAS, false, false))
                     .transparency(TRANSLUCENT_TRANSPARENCY)

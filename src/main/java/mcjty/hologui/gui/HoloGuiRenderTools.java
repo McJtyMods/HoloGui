@@ -36,7 +36,7 @@ public class HoloGuiRenderTools {
         matrixStack.rotate(Vector3f.YP.rotationDegrees(180));
         matrixStack.rotate(Vector3f.ZP.rotationDegrees(180));
         Minecraft.getInstance().fontRenderer.renderString(text, (float) (x * 10 / scale - 40 / scale), (float) (y * 10 / scale - 40 / scale), color,
-                false, matrixStack.getLast().getPositionMatrix(), buffer, false, 0, 0xf000f0);  // @todo 1.15 or 140?
+                false, matrixStack.getLast().getMatrix(), buffer, false, 0, 0xf000f0);  // @todo 1.15 or 140?
         matrixStack.pop();
     }
 
@@ -46,7 +46,7 @@ public class HoloGuiRenderTools {
         matrixStack.rotate(Vector3f.YP.rotationDegrees(180));
         matrixStack.rotate(Vector3f.ZP.rotationDegrees(180));
         Minecraft.getInstance().fontRenderer.renderString(text, (float) (x * 10 / scale - 40 / scale), (float) (y * 10 / scale - 40 / scale), color,
-                true, matrixStack.getLast().getPositionMatrix(), buffer, false, 0, 0xf000f0);  // @todo 1.15 or 140?
+                true, matrixStack.getLast().getMatrix(), buffer, false, 0, 0xf000f0);  // @todo 1.15 or 140?
         matrixStack.pop();
     }
 
@@ -60,7 +60,7 @@ public class HoloGuiRenderTools {
         TextureAtlasSprite sprite = HoloGuiSpriteUploader.INSTANCE.getSprite(image);
 
         IVertexBuilder builder = buffer.getBuffer(HoloGuiRenderType.HOLOGUI_ICONS);
-        RenderHelper.drawTexturedModalRect(matrixStack.getLast().getPositionMatrix(), builder, (int) (x * 10 - 46), (int) (y * 10 - 44), u, v, w, h, txtw, txth,
+        RenderHelper.drawTexturedModalRect(matrixStack.getLast().getMatrix(), builder, (int) (x * 10 - 46), (int) (y * 10 - 44), u, v, w, h, txtw, txth,
                 sprite.getMinU(), sprite.getMinV());
         matrixStack.pop();
     }
@@ -173,7 +173,7 @@ public class HoloGuiRenderTools {
 
         int lightmapValue = 140;     // @todo 1.15 or 0xf000f0
         bakedmodel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(matrixStack, bakedmodel, transform, false);
-        renderItem.renderItem(stack, transform, false, matrixStack, buffer, lightmapValue, OverlayTexture.DEFAULT_LIGHT, bakedmodel);
+        renderItem.renderItem(stack, transform, false, matrixStack, buffer, lightmapValue, OverlayTexture.NO_OVERLAY, bakedmodel);
 
         // @todo 1.15
 //        GlStateManager.cullFace(GlStateManager.CullFace.BACK);

@@ -103,7 +103,7 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
 
         float min = -.5f;
         float max = .5f;
-        renderQuadColor(builder, matrixStack.getLast().getPositionMatrix(), min, max, min, max, 255, 255, 255, 255, sprite);
+        renderQuadColor(builder, matrixStack.getLast().getMatrix(), min, max, min, max, 255, 255, 255, 255, sprite);
 
 //        GlStateManager.disableDepthTest();
 
@@ -114,7 +114,7 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
 //            GlStateManager.disableTexture();
 //            GlStateManager.enableBlend();
             float offset = .01f;
-            renderQuadColor(builder, matrixStack.getLast().getPositionMatrix(), (cursorX / 10.0f) - .42f - offset, (cursorX / 10.0f) - .42f + offset,
+            renderQuadColor(builder, matrixStack.getLast().getMatrix(), (cursorX / 10.0f) - .42f - offset, (cursorX / 10.0f) - .42f + offset,
                     - ((cursorY / 10) -.42f - offset),  - ((cursorY / 10) -.42f + offset),
                     60, 255, 128, 100, sprite);
 //            t.draw();
