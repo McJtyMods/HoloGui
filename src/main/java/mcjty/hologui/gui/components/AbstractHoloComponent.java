@@ -1,8 +1,8 @@
 package mcjty.hologui.gui.components;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.IGuiComponent;
+import mcjty.hologui.api.IHoloGuiEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.player.PlayerEntity;
 

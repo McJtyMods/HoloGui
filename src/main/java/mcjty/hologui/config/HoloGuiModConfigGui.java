@@ -1,7 +1,5 @@
 package mcjty.hologui.config;
 
-import mcjty.hologui.HoloGui;
-
 // @todo 1.14
 public class HoloGuiModConfigGui {} /*extends GuiConfig {
 
