@@ -7,7 +7,6 @@ import mcjty.hologui.gui.HoloGuiHandler;
 import mcjty.hologui.setup.ClientRegistration;
 import mcjty.hologui.setup.ModSetup;
 import mcjty.lib.base.ModBase;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -63,8 +62,4 @@ public class HoloGui implements ModBase {
         });
     }
 
-    @Override
-    public void openManual(PlayerEntity player, int bookindex, String page) {
-        // @todo
-    }
 }
