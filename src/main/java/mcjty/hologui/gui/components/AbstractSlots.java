@@ -69,22 +69,27 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
 
     public P tooltipHandler(BiConsumer<ItemStack, List<String>> tooltipHandler) {
         this.tooltipHandler = tooltipHandler;
+        return getThis();
+    }
+
+    private P getThis() {
+        //noinspection unchecked
         return (P) this;
     }
 
     public P withAmount() {
         this.withAmount = true;
-        return (P) this;
+        return getThis();
     }
 
     public P exactView() {
         this.exactView = true;
-        return (P) this;
+        return getThis();
     }
 
     public P fullBright() {
         this.fullBright = true;
-        return (P) this;
+        return getThis();
     }
 
     @Override

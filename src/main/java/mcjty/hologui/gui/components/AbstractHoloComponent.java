@@ -81,6 +81,7 @@ public abstract class AbstractHoloComponent<P extends IGuiComponent<P>> implemen
     @Override
     public P name(String name) {
         this.name = name;
+        //noinspection unchecked
         return (P) this;
     }
 
