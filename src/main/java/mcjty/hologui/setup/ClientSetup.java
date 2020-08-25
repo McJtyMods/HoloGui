@@ -1,21 +1,18 @@
 package mcjty.hologui.setup;
 
 
-import mcjty.hologui.HoloGui;
 import mcjty.hologui.ModEntities;
 import mcjty.hologui.gui.HoloGuiEntityRender;
 import mcjty.hologui.gui.HoloGuiSpriteUploader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
-@Mod.EventBusSubscriber(modid = HoloGui.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class ClientRegistration {
+public class ClientSetup {
 
-    public static void init() {
+    public static void init(FMLClientSetupEvent event) {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.HOLOGUI_ENTITY_TYPE.get(), HoloGuiEntityRender::new);
     }
 
