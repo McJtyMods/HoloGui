@@ -6,7 +6,6 @@ import mcjty.hologui.config.Config;
 import mcjty.hologui.gui.HoloGuiHandler;
 import mcjty.hologui.setup.ClientRegistration;
 import mcjty.hologui.setup.ModSetup;
-import mcjty.lib.base.ModBase;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -22,7 +21,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @Mod(HoloGui.MODID)
-public class HoloGui implements ModBase {
+public class HoloGui {
     public static final String MODID = "hologui";
 
     public static ModSetup setup = new ModSetup();
@@ -47,11 +46,6 @@ public class HoloGui implements ModBase {
         Config.loadConfig(Config.CLIENT_CONFIG, FMLPaths.CONFIGDIR.get().resolve("hologui-client.toml"));
     }
 
-
-    @Override
-    public String getModId() {
-        return HoloGui.MODID;
-    }
 
     private void processIMC(final InterModProcessEvent event) {
         event.getIMCStream().forEach(message -> {

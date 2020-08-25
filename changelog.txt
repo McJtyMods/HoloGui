@@ -1,5 +1,6 @@
 Upcoming:
 - Fixed a problem with 'opaque' mode not working
+- Various cleanups and fixes
 
 0.0.9-beta:
 - Fix some issues with text component crashing in some situations
