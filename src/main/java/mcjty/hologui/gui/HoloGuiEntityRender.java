@@ -149,6 +149,17 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
 
     private static void renderQuadColor(IVertexBuilder builder, Matrix4f matrix, float minX, float maxX, float minY, float maxY, int r, int g, int b, int a,
                                         TextureAtlasSprite sprite) {
+//   public static final VertexFormat BLOCK = new VertexFormat(ImmutableList.<VertexFormatElement>builder()
+// .add(POSITION_3F).add(COLOR_4UB).add(TEX_2F).add(TEX_2SB).add(NORMAL_3B).add(PADDING_1B).build());
+
+//        builder.pos(matrix, minX, minY, 0).color(r, g, b, a).tex(sprite.getMinU(), sprite.getMinV()).lightmap(0xf000f0).normal(1, 1, 1).endVertex(); //1
+//        builder.pos(matrix, maxX, minY, 0).color(r, g, b, a).tex(sprite.getMaxU(), sprite.getMinV()).lightmap(0xf000f0).normal(1, 1, 1).endVertex();
+//        builder.pos(matrix, maxX, maxY, 0).color(r, g, b, a).tex(sprite.getMaxU(), sprite.getMaxV()).lightmap(0xf000f0).normal(1, 1, 1).endVertex();
+//        builder.pos(matrix, minX, maxY, 0).color(r, g, b, a).tex(sprite.getMinU(), sprite.getMaxV()).lightmap(0xf000f0).normal(1, 1, 1).endVertex();
+//        builder.pos(matrix, minX, maxY, 0).color(r, g, b, a).tex(sprite.getMinU(), sprite.getMaxV()).lightmap(0xf000f0).normal(1, 1, 1).endVertex(); //2
+//        builder.pos(matrix, maxX, maxY, 0).color(r, g, b, a).tex(sprite.getMaxU(), sprite.getMaxV()).lightmap(0xf000f0).normal(1, 1, 1).endVertex();
+//        builder.pos(matrix, maxX, minY, 0).color(r, g, b, a).tex(sprite.getMaxU(), sprite.getMinV()).lightmap(0xf000f0).normal(1, 1, 1).endVertex();
+//        builder.pos(matrix, minX, minY, 0).color(r, g, b, a).tex(sprite.getMinU(), sprite.getMinV()).lightmap(0xf000f0).normal(1, 1, 1).endVertex();
         builder.pos(matrix, minX, minY, 0).color(r, g, b, a).tex(sprite.getMinU(), sprite.getMinV()).endVertex(); //1
         builder.pos(matrix, maxX, minY, 0).color(r, g, b, a).tex(sprite.getMaxU(), sprite.getMinV()).endVertex();
         builder.pos(matrix, maxX, maxY, 0).color(r, g, b, a).tex(sprite.getMaxU(), sprite.getMaxV()).endVertex();
