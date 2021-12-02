@@ -126,7 +126,7 @@ dependencies {
 task apiJar(type: Jar) {
     classifier = "api"
     from(sourceSets.main.output) {
-        include "mcjty/mcjtylib/api/**"
+        include "mcjty/hologui/api/**"
     }
 }
 
