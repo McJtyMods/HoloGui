@@ -2,13 +2,12 @@
 // For those who want the bleeding edge
 buildscript {
     repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url = 'https://maven.minecraftforge.net' }
         maven { url 'https://plugins.gradle.org/m2/' }
-        jcenter()
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1+', changing: true
         classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.4.0'
     }
 }
@@ -20,33 +19,32 @@ apply plugin: 'maven-publish'
 
 repositories {
     maven { // JEI
+        name 'progwml6'
         url "https://dvs1.progwml6.com/files/maven"
+        content {
+            includeGroup "mezz.jei"
+        }
     }
     maven { // Patchouli
-        url "https://maven.blamejared.com"
-    }
-    maven {
-        name 'OC Repo'
-        url "http://maven.cil.li/"
+        name 'blamejared'
+        url "https://maven.blamejared.com/"
+        content {
+            includeGroup "vazkii.patchouli"
+        }
     }
     maven { // TOP
         name 'tterrag maven'
-        url "http://maven.tterrag.com/"
+        url "https://maven.tterrag.com/"
+        content {
+            includeGroup "mcjty.theoneprobe"
+        }
     }
     maven { // McJtyLib
-        url "http://maven.k-4u.nl"
-    }
-    maven {
-        name = "sonatype"
-        url = "https://oss.sonatype.org/content/repositories/snapshots/"
-    }
-    maven {
-        name = "CoFH Maven"
-        url = "http://maven.covers1624.net"
-    }
-    maven {
-        name = "TESLA"
-        url = "https://maven.mcmoddev.com"
+        name 'k-4u'
+        url "https://maven.k-4u.nl/"
+        content {
+            includeGroup "com.github.mcjty"
+        }
     }
 }
 
@@ -105,23 +103,23 @@ dependencies {
 
     compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
     runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
-    compile fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}") {
-        transitive = false
-    }
+
+    compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
+    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
     if (findProject(':TheOneProbe') != null) {
         compile project(':TheOneProbe')
     } else {
-        compile fg.deobf(project.dependencies.create("mcjty.theoneprobe:TheOneProbe-${top_version}") {
-            transitive = false
-        })
+        compileOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-${top_version}:api")
+        runtimeOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-${top_version}")
     }
     if (findProject(':McJtyLib') != null) {
         compile project(':McJtyLib')
     } else {
-        compile fg.deobf (project.dependencies.create("com.github.mcjty:mcjtylib:${mcjtylib_version}") {
-            transitive = false
-        })
+        compileOnly fg.deobf("com.github.mcjty:mcjtylib:${mcjtylib_version}")
+        // API version appears to be an empty jar file
+        // compileOnly fg.deobf("com.github.mcjty:mcjtylib:${mcjtylib_version}:api")
+        runtimeOnly fg.deobf("com.github.mcjty:mcjtylib:${mcjtylib_version}")
     }
 }
 
