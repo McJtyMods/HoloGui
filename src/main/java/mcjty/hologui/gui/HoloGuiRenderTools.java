@@ -199,7 +199,7 @@ public class HoloGuiRenderTools {
         Minecraft mc = Minecraft.getInstance();
         ITooltipFlag flag = mc.gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL;
         // @todo 1.14 check?
-        List<String> list = stack.getTooltip(mc.player, flag).stream().map(ITextComponent::getFormattedText).collect(Collectors.toList());
+        List<String> list = stack.getTooltip(mc.player, flag).stream().map(ITextComponent::getString).collect(Collectors.toList());
 
         for (int i = 0; i < list.size(); ++i) {
             if (i == 0) {
