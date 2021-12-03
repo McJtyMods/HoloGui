@@ -20,8 +20,8 @@ public class ModEntities {
     public static final RegistryObject<EntityType<HoloGuiEntity>> HOLOGUI_ENTITY_TYPE = ENTITIES.register("hologui", ModEntities::createHoloGuiType);
 
     private static EntityType<HoloGuiEntity> createHoloGuiType() {
-        return EntityType.Builder.create(HoloGuiEntity::new, EntityClassification.MISC)
-                .size(1, 1)
+        return EntityType.Builder.of(HoloGuiEntity::new, EntityClassification.MISC)
+                .sized(1, 1)
                 .setShouldReceiveVelocityUpdates(false)
                 .build("hologui");
     }

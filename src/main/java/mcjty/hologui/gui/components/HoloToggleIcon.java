@@ -70,7 +70,7 @@ public class HoloToggleIcon extends AbstractHoloComponent<IIconToggle> implement
     @Override
     public void hitClient(PlayerEntity player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         Entity ent = entity.getEntity();
-        player.world.playSound(ent.getPosX(), ent.getPosY(), ent.getPosZ(), HoloGuiSounds.guiclick, SoundCategory.PLAYERS, 1.0f, 1.0f, true);
+        player.level.playSound(player, ent.getX(), ent.getY(), ent.getZ(), HoloGuiSounds.guiclick, SoundCategory.PLAYERS, 1.0f, 1.0f);
     }
 
 }

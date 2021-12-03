@@ -60,10 +60,10 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
 
 //        Minecraft.getInstance().gameRenderer.getLightTexture().disableLightmap();
 
-        matrixStack.push();
+        matrixStack.pushPose();
 //        GlStateManager.translated(x, y, z);
 
-        matrixStack.rotate(Vector3f.YP.rotationDegrees(180.0F - entity.getYaw(0)));
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees(180.0F - entity.getViewYRot(0)));
         matrixStack.translate(0, .5, 0);
         float scale = entity.getScale();
         scale = 1f - (1f-scale) * (.4f / .25f);
@@ -103,7 +103,7 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
 
         float min = -.5f;
         float max = .5f;
-        renderQuadColor(builder, matrixStack.getLast().getMatrix(), min, max, min, max, 255, 255, 255, 255, sprite);
+        renderQuadColor(builder, matrixStack.last().pose(), min, max, min, max, 255, 255, 255, 255, sprite);
 
 //        GlStateManager.disableDepthTest();
 
@@ -114,7 +114,7 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
 //            GlStateManager.disableTexture();
 //            GlStateManager.enableBlend();
             float offset = .01f;
-            renderQuadColor(builder, matrixStack.getLast().getMatrix(), (cursorX / 10.0f) - .42f - offset, (cursorX / 10.0f) - .42f + offset,
+            renderQuadColor(builder, matrixStack.last().pose(), (cursorX / 10.0f) - .42f - offset, (cursorX / 10.0f) - .42f + offset,
                     - ((cursorY / 10) -.42f - offset),  - ((cursorY / 10) -.42f + offset),
                     60, 255, 128, 100, sprite);
 //            t.draw();
@@ -138,7 +138,7 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
             }
         }
 
-        matrixStack.pop();
+        matrixStack.popPose();
 
 
 //        GlStateManager.enableTexture();
@@ -160,14 +160,14 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
 //        builder.pos(matrix, maxX, maxY, 0).color(r, g, b, a).tex(sprite.getMaxU(), sprite.getMaxV()).lightmap(0xf000f0).normal(1, 1, 1).endVertex();
 //        builder.pos(matrix, maxX, minY, 0).color(r, g, b, a).tex(sprite.getMaxU(), sprite.getMinV()).lightmap(0xf000f0).normal(1, 1, 1).endVertex();
 //        builder.pos(matrix, minX, minY, 0).color(r, g, b, a).tex(sprite.getMinU(), sprite.getMinV()).lightmap(0xf000f0).normal(1, 1, 1).endVertex();
-        builder.pos(matrix, minX, minY, 0).color(r, g, b, a).tex(sprite.getMinU(), sprite.getMinV()).endVertex(); //1
-        builder.pos(matrix, maxX, minY, 0).color(r, g, b, a).tex(sprite.getMaxU(), sprite.getMinV()).endVertex();
-        builder.pos(matrix, maxX, maxY, 0).color(r, g, b, a).tex(sprite.getMaxU(), sprite.getMaxV()).endVertex();
-        builder.pos(matrix, minX, maxY, 0).color(r, g, b, a).tex(sprite.getMinU(), sprite.getMaxV()).endVertex();
-        builder.pos(matrix, minX, maxY, 0).color(r, g, b, a).tex(sprite.getMinU(), sprite.getMaxV()).endVertex(); //2
-        builder.pos(matrix, maxX, maxY, 0).color(r, g, b, a).tex(sprite.getMaxU(), sprite.getMaxV()).endVertex();
-        builder.pos(matrix, maxX, minY, 0).color(r, g, b, a).tex(sprite.getMaxU(), sprite.getMinV()).endVertex();
-        builder.pos(matrix, minX, minY, 0).color(r, g, b, a).tex(sprite.getMinU(), sprite.getMinV()).endVertex();
+        builder.vertex(matrix, minX, minY, 0).color(r, g, b, a).uv(sprite.getU0(), sprite.getV0()).endVertex(); //1
+        builder.vertex(matrix, maxX, minY, 0).color(r, g, b, a).uv(sprite.getU1(), sprite.getV0()).endVertex();
+        builder.vertex(matrix, maxX, maxY, 0).color(r, g, b, a).uv(sprite.getU1(), sprite.getV1()).endVertex();
+        builder.vertex(matrix, minX, maxY, 0).color(r, g, b, a).uv(sprite.getU0(), sprite.getV1()).endVertex();
+        builder.vertex(matrix, minX, maxY, 0).color(r, g, b, a).uv(sprite.getU0(), sprite.getV1()).endVertex(); //2
+        builder.vertex(matrix, maxX, maxY, 0).color(r, g, b, a).uv(sprite.getU1(), sprite.getV1()).endVertex();
+        builder.vertex(matrix, maxX, minY, 0).color(r, g, b, a).uv(sprite.getU1(), sprite.getV0()).endVertex();
+        builder.vertex(matrix, minX, minY, 0).color(r, g, b, a).uv(sprite.getU0(), sprite.getV0()).endVertex();
     }
 
     protected float interpolateRotation(float prevYawOffset, float yawOffset, float partialTicks) {
@@ -184,9 +184,8 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
         return prevYawOffset + partialTicks * f;
     }
 
-
     @Override
-    public ResourceLocation getEntityTexture(HoloGuiEntity entity) {
+    public ResourceLocation getTextureLocation(HoloGuiEntity pEntity) {
         return null;
     }
 }

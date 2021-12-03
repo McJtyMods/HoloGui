@@ -20,7 +20,7 @@ public class ClientSetup {
         IResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
         if (resourceManager instanceof IReloadableResourceManager) {
             HoloGuiSpriteUploader.INSTANCE = new HoloGuiSpriteUploader(Minecraft.getInstance().getTextureManager());
-            ((IReloadableResourceManager) resourceManager).addReloadListener(HoloGuiSpriteUploader.INSTANCE);
+            ((IReloadableResourceManager) resourceManager).registerReloadListener(HoloGuiSpriteUploader.INSTANCE);
         }
     }
 }

@@ -29,11 +29,11 @@ import java.util.Optional;
 
 public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 
-    private static final DataParameter<Optional<BlockPos>> GUITILE = EntityDataManager.createKey(HoloGuiEntity.class, DataSerializers.OPTIONAL_BLOCK_POS);
-    private static final DataParameter<String> TAG = EntityDataManager.createKey(HoloGuiEntity.class, DataSerializers.STRING);
-    private static final DataParameter<String> GUIID = EntityDataManager.createKey(HoloGuiEntity.class, DataSerializers.STRING);
-    private static final DataParameter<Float> SCALE = EntityDataManager.createKey(HoloGuiEntity.class, DataSerializers.FLOAT);
-    private static final DataParameter<Integer> CLOSESTRATEGY = EntityDataManager.createKey(HoloGuiEntity.class, DataSerializers.VARINT);
+    private static final DataParameter<Optional<BlockPos>> GUITILE = EntityDataManager.defineId(HoloGuiEntity.class, DataSerializers.OPTIONAL_BLOCK_POS);
+    private static final DataParameter<String> TAG = EntityDataManager.defineId(HoloGuiEntity.class, DataSerializers.STRING);
+    private static final DataParameter<String> GUIID = EntityDataManager.defineId(HoloGuiEntity.class, DataSerializers.STRING);
+    private static final DataParameter<Float> SCALE = EntityDataManager.defineId(HoloGuiEntity.class, DataSerializers.FLOAT);
+    private static final DataParameter<Integer> CLOSESTRATEGY = EntityDataManager.defineId(HoloGuiEntity.class, DataSerializers.INT);
 
     private AxisAlignedBB playerDetectionBox = null;
 
@@ -61,8 +61,9 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 //        setSize(1f, 1f);
     }
 
+
     @Override
-    public IPacket<?> createSpawnPacket() {
+    public IPacket<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
@@ -97,37 +98,37 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 
     @Override
     public float getScale() {
-        return this.dataManager.get(SCALE);
+        return this.entityData.get(SCALE);
     }
 
     @Override
     public void setScale(float scale) {
-        this.dataManager.set(SCALE, scale);
+        this.entityData.set(SCALE, scale);
     }
     public void setGuiTile(BlockPos guiTile) {
-        this.dataManager.set(GUITILE, Optional.ofNullable(guiTile));
+        this.entityData.set(GUITILE, Optional.ofNullable(guiTile));
     }
 
     public BlockPos getGuiTile() {
-        return (BlockPos) ((Optional) this.dataManager.get(GUITILE)).orElse(null);
+        return (BlockPos) ((Optional) this.entityData.get(GUITILE)).orElse(null);
     }
 
     @Override
     public String getGuiId() {
-        return this.dataManager.get(GUIID);
+        return this.entityData.get(GUIID);
     }
 
     public void setGuiId(String guiId) {
-        this.dataManager.set(GUIID, guiId);
+        this.entityData.set(GUIID, guiId);
     }
 
     public void setTag(String tag) {
-        this.dataManager.set(TAG, tag);
+        this.entityData.set(TAG, tag);
     }
 
     @Override
     public String getTag() {
-        return this.dataManager.get(TAG);
+        return this.entityData.get(TAG);
     }
 
     @Override
@@ -145,7 +146,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         // @todo 1.14?
         setScale(getScale());
 
-        if (world.isRemote) {
+        if (level.isClientSide) {
             String id = getGuiId();
             if (id != null && !id.isEmpty()) {
                 if (!id.equals(lastGuiId)) {
@@ -168,7 +169,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 
     private void onUpdateServer() {
         if (playerDetectionBox == null) {
-            playerDetectionBox = new AxisAlignedBB(getPosX() - 10, getPosY() - 10, getPosZ() - 10, getPosX() + 10, getPosY() + 10, getPosZ() + 10);
+            playerDetectionBox = new AxisAlignedBB(getX() - 10, getY() - 10, getZ() - 10, getX() + 10, getY() + 10, getZ() + 10);
         }
 
         ticks--;
@@ -180,7 +181,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
             } else {
                 BlockPos tile = getGuiTile();
                 if (tile != null) {
-                    IGuiTile guiTile = HoloGui.guiHandler.getGuiTile(world, tile);
+                    IGuiTile guiTile = HoloGui.guiHandler.getGuiTile(level, tile);
                     if (guiTile != null) {
                         guiTile.syncToClient();
                     }
@@ -191,11 +192,11 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         if (hasCloseStrategy(CloseStrategy.TIMEOUT)) {
             timeout--;
             if (timeout <= 0) {
-                world.playSound(null, getPosX(), getPosY(), getPosZ(), HoloGuiSounds.guiopen, SoundCategory.PLAYERS, 0.2f, 1.0f);
+                level.playSound(null, getX(), getY(), getZ(), HoloGuiSounds.guiopen, SoundCategory.PLAYERS, 0.2f, 1.0f);
                 this.remove();
             }
             if (hasCloseStrategy(CloseStrategy.TIMEOUT_RESET)) {
-                if (world.getEntitiesWithinAABB(PlayerEntity.class, playerDetectionBox)
+                if (level.getEntitiesOfClass(PlayerEntity.class, playerDetectionBox)
                         .stream()
                         .anyMatch(this::playerLooksAtMe)) {
                     timeout = maxTimeout;
@@ -206,7 +207,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 
 
     private boolean playerLooksAtMe(PlayerEntity player) {
-        Vector3d lookVec = getLookVec();
+        Vector3d lookVec = getLookAngle();
         Vector3d v = getIntersect3D(player, lookVec);
         Vector2f vec2d = get2DProjection(lookVec, v);
 
@@ -225,7 +226,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 
     private void onUpdateClient() {
         PlayerEntity player = McJtyLib.proxy.getClientPlayer();
-        Vector3d lookVec = getLookVec();
+        Vector3d lookVec = getLookAngle();
         Vector3d v = getIntersect3D(player, lookVec);
         Vector2f vec2d = get2DProjection(lookVec, v);
 
@@ -264,7 +265,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
             } else {
                 BlockPos tile = getGuiTile();
                 if (tile != null) {
-                    IGuiTile guiTile = HoloGui.guiHandler.getGuiTile(world, tile);
+                    IGuiTile guiTile = HoloGui.guiHandler.getGuiTile(level, tile);
                     if (guiTile != null) {
                         panel = guiTile.createGui(getTag(), HoloGui.guiHandler.getComponentRegistry());
                     }
@@ -281,12 +282,12 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 
     @Override
     public void setCloseStrategy(int strategy) {
-        this.dataManager.set(CLOSESTRATEGY, strategy);
+        this.entityData.set(CLOSESTRATEGY, strategy);
     }
 
     @Override
     public int getCloseStrategy() {
-        return this.dataManager.get(CLOSESTRATEGY);
+        return this.entityData.get(CLOSESTRATEGY);
     }
 
     @Override
@@ -295,10 +296,10 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     }
 
     @Override
-    public ActionResultType processInitialInteract(PlayerEntity player, Hand hand) {
+    public ActionResultType interact(PlayerEntity player, Hand hand) {
         // The small holo is used as a child on the flux levitator. It doesn't close like this
         if (hasCloseStrategy(CloseStrategy.RIGHTCLICK)) {
-            world.playSound(getPosX(), getPosY(), getPosZ(), HoloGuiSounds.guiopen, SoundCategory.PLAYERS, 0.2f, 1.0f, true);  // @todo config
+            level.playSound(player, getX(), getY(), getZ(), HoloGuiSounds.guiopen, SoundCategory.PLAYERS, 0.2f, 1.0f);  // @todo config
             remove();
         }
         return ActionResultType.PASS;
@@ -306,7 +307,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 
 
     private Vector2f intersect(PlayerEntity player) {
-        Vector3d lookVec = getLookVec();
+        Vector3d lookVec = getLookAngle();
         Vector3d v = getIntersect3D(player, lookVec);
         return get2DProjection(lookVec, v);
     }
@@ -323,12 +324,12 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         // Origin on plane is getPosX(), getPosY(), getPosZ()
         // Point on plane in 2D x direction: cross( (0,1,0), (xn,yn,zn) )
         // Point on plane in 2D y direction: getPosX(), getPosY()-1, getPosZ()
-        Vector3d vx = lookVec.crossProduct(new Vector3d(0, 1, 0));    // @todo optimize
+        Vector3d vx = lookVec.cross(new Vector3d(0, 1, 0));    // @todo optimize
         Vector3d vy = new Vector3d(0, -1, 0);
 //        Vector3d vy = vx.crossProduct(new Vector3d(1, 0, 0));
-        x -= getPosX();
-        y -= getPosY();
-        z -= getPosZ();
+        x -= getX();
+        y -= getY();
+        z -= getZ();
         double x2d = vx.x * x + vx.y * y + vx.z * z + .5;
         double y2d = vy.x * x + vy.y * y + vy.z * z + 1;
 
@@ -343,16 +344,16 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         double zn = lookVec.z;
 
         // Plane: Ax + By + Cz + D = 0
-        double D = -(xn * getPosX() + yn * getPosY() + zn * getPosZ());
+        double D = -(xn * getX() + yn * getY() + zn * getZ());
         double A = xn;
         double B = yn;
         double C = zn;
 
         // Line (from player): (x = x1 + at, y = y1 + bt, z = z1 + ct)
-        double x1 = player.getPosX();
-        double y1 = player.getPosY() + player.getEyeHeight();
-        double z1 = player.getPosZ();
-        Vector3d playerLookVec = player.getLookVec();
+        double x1 = player.getX();
+        double y1 = player.getY() + player.getEyeHeight();
+        double z1 = player.getZ();
+        Vector3d playerLookVec = player.getLookAngle();
         double a = playerLookVec.x;
         double b = playerLookVec.y;
         double c = playerLookVec.z;
@@ -366,7 +367,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     }
 
     @Override
-    public boolean hitByEntity(Entity entityIn) {
+    public boolean skipAttackInteraction(Entity entityIn) {
         if (entityIn instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) entityIn;
             Vector2f vec2d = intersect(player);
@@ -382,7 +383,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
                 x = vec2d.x * 10 / factor - offset;
                 y = vec2d.y * 10 / factor - offset;
 
-                if (!world.isRemote) {
+                if (!level.isClientSide) {
                     gui.hit(player, this, x, y);
                 } else {
                     gui.hitClient(player, this, x, y);
@@ -400,16 +401,16 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 
 
     @Override
-    protected void registerData() {
-        this.dataManager.register(GUITILE, Optional.empty());
-        this.dataManager.register(TAG, "");
-        this.dataManager.register(GUIID, "");
-        this.dataManager.register(SCALE, 1.0f);
-        this.dataManager.register(CLOSESTRATEGY, CloseStrategy.TIMEOUT + CloseStrategy.TIMEOUT_RESET + CloseStrategy.RIGHTCLICK);
+    protected void defineSynchedData() {
+        this.entityData.define(GUITILE, Optional.empty());
+        this.entityData.define(TAG, "");
+        this.entityData.define(GUIID, "");
+        this.entityData.define(SCALE, 1.0f);
+        this.entityData.define(CLOSESTRATEGY, CloseStrategy.TIMEOUT + CloseStrategy.TIMEOUT_RESET + CloseStrategy.RIGHTCLICK);
     }
 
     @Override
-    public void readAdditional(CompoundNBT compound) {
+    public void readAdditionalSaveData(CompoundNBT compound) {
         this.timeout = compound.getInt("timeout");
         this.maxTimeout = compound.getInt("maxTimeout");
         if (compound.contains("guix")) {
@@ -429,7 +430,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     }
 
     @Override
-    protected void writeAdditional(CompoundNBT compound) {
+    protected void addAdditionalSaveData(CompoundNBT compound) {
         compound.putInt("timeout", timeout);
         compound.putInt("maxTimeout", maxTimeout);
         BlockPos tile = getGuiTile();

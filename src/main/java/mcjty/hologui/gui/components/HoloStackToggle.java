@@ -72,19 +72,19 @@ public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> impleme
             border = true;
         }
         HoloGuiRenderTools.renderItem(matrixStack, buffer, x, y, stack, lightmap, border, scale);
-        RenderHelper.enableStandardItemLighting();
+        RenderHelper.turnBackOn();
     }
 
     @Override
     public void renderTooltip(MatrixStack matrixStack, IRenderTypeBuffer buffer, PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
-        matrixStack.push();
+        matrixStack.pushPose();
         matrixStack.scale(0.01f, 0.01f, 0.01f);
-        matrixStack.rotate(Vector3f.YP.rotationDegrees(180));
-        matrixStack.rotate(Vector3f.ZP.rotationDegrees(180));
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees(180));
+        matrixStack.mulPose(Vector3f.ZP.rotationDegrees(180));
         matrixStack.translate(0, 0, -10);
         matrixStack.scale(0.4f, 0.4f, 0.0f);
         HoloGuiRenderTools.renderToolTip(matrixStack, buffer, stack, (int) (x * 30 - 120), (int) (y * 30 - 120), tooltipHandler);
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 
     @Override
@@ -103,7 +103,7 @@ public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> impleme
     @Override
     public void hitClient(PlayerEntity player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         Entity ent = entity.getEntity();
-        player.world.playSound(ent.getPosX(), ent.getPosY(), ent.getPosZ(), HoloGuiSounds.guiclick, SoundCategory.PLAYERS, 1.0f, 1.0f, true);
+        player.level.playSound(player, ent.getX(), ent.getY(), ent.getZ(), HoloGuiSounds.guiclick, SoundCategory.PLAYERS, 1.0f, 1.0f);
     }
 
 

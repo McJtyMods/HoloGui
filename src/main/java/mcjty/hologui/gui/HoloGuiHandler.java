@@ -48,13 +48,13 @@ public class HoloGuiHandler implements IHoloGuiHandler {
     @Override
     public boolean openHoloGui(World world, BlockPos pos, PlayerEntity player) {
         IHoloGuiEntity entity = openHoloGuiEntity(world, pos, player, TAG_DEFAULT, 1.0);
-        return world.isRemote ? true : entity != null;
+        return world.isClientSide ? true : entity != null;
     }
 
     @Override
     public IHoloGuiEntity openHoloGuiEntity(World world, BlockPos pos, PlayerEntity player, String tag, double distance) {
-        if (world.isRemote) {
-            world.playSound(pos.getX(), pos.getY(), pos.getZ(), HoloGuiSounds.guiopen, SoundCategory.PLAYERS, 1.0f, 1.0f, true);
+        if (world.isClientSide) {
+            world.playSound(player, pos.getX(), pos.getY(), pos.getZ(), HoloGuiSounds.guiopen, SoundCategory.PLAYERS, 1.0f, 1.0f);
             return null;
         }
         IGuiTile guiTile = HoloGui.guiHandler.getGuiTile(world, pos);
@@ -81,12 +81,12 @@ public class HoloGuiHandler implements IHoloGuiHandler {
     public IHoloGuiEntity openHoloGui(PlayerEntity player, String guiId, double distance) {
         // @todo, check what's wrong with sound
 
-        World world = player.getEntityWorld();
-        BlockPos pos = player.getPosition();
+        World world = player.getCommandSenderWorld();
+        BlockPos pos = player.blockPosition();
 
         world.playSound(player, pos, HoloGuiSounds.guiopen, SoundCategory.PLAYERS, 1.0f, 1.0f);
-        if (world.isRemote) {
-            world.playSound(pos.getX(), pos.getY(), pos.getZ(), HoloGuiSounds.guiopen, SoundCategory.PLAYERS, 1.0f, 1.0f, true);
+        if (world.isClientSide) {
+            world.playSound(player, pos.getX(), pos.getY(), pos.getZ(), HoloGuiSounds.guiopen, SoundCategory.PLAYERS, 1.0f, 1.0f);
             return null;
         }
         HoloGuiEntity entity = createHoloGui(world, player, "", distance);
@@ -96,11 +96,11 @@ public class HoloGuiHandler implements IHoloGuiHandler {
 
     @Override
     public IHoloGuiEntity openHoloGuiRelative(Entity parent, Vector3d offset, String guiId) {
-//        if (world.isRemote) {
+//        if (world.isClientSide) {
 //            world.playSound(pos.getX(), pos.getY(), pos.getZ(), ModSounds.guiopen, SoundCategory.PLAYERS, 1.0f, 1.0f, true);
 //            return null;
 //        }
-        World world = parent.getEntityWorld();
+        World world = parent.getCommandSenderWorld();
         HoloGuiEntity entity = createHoloGuiRelative(world, parent, offset, "");
         entity.setGuiId(guiId);
         return entity;
@@ -109,17 +109,17 @@ public class HoloGuiHandler implements IHoloGuiHandler {
     private static HoloGuiEntity createHoloGui(World world, PlayerEntity player, String tag, double distance) {
         HoloGuiEntity entity = new HoloGuiEntity(ModEntities.HOLOGUI_ENTITY_TYPE.get(), world);
         entity.setTag(tag);
-        double x = player.getPosX();
-        double y = player.getPosY()+player.getEyeHeight() - .5;
-        double z = player.getPosZ();
-        Vector3d lookVec = player.getLookVec();
+        double x = player.getX();
+        double y = player.getY()+player.getEyeHeight() - .5;
+        double z = player.getZ();
+        Vector3d lookVec = player.getLookAngle();
         lookVec = new Vector3d(lookVec.x, 0, lookVec.z).normalize();
         x += lookVec.x * distance;
         y += lookVec.y;
         z += lookVec.z * distance;
-        entity.setPosition(x, y, z);
-        entity.setLocationAndAngles(x, y, z, player.rotationYaw, 0);
-        world.addEntity(entity);
+        entity.setPos(x, y, z);
+        entity.moveTo(x, y, z, player.yRot, 0);
+        world.addFreshEntity(entity);
         return entity;
     }
 
@@ -127,12 +127,12 @@ public class HoloGuiHandler implements IHoloGuiHandler {
 //        HoloGuiEntity entity = new HoloGuiEntitySmall(world);
         HoloGuiEntity entity = new HoloGuiEntity(ModEntities.HOLOGUI_ENTITY_TYPE.get(), world);
         entity.setTag(tag);
-        double x = parent.getPosX() + offset.x;
-        double y = parent.getPosY() + offset.y;
-        double z = parent.getPosZ() + offset.z;
-        entity.setPosition(x, y, z);
-        entity.setLocationAndAngles(x, y, z, parent.rotationYaw+90, parent.rotationPitch);
-        world.addEntity(entity);
+        double x = parent.getX() + offset.x;
+        double y = parent.getY() + offset.y;
+        double z = parent.getZ() + offset.z;
+        entity.setPos(x, y, z);
+        entity.moveTo(x, y, z, parent.yRot+90, parent.xRot);
+        world.addFreshEntity(entity);
         return entity;
     }
 

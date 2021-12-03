@@ -52,19 +52,19 @@ public class HoloStackIcon extends AbstractHoloComponent<IStackIcon> implements 
     @Override
     public void render(MatrixStack matrixStack, IRenderTypeBuffer buffer, PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         HoloGuiRenderTools.renderItem(matrixStack, buffer, x, y, stackSupplier.get(), null, false, scale);
-        RenderHelper.enableStandardItemLighting();
+        RenderHelper.turnBackOn();
     }
 
     @Override
     public void renderTooltip(MatrixStack matrixStack, IRenderTypeBuffer buffer, PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
-        matrixStack.push();
+        matrixStack.pushPose();
         matrixStack.scale(0.01f, 0.01f, 0.01f);
-        matrixStack.rotate(Vector3f.YP.rotationDegrees(180));
-        matrixStack.rotate(Vector3f.ZP.rotationDegrees(180));
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees(180));
+        matrixStack.mulPose(Vector3f.ZP.rotationDegrees(180));
         matrixStack.translate(0, 0, -10);
         matrixStack.scale(0.4f, 0.4f, 0.0f);
         HoloGuiRenderTools.renderToolTip(matrixStack, buffer, stackSupplier.get(), (int) (x * 30 - 120), (int) (y * 30 - 120), tooltipHandler);
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 
 }

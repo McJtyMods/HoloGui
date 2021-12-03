@@ -16,16 +16,14 @@ public class CommandHoloCfg implements Command<CommandSource> {
 
     public static ArgumentBuilder<CommandSource, ?> register(CommandDispatcher<CommandSource> dispatcher) {
         return Commands.literal("cfg")
-                .requires(cs -> cs.hasPermissionLevel(0))
+                .requires(cs -> cs.hasPermission(0))
                 .executes(CMD);
     }
 
     @Override
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
-        ServerPlayerEntity player = context.getSource().asPlayer();
-        if (player != null) {
-            HoloGui.guiHandler.openHoloGui(player, ConfigurationGui.GUI_CONFIGURATION, 1.0);
-        }
+        ServerPlayerEntity player = context.getSource().getPlayerOrException();
+        HoloGui.guiHandler.openHoloGui(player, ConfigurationGui.GUI_CONFIGURATION, 1.0);
         return 0;
     }
 }

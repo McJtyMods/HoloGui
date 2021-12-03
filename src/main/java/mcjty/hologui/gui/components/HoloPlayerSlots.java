@@ -31,8 +31,8 @@ public class HoloPlayerSlots extends AbstractSlots<IPlayerSlots> implements IPla
     @Override
     protected List<Pair<ItemStack, Integer>> getStacks(PlayerEntity player) {
         List<Pair<ItemStack, Integer>> stacks = new ArrayList<>();
-        for (int i = 0 ; i < player.inventory.getSizeInventory() ; i++) {
-            ItemStack stack = player.inventory.getStackInSlot(i);
+        for (int i = 0 ; i < player.inventory.getContainerSize() ; i++) {
+            ItemStack stack = player.inventory.getItem(i);
             if (filter.test(stack, i)) {
                 stacks.add(Pair.of(stack, i));
             }

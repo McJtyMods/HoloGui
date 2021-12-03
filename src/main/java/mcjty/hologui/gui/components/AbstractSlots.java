@@ -62,7 +62,7 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
     @Override
     public void hitClient(PlayerEntity player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         Entity ent = entity.getEntity();
-        player.world.playSound(ent.getPosX(), ent.getPosY(), ent.getPosZ(), HoloGuiSounds.guiclick, SoundCategory.PLAYERS, 1.0f, 1.0f, true);
+        player.level.playSound(player, ent.getX(), ent.getY(), ent.getZ(), HoloGuiSounds.guiclick, SoundCategory.PLAYERS, 1.0f, 1.0f);
         Pair<ItemStack, Integer> pair = getSelectedPair(player, cursorX, cursorY);
         selected = pair.getRight();
     }
@@ -113,11 +113,11 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
                 }
                 HoloGuiRenderTools.renderItem(matrixStack, buffer, xx, yy, stack, lightmap, cursorPair.getRight() == pair.getRight(), 0.9f);
                 if (withAmount && stack.getCount() > 1) {
-                    matrixStack.push();
+                    matrixStack.pushPose();
                     matrixStack.scale(.5f, .5f, .5f);
                     String s = Integer.toString(stack.getCount());
                     HoloGuiRenderTools.renderTextShadow(matrixStack, buffer, xx * 2 - 4 + .4, yy * 2 - 4 + .9, s, 0xffffffff, 1.0f);
-                    matrixStack.pop();
+                    matrixStack.popPose();
                 }
 
                 IImage image = overlay.apply(stack, pair.getRight());
@@ -135,7 +135,7 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
                 }
             }
         }
-        RenderHelper.enableStandardItemLighting();
+        RenderHelper.turnBackOn();
     }
 
     protected abstract List<Pair<ItemStack, Integer>> getStacks(PlayerEntity player);
@@ -179,17 +179,17 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
     public void renderTooltip(MatrixStack matrixStack, IRenderTypeBuffer buffer, PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         ItemStack stack = getSelectedStack(player, cursorX, cursorY);
         if (!stack.isEmpty()) {
-            matrixStack.push();
+            matrixStack.pushPose();
             matrixStack.scale(0.01f, 0.01f, 0.01f);
-            matrixStack.rotate(Vector3f.YP.rotationDegrees(180));
-            matrixStack.rotate(Vector3f.ZP.rotationDegrees(180));
+            matrixStack.mulPose(Vector3f.YP.rotationDegrees(180));
+            matrixStack.mulPose(Vector3f.ZP.rotationDegrees(180));
             matrixStack.translate(0, 0, -10);
             matrixStack.scale(0.4f, 0.4f, 0.0f);
             int xx = (int) (cursorX - x);
             int yy = (int) (cursorY - y);
             HoloGuiRenderTools.renderToolTip(matrixStack, buffer, stack, (int) ((xx+x) * 30 - 120), (int) ((yy+y) * 30 - 120 + 25), tooltipHandler);
-            RenderHelper.enableStandardItemLighting();
-            matrixStack.pop();
+            RenderHelper.turnBackOn();
+            matrixStack.popPose();
         }
     }
 
