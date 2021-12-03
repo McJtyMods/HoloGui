@@ -6,7 +6,7 @@ import mcjty.hologui.api.components.IStackIcon;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 

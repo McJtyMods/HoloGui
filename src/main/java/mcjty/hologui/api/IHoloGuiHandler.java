@@ -3,7 +3,7 @@ package mcjty.hologui.api;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -51,7 +51,7 @@ public interface IHoloGuiHandler {
      * entity will not render itself. It is up to the renderer of the parent to
      * make sure the hologui renders.
      */
-    IHoloGuiEntity openHoloGuiRelative(Entity parent, Vec3d offset, String guiId);
+    IHoloGuiEntity openHoloGuiRelative(Entity parent, Vector3d offset, String guiId);
 
     // @todo, generalize, move into Ariente?
     IGuiComponent<?> createNoAccessPanel();

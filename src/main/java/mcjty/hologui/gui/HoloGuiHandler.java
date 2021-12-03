@@ -8,7 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -95,7 +95,7 @@ public class HoloGuiHandler implements IHoloGuiHandler {
     }
 
     @Override
-    public IHoloGuiEntity openHoloGuiRelative(Entity parent, Vec3d offset, String guiId) {
+    public IHoloGuiEntity openHoloGuiRelative(Entity parent, Vector3d offset, String guiId) {
 //        if (world.isRemote) {
 //            world.playSound(pos.getX(), pos.getY(), pos.getZ(), ModSounds.guiopen, SoundCategory.PLAYERS, 1.0f, 1.0f, true);
 //            return null;
@@ -112,8 +112,8 @@ public class HoloGuiHandler implements IHoloGuiHandler {
         double x = player.getPosX();
         double y = player.getPosY()+player.getEyeHeight() - .5;
         double z = player.getPosZ();
-        Vec3d lookVec = player.getLookVec();
-        lookVec = new Vec3d(lookVec.x, 0, lookVec.z).normalize();
+        Vector3d lookVec = player.getLookVec();
+        lookVec = new Vector3d(lookVec.x, 0, lookVec.z).normalize();
         x += lookVec.x * distance;
         y += lookVec.y;
         z += lookVec.z * distance;
@@ -123,7 +123,7 @@ public class HoloGuiHandler implements IHoloGuiHandler {
         return entity;
     }
 
-    private static HoloGuiEntity createHoloGuiRelative(World world, Entity parent, Vec3d offset, String tag) {
+    private static HoloGuiEntity createHoloGuiRelative(World world, Entity parent, Vector3d offset, String tag) {
 //        HoloGuiEntity entity = new HoloGuiEntitySmall(world);
         HoloGuiEntity entity = new HoloGuiEntity(ModEntities.HOLOGUI_ENTITY_TYPE.get(), world);
         entity.setTag(tag);

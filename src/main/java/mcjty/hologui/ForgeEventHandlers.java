@@ -2,13 +2,13 @@ package mcjty.hologui;
 
 import mcjty.hologui.commands.ModCommands;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
+import net.minecraftforge.event.RegisterCommandsEvent;
 
 public class ForgeEventHandlers {
 
     @SubscribeEvent
-    public void serverLoad(FMLServerStartingEvent event) {
-        ModCommands.register(event.getCommandDispatcher());
+    public void registerCommands(RegisterCommandsEvent event) {
+        ModCommands.register(event.getDispatcher());
     }
 
     // @todo 1.14

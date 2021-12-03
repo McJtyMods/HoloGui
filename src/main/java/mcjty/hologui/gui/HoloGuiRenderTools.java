@@ -9,7 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.AtlasTexture;
@@ -71,7 +71,7 @@ public class HoloGuiRenderTools {
         GlStateManager.scaled(0.10, 0.10, 0.10);
         GlStateManager.rotatef(180, 0, 1, 0);
 
-        RenderHelper.drawFlatBox(3 - (int) x, 3 - (int) y, (int) (3 - x + w), (int) (3 - y + h), color, color);
+//        RenderHelper.drawFlatBox(3 - (int) x, 3 - (int) y, (int) (3 - x + w), (int) (3 - y + h), color, color);
 //        RenderHelper.drawHorizontalLine((int) x, (int) y, (int) (x + w), color);
 //        RenderHelper.drawHorizontalLine((int) x, (int) (y + h), (int) (x + w), color);
 //        RenderHelper.drawVerticalLine((int) x, (int) y, (int) (y + h), color);
@@ -199,7 +199,7 @@ public class HoloGuiRenderTools {
         Minecraft mc = Minecraft.getInstance();
         ITooltipFlag flag = mc.gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL;
         // @todo 1.14 check?
-        List<String> list = stack.getTooltip(mc.player, flag).stream().map(ITextComponent::getFormattedText).collect(Collectors.toList());
+        List<String> list = stack.getTooltip(mc.player, flag).stream().map(ITextComponent::getString).collect(Collectors.toList());
 
         for (int i = 0; i < list.size(); ++i) {
             if (i == 0) {
@@ -207,7 +207,9 @@ public class HoloGuiRenderTools {
                 // @todo 1.14
                 list.set(i, list.get(i));
             } else {
-                list.set(i, TextFormatting.GRAY + list.get(i));
+//                list.set(i, TextFormatting.GRAY + list.get(i));
+                // @todo 1.16
+                list.set(i, list.get(i));
             }
         }
         tooltipHandler.accept(stack, list);
@@ -215,7 +217,7 @@ public class HoloGuiRenderTools {
         FontRenderer font = stack.getItem().getFontRenderer(stack);
         FontRenderer font1 = (font == null ? mc.fontRenderer : font);
         // @todo 1.15 !!!!
-        GuiUtils.drawHoveringText(list, x, y, 600, 500, -1, font1);
+        //GuiUtils.drawHoveringText(matrixStack, list, x, y, 600, 500, -1, font1);
 
         // @todo 1.15 need to begone!
         net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
