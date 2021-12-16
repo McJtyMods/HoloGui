@@ -37,11 +37,11 @@ public class HoloPlayerInventory extends AbstractSlots<IPlayerInventory> impleme
     protected List<Pair<ItemStack, Integer>> getStacks(Player player) {
         List<Pair<ItemStack, Integer>> stacks = new ArrayList<>();
         for (int i = 9 ; i < 9 + 3*9 ; i++) {
-            ItemStack stack = player.inventory.getItem(i);
+            ItemStack stack = player.getInventory().getItem(i);
             stacks.add(Pair.of(stack, i));
         }
         for (int i = 0 ; i < 9 ; i++) {
-            ItemStack stack = player.inventory.getItem(i);
+            ItemStack stack = player.getInventory().getItem(i);
             stacks.add(Pair.of(stack, i));
         }
         return stacks;

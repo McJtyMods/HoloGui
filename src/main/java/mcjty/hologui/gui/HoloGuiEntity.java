@@ -193,7 +193,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
             timeout--;
             if (timeout <= 0) {
                 level.playSound(null, getX(), getY(), getZ(), HoloGuiSounds.guiopen, SoundSource.PLAYERS, 0.2f, 1.0f);
-                this.remove();
+                this.remove(RemovalReason.DISCARDED);
             }
             if (hasCloseStrategy(CloseStrategy.TIMEOUT_RESET)) {
                 if (level.getEntitiesOfClass(Player.class, playerDetectionBox)
@@ -300,7 +300,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         // The small holo is used as a child on the flux levitator. It doesn't close like this
         if (hasCloseStrategy(CloseStrategy.RIGHTCLICK)) {
             level.playSound(player, getX(), getY(), getZ(), HoloGuiSounds.guiopen, SoundSource.PLAYERS, 0.2f, 1.0f);  // @todo config
-            remove();
+            remove(RemovalReason.DISCARDED);
         }
         return InteractionResult.PASS;
     }

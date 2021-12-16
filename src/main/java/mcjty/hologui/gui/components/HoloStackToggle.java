@@ -9,7 +9,7 @@ import mcjty.hologui.api.components.IStackToggle;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderHelper;
+// @todo 1.18 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -72,7 +72,7 @@ public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> impleme
             border = true;
         }
         HoloGuiRenderTools.renderItem(matrixStack, buffer, x, y, stack, lightmap, border, scale);
-        RenderHelper.turnBackOn();
+        // @todo 1.18 RenderHelper.turnBackOn();
     }
 
     @Override

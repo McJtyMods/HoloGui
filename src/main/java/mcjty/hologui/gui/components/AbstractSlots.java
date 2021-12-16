@@ -7,7 +7,7 @@ import mcjty.hologui.gui.ColorFromStyle;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderHelper;
+// @todo 1.18 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -135,7 +135,7 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
                 }
             }
         }
-        RenderHelper.turnBackOn();
+        // @todo 1.18 RenderHelper.turnBackOn();
     }
 
     protected abstract List<Pair<ItemStack, Integer>> getStacks(Player player);
@@ -188,7 +188,7 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
             int xx = (int) (cursorX - x);
             int yy = (int) (cursorY - y);
             HoloGuiRenderTools.renderToolTip(matrixStack, buffer, stack, (int) ((xx+x) * 30 - 120), (int) ((yy+y) * 30 - 120 + 25), tooltipHandler);
-            RenderHelper.turnBackOn();
+            // @todo 1.18 RenderHelper.turnBackOn();
             matrixStack.popPose();
         }
     }

@@ -118,7 +118,7 @@ public class HoloGuiHandler implements IHoloGuiHandler {
         y += lookVec.y;
         z += lookVec.z * distance;
         entity.setPos(x, y, z);
-        entity.moveTo(x, y, z, player.yRot, 0);
+        entity.moveTo(x, y, z, player.getYRot(), 0);
         world.addFreshEntity(entity);
         return entity;
     }
@@ -131,7 +131,7 @@ public class HoloGuiHandler implements IHoloGuiHandler {
         double y = parent.getY() + offset.y;
         double z = parent.getZ() + offset.z;
         entity.setPos(x, y, z);
-        entity.moveTo(x, y, z, parent.yRot+90, parent.xRot);
+        entity.moveTo(x, y, z, parent.getYRot()+90, parent.getXRot());
         world.addFreshEntity(entity);
         return entity;
     }

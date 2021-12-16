@@ -8,7 +8,7 @@ import mcjty.hologui.api.components.IText;
 import mcjty.hologui.gui.ColorFromStyle;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderHelper;
+// @todo 1.18 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.function.Supplier;
@@ -56,7 +56,7 @@ public class HoloText extends AbstractHoloComponent<IText> implements IText {
 
     @Override
     public void render(PoseStack matrixStack, MultiBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
-        RenderHelper.turnOff();
+        // @todo 1.18 RenderHelper.turnOff();
         // @todo fix!
         HoloGuiRenderTools.renderText(matrixStack, buffer, x, y, text.get(), color.getColor(), scale);
     }
