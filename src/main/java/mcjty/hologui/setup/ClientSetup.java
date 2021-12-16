@@ -5,8 +5,8 @@ import mcjty.hologui.ModEntities;
 import mcjty.hologui.gui.HoloGuiEntityRender;
 import mcjty.hologui.gui.HoloGuiSpriteUploader;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.IReloadableResourceManager;
-import net.minecraft.resources.IResourceManager;
+import net.minecraft.server.packs.resources.ReloadableResourceManager;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
@@ -17,10 +17,10 @@ public class ClientSetup {
     }
 
     public static void setupSpriteUploader() {
-        IResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
-        if (resourceManager instanceof IReloadableResourceManager) {
+        ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
+        if (resourceManager instanceof ReloadableResourceManager) {
             HoloGuiSpriteUploader.INSTANCE = new HoloGuiSpriteUploader(Minecraft.getInstance().getTextureManager());
-            ((IReloadableResourceManager) resourceManager).registerReloadListener(HoloGuiSpriteUploader.INSTANCE);
+            ((ReloadableResourceManager) resourceManager).registerReloadListener(HoloGuiSpriteUploader.INSTANCE);
         }
     }
 }

@@ -1,20 +1,20 @@
 package mcjty.hologui.gui.components;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import mcjty.hologui.HoloGui;
 import mcjty.hologui.api.IEvent;
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.components.IStackToggle;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.sounds.SoundSource;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -24,7 +24,7 @@ import java.util.function.Function;
 public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> implements IStackToggle {
 
     private ItemStack stack;
-    private Function<PlayerEntity, Boolean> currentValue;
+    private Function<Player, Boolean> currentValue;
     private IEvent hitEvent;
     float scale = 1.0f;
     private BiConsumer<ItemStack, List<String>> tooltipHandler = (itemStack, strings) -> {};
@@ -49,7 +49,7 @@ public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> impleme
     }
 
     @Override
-    public IStackToggle getter(Function<PlayerEntity, Boolean> getter) {
+    public IStackToggle getter(Function<Player, Boolean> getter) {
         this.currentValue = getter;
         return this;
     }
@@ -61,7 +61,7 @@ public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> impleme
     }
 
     @Override
-    public void render(MatrixStack matrixStack, IRenderTypeBuffer buffer, PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void render(PoseStack matrixStack, MultiBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         Boolean state = currentValue.apply(player);
         ResourceLocation lightmap = null;
         boolean border = false;
@@ -76,7 +76,7 @@ public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> impleme
     }
 
     @Override
-    public void renderTooltip(MatrixStack matrixStack, IRenderTypeBuffer buffer, PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void renderTooltip(PoseStack matrixStack, MultiBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         matrixStack.pushPose();
         matrixStack.scale(0.01f, 0.01f, 0.01f);
         matrixStack.mulPose(Vector3f.YP.rotationDegrees(180));
@@ -94,16 +94,16 @@ public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> impleme
     }
 
     @Override
-    public void hit(PlayerEntity player, IHoloGuiEntity entity, double cursorX, double cursorY) {
+    public void hit(Player player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         if (hitEvent != null) {
             hitEvent.hit(this, player, entity, cursorX, cursorY);
         }
     }
 
     @Override
-    public void hitClient(PlayerEntity player, IHoloGuiEntity entity, double cursorX, double cursorY) {
+    public void hitClient(Player player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         Entity ent = entity.getEntity();
-        player.level.playSound(player, ent.getX(), ent.getY(), ent.getZ(), HoloGuiSounds.guiclick, SoundCategory.PLAYERS, 1.0f, 1.0f);
+        player.level.playSound(player, ent.getX(), ent.getY(), ent.getZ(), HoloGuiSounds.guiclick, SoundSource.PLAYERS, 1.0f, 1.0f);
     }
 
 

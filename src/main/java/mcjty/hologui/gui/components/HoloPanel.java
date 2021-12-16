@@ -1,11 +1,11 @@
 package mcjty.hologui.gui.components;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.components.IPanel;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,7 +27,7 @@ public class HoloPanel extends AbstractHoloComponent<IPanel> implements IPanel {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, IRenderTypeBuffer buffer, PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void render(PoseStack matrixStack, MultiBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         for (IGuiComponent<?> child : children) {
             child.render(matrixStack, buffer, player, holo, cursorX, cursorY);
         }
@@ -55,7 +55,7 @@ public class HoloPanel extends AbstractHoloComponent<IPanel> implements IPanel {
     }
 
     @Override
-    public void hit(PlayerEntity player, IHoloGuiEntity entity, double cursorX, double cursorY) {
+    public void hit(Player player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         for (IGuiComponent<?> child : children) {
             if (child.isInside(cursorX, cursorY)) {
                 child.hit(player, entity, cursorX, cursorY);
@@ -64,7 +64,7 @@ public class HoloPanel extends AbstractHoloComponent<IPanel> implements IPanel {
     }
 
     @Override
-    public void hitClient(PlayerEntity player, IHoloGuiEntity entity, double cursorX, double cursorY) {
+    public void hitClient(Player player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         for (IGuiComponent<?> child : children) {
             if (child.isInside(cursorX, cursorY)) {
                 child.hitClient(player, entity, cursorX, cursorY);

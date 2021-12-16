@@ -1,13 +1,13 @@
 package mcjty.hologui.gui.components;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import mcjty.hologui.api.*;
 import mcjty.hologui.api.components.IPlayerInventory;
 import mcjty.hologui.gui.ColorFromStyle;
 import mcjty.hologui.gui.HoloGuiRenderTools;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class HoloPlayerInventory extends AbstractSlots<IPlayerInventory> impleme
     }
 
     @Override
-    protected List<Pair<ItemStack, Integer>> getStacks(PlayerEntity player) {
+    protected List<Pair<ItemStack, Integer>> getStacks(Player player) {
         List<Pair<ItemStack, Integer>> stacks = new ArrayList<>();
         for (int i = 9 ; i < 9 + 3*9 ; i++) {
             ItemStack stack = player.inventory.getItem(i);
@@ -66,7 +66,7 @@ public class HoloPlayerInventory extends AbstractSlots<IPlayerInventory> impleme
     }
 
     @Override
-    public void render(MatrixStack matrixStack, IRenderTypeBuffer buffer, PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void render(PoseStack matrixStack, MultiBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         IColor color = new ColorFromStyle(StyledColor.BORDER);
         int bc = color.getColor();
         if (bc != -1) {

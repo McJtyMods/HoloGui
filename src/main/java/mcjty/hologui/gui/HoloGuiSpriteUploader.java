@@ -1,10 +1,10 @@
 package mcjty.hologui.gui;
 
 import mcjty.hologui.HoloGui;
-import net.minecraft.client.renderer.texture.SpriteUploader;
+import net.minecraft.client.resources.TextureAtlasHolder;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 
 import static mcjty.hologui.gui.HoloGuiEntityRender.*;
 
-public class HoloGuiSpriteUploader extends SpriteUploader {
+public class HoloGuiSpriteUploader extends TextureAtlasHolder {
 
     public static HoloGuiSpriteUploader INSTANCE;
 

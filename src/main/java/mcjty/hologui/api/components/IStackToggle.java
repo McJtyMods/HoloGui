@@ -2,8 +2,8 @@ package mcjty.hologui.api.components;
 
 import mcjty.hologui.api.IEvent;
 import mcjty.hologui.api.IGuiComponent;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -14,7 +14,7 @@ public interface IStackToggle extends IGuiComponent<IStackToggle> {
 
     IStackToggle itemStack(@Nonnull ItemStack stack);
 
-    IStackToggle getter(Function<PlayerEntity, Boolean> getter);
+    IStackToggle getter(Function<Player, Boolean> getter);
 
     IStackToggle hitEvent(IEvent event);
 

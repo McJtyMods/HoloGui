@@ -1,7 +1,7 @@
 package mcjty.hologui.api.components;
 
 import mcjty.hologui.api.IGuiComponent;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import java.util.List;

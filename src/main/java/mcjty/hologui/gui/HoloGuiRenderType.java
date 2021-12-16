@@ -1,9 +1,9 @@
 package mcjty.hologui.gui;
 
-import net.minecraft.client.renderer.RenderState;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import org.lwjgl.opengl.GL11;
 
 public class HoloGuiRenderType extends RenderType {
@@ -18,17 +18,17 @@ public class HoloGuiRenderType extends RenderType {
 //    .transparency(TRANSLUCENT_TRANSPARENCY).build(true);
 
 
-    public static final RenderType HOLOGUI_BACKGROUND = create("hologui_background", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 262144, true, true,
+    public static final RenderType HOLOGUI_BACKGROUND = create("hologui_background", DefaultVertexFormat.POSITION_COLOR_TEX, GL11.GL_QUADS, 262144, true, true,
             State.builder().setShadeModelState(SMOOTH_SHADE)
-                    .setLightmapState(RenderState.NO_LIGHTMAP)
+                    .setLightmapState(RenderStateShard.NO_LIGHTMAP)
                     .setTextureState(new TextureState(HoloGuiSpriteUploader.HOLOGUI_ATLAS, false, false))
                     .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
 //                    .writeMask(COLOR_WRITE)
                     .createCompositeState(true));
 
-    public static final RenderType HOLOGUI_ICONS = create("hologui_icons", DefaultVertexFormats.POSITION_TEX, GL11.GL_QUADS, 262144, true, true,
+    public static final RenderType HOLOGUI_ICONS = create("hologui_icons", DefaultVertexFormat.POSITION_TEX, GL11.GL_QUADS, 262144, true, true,
             State.builder().setShadeModelState(SMOOTH_SHADE)
-                    .setLightmapState(RenderState.NO_LIGHTMAP)
+                    .setLightmapState(RenderStateShard.NO_LIGHTMAP)
                     .setTextureState(new TextureState(HoloGuiSpriteUploader.HOLOGUI_ATLAS, false, false))
                     .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
 //                    .writeMask(COLOR_WRITE)

@@ -3,7 +3,7 @@ package mcjty.hologui.api.components;
 import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.api.IImage;
 import mcjty.hologui.api.IStackEvent;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.List;

@@ -4,7 +4,7 @@ import mcjty.hologui.HoloGui;
 import mcjty.hologui.api.*;
 import mcjty.hologui.api.components.*;
 import mcjty.hologui.gui.ColorFromStyle;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public class GuiComponentRegistry implements IGuiComponentRegistry {
 

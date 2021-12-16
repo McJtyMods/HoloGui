@@ -1,16 +1,16 @@
 package mcjty.hologui.gui.components;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import mcjty.hologui.api.IEvent;
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.IImage;
 import mcjty.hologui.api.components.IIconChoice;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.sounds.SoundSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ public class HoloIconChoice extends AbstractHoloComponent<IIconChoice> implement
 
     private List<IImage> images = new ArrayList<>();
 
-    private Function<PlayerEntity, Integer> currentValue;
+    private Function<Player, Integer> currentValue;
     private IEvent hitEvent;
 
     HoloIconChoice(double x, double y, double w, double h) {
@@ -34,7 +34,7 @@ public class HoloIconChoice extends AbstractHoloComponent<IIconChoice> implement
     }
 
     @Override
-    public IIconChoice getter(Function<PlayerEntity, Integer> getter) {
+    public IIconChoice getter(Function<Player, Integer> getter) {
         this.currentValue = getter;
         return this;
     }
@@ -46,7 +46,7 @@ public class HoloIconChoice extends AbstractHoloComponent<IIconChoice> implement
     }
 
     @Override
-    public void render(MatrixStack matrixStack, IRenderTypeBuffer buffer, PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void render(PoseStack matrixStack, MultiBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         Integer value = currentValue.apply(player);
         if (value < 0 || value >= images.size()) {
             return;
@@ -56,16 +56,16 @@ public class HoloIconChoice extends AbstractHoloComponent<IIconChoice> implement
     }
 
     @Override
-    public void hit(PlayerEntity player, IHoloGuiEntity entity, double cursorX, double cursorY) {
+    public void hit(Player player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         if (hitEvent != null) {
             hitEvent.hit(this, player, entity, cursorX, cursorY);
         }
     }
 
     @Override
-    public void hitClient(PlayerEntity player, IHoloGuiEntity entity, double cursorX, double cursorY) {
+    public void hitClient(Player player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         Entity ent = entity.getEntity();
-        player.level.playSound(player, ent.getX(), ent.getY(), ent.getZ(), HoloGuiSounds.guiclick, SoundCategory.PLAYERS, 1.0f, 1.0f);
+        player.level.playSound(player, ent.getX(), ent.getY(), ent.getZ(), HoloGuiSounds.guiclick, SoundSource.PLAYERS, 1.0f, 1.0f);
     }
 
 }

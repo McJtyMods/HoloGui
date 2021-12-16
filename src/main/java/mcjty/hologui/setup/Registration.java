@@ -2,7 +2,7 @@ package mcjty.hologui.setup;
 
 
 import mcjty.hologui.gui.HoloGuiSounds;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;

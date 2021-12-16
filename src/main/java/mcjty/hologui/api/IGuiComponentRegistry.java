@@ -1,7 +1,7 @@
 package mcjty.hologui.api;
 
 import mcjty.hologui.api.components.*;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Use this interface to create basic components for a gui. Typically you call this in

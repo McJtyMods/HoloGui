@@ -1,18 +1,18 @@
 package mcjty.hologui.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import mcjty.hologui.HoloGui;
 import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.config.Config;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.ResourceLocation;
 
 public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
 
@@ -25,7 +25,7 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
     public static final ResourceLocation GUI_BACKGROUND_7 = new ResourceLocation(HoloGui.MODID, "hologui_gray_sharpwhite");
     public static final ResourceLocation GUI_BACKGROUND_8 = new ResourceLocation(HoloGui.MODID, "hologui_gray_softblack");
 
-    public HoloGuiEntityRender(EntityRendererManager renderManager) {
+    public HoloGuiEntityRender(EntityRendererProvider.Context renderManager) {
         super(renderManager);
     }
 
@@ -40,7 +40,7 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
 
 
     @Override
-    public void render(HoloGuiEntity entity, float p_225623_2_, float p_225623_3_, MatrixStack stack, IRenderTypeBuffer buffer, int p_225623_6_) {
+    public void render(HoloGuiEntity entity, float p_225623_2_, float p_225623_3_, PoseStack stack, MultiBufferSource buffer, int p_225623_6_) {
 //        super.render(p_225623_1_, p_225623_2_, p_225623_3_, p_225623_4_, p_225623_5_, p_225623_6_);
 
     // @todo 1.15
@@ -53,9 +53,9 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
         doActualRender(entity, stack, buffer);
     }
 
-    public static void doActualRender(HoloGuiEntity entity, MatrixStack matrixStack, IRenderTypeBuffer buffer) {
+    public static void doActualRender(HoloGuiEntity entity, PoseStack matrixStack, MultiBufferSource buffer) {
 
-        IVertexBuilder builder = buffer.getBuffer(HoloGuiRenderType.HOLOGUI_BACKGROUND);
+        VertexConsumer builder = buffer.getBuffer(HoloGuiRenderType.HOLOGUI_BACKGROUND);
 
 
 //        Minecraft.getInstance().gameRenderer.getLightTexture().disableLightmap();
@@ -147,7 +147,7 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
 //        Minecraft.getInstance().gameRenderer.getLightTexture().enableLightmap();
     }
 
-    private static void renderQuadColor(IVertexBuilder builder, Matrix4f matrix, float minX, float maxX, float minY, float maxY, int r, int g, int b, int a,
+    private static void renderQuadColor(VertexConsumer builder, Matrix4f matrix, float minX, float maxX, float minY, float maxY, int r, int g, int b, int a,
                                         TextureAtlasSprite sprite) {
 //   public static final VertexFormat BLOCK = new VertexFormat(ImmutableList.<VertexFormatElement>builder()
 // .add(POSITION_3F).add(COLOR_4UB).add(TEX_2F).add(TEX_2SB).add(NORMAL_3B).add(PADDING_1B).build());
