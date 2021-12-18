@@ -19,19 +19,19 @@ public class HoloGuiRenderType extends RenderType {
 
     public static final RenderType HOLOGUI_BACKGROUND = create("hologui_background", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 262144, true, true,
             CompositeState.builder()
-                    // @todo 1.18 .setShadeModelState(SMOOTH_SHADE)
+                    .setShaderState(RENDERTYPE_BEACON_BEAM_SHADER)
                     .setLightmapState(RenderStateShard.NO_LIGHTMAP)
                     .setTextureState(new TextureStateShard(HoloGuiSpriteUploader.HOLOGUI_ATLAS, false, false))
                     .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
-//                    .writeMask(COLOR_WRITE)
+                    .setWriteMaskState(COLOR_WRITE)
                     .createCompositeState(true));
 
     public static final RenderType HOLOGUI_ICONS = create("hologui_icons", DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 262144, true, true,
             CompositeState.builder()
-                    // @todo 1.18 .setShadeModelState(SMOOTH_SHADE)
+                    .setShaderState(RENDERTYPE_ENTITY_SMOOTH_CUTOUT_SHADER)
                     .setLightmapState(RenderStateShard.NO_LIGHTMAP)
                     .setTextureState(new TextureStateShard(HoloGuiSpriteUploader.HOLOGUI_ATLAS, false, false))
                     .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
-//                    .writeMask(COLOR_WRITE)
+                    .setWriteMaskState(COLOR_WRITE)
                     .createCompositeState(true));
 }
