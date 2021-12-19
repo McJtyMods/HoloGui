@@ -23,6 +23,8 @@ public class ModEntities {
         return EntityType.Builder.of(HoloGuiEntity::new, MobCategory.MISC)
                 .sized(1, 1)
                 .setShouldReceiveVelocityUpdates(false)
+                .noSummon()
+                .fireImmune()
                 .build("hologui");
     }
 }
