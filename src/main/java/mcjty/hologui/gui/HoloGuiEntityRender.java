@@ -59,6 +59,7 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
 
 
 //        Minecraft.getInstance().gameRenderer.getLightTexture().disableLightmap();
+        com.mojang.blaze3d.platform.Lighting.setupForFlatItems();
 
         matrixStack.pushPose();
 //        GlStateManager.translated(x, y, z);
@@ -145,6 +146,7 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
 //        GlStateManager.enableDepthTest();
 //        GlStateManager.enableLighting();
 //        Minecraft.getInstance().gameRenderer.getLightTexture().enableLightmap();
+        com.mojang.blaze3d.platform.Lighting.setupFor3DItems();
     }
 
     private static void renderQuadColor(VertexConsumer builder, Matrix4f matrix, float minX, float maxX, float minY, float maxY, int r, int g, int b, int a,

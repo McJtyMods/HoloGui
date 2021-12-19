@@ -124,7 +124,7 @@ public class HoloGuiRenderTools {
 
             ItemRenderer renderItem = Minecraft.getInstance().getItemRenderer();
             BakedModel ibakedmodel = renderItem.getModel(stack, null, null, 1);
-            renderItemModel(matrixStack, buffer, stack, ibakedmodel, ItemTransforms.TransformType.GUI, lightmap);
+            renderItemModel(matrixStack, buffer, stack, ibakedmodel, ItemTransforms.TransformType.NONE, lightmap);
             if (border) {
                 VertexConsumer builder = buffer.getBuffer(CustomRenderTypes.LINESTRIP);
                 x /= 200;
@@ -171,7 +171,7 @@ public class HoloGuiRenderTools {
         matrixStack.pushPose();
         // TODO: check if negative scale is a thing
 
-        int lightmapValue = 140;     // @todo 1.15 or 0xf000f0
+        int lightmapValue = 0xF00F0;     // @todo 1.15 or 140
         bakedmodel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(matrixStack, bakedmodel, transform, false);
         renderItem.render(stack, transform, false, matrixStack, buffer, lightmapValue, OverlayTexture.NO_OVERLAY, bakedmodel);
 
