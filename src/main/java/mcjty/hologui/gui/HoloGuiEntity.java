@@ -25,6 +25,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Optional;
 
 public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
@@ -167,6 +168,15 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         }
     }
 
+    private void closeGui() {
+        closeGui((Player)null);
+    }
+
+    private void closeGui(@Nullable Player player) {
+        level.playSound(player, getX(), getY(), getZ(), HoloGuiSounds.guiopen, SoundSource.PLAYERS, 0.2f, 1.0f); // @todo configure
+        discard();
+    }
+
     private void onUpdateServer() {
         if (playerDetectionBox == null) {
             playerDetectionBox = new AABB(getX() - 10, getY() - 10, getZ() - 10, getX() + 10, getY() + 10, getZ() + 10);
@@ -180,11 +190,21 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
                 // @todo do we have to do anything here?
             } else {
                 BlockPos tile = getGuiTile();
-                if (tile != null) {
-                    IGuiTile guiTile = HoloGui.guiHandler.getGuiTile(level, tile);
-                    if (guiTile != null) {
-                        guiTile.syncToClient();
-                    }
+                if (tile == null) {
+                    // Block connected to GUI has been destroyed.
+                    closeGui();
+
+                    return;
+                }
+
+                IGuiTile guiTile = HoloGui.guiHandler.getGuiTile(level, tile);
+                if (guiTile == null) {
+                    // Block connected to GUI has been destroyed.
+                    closeGui();
+
+                    return;
+                } else {
+                    guiTile.syncToClient();
                 }
             }
         }
@@ -192,8 +212,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         if (hasCloseStrategy(CloseStrategy.TIMEOUT)) {
             timeout--;
             if (timeout <= 0) {
-                level.playSound(null, getX(), getY(), getZ(), HoloGuiSounds.guiopen, SoundSource.PLAYERS, 0.2f, 1.0f);
-                this.remove(RemovalReason.DISCARDED);
+                closeGui();
             }
             if (hasCloseStrategy(CloseStrategy.TIMEOUT_RESET)) {
                 if (level.getEntitiesOfClass(Player.class, playerDetectionBox)
@@ -295,16 +314,15 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         return (getCloseStrategy() & s) != 0;
     }
 
+    @Nonnull
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
         // The small holo is used as a child on the flux levitator. It doesn't close like this
         if (hasCloseStrategy(CloseStrategy.RIGHTCLICK)) {
-            level.playSound(player, getX(), getY(), getZ(), HoloGuiSounds.guiopen, SoundSource.PLAYERS, 0.2f, 1.0f);  // @todo config
-            remove(RemovalReason.DISCARDED);
+            closeGui(player);
         }
         return InteractionResult.PASS;
     }
-
 
     private Vec2 intersect(Player player) {
         Vec3 lookVec = getLookAngle();
@@ -368,8 +386,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 
     @Override
     public boolean skipAttackInteraction(Entity entityIn) {
-        if (entityIn instanceof Player) {
-            Player player = (Player) entityIn;
+        if (entityIn instanceof Player player) {
             Vec2 vec2d = intersect(player);
             IGuiComponent gui = getGui(player);
             if (gui != null) {
