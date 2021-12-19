@@ -410,6 +410,11 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         return true;
     }
 
+    @Override
+    public boolean isPickable() {
+        return true;
+    }
+
 // @todo 1.14: check EntityRenderer.isMultipass
 //    @Override
 //    public boolean shouldRenderInPass(int pass) {
