@@ -14,7 +14,6 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.TooltipFlag;
@@ -56,12 +55,10 @@ public class HoloGuiRenderTools {
         matrixStack.mulPose(Vector3f.YP.rotationDegrees(180));
         matrixStack.mulPose(Vector3f.ZP.rotationDegrees(180));
         matrixStack.scale(1, 1, 0.01f);
-        Minecraft.getInstance().getTextureManager().bindForSetup(image);
-        TextureAtlasSprite sprite = HoloGuiSpriteUploader.INSTANCE.getSprite(image);
 
-        VertexConsumer builder = buffer.getBuffer(HoloGuiRenderType.HOLOGUI_ICONS);
-        RenderHelper.drawTexturedModalRect(matrixStack.last().pose(), builder, (int) (x * 10 - 46), (int) (y * 10 - 44), u, v, w, h, txtw, txth,
-                sprite.getU0(), sprite.getV0());
+        float zLevel = Minecraft.getInstance().getItemRenderer().blitOffset + 250F;
+
+        GuiUtils.drawContinuousTexturedBox(matrixStack, image, (int) (x * 10 - 46), (int) (y * 10 - 44), u, v, w, h, txtw, txth, 0, zLevel);
         matrixStack.popPose();
     }
 
@@ -171,7 +168,7 @@ public class HoloGuiRenderTools {
         matrixStack.pushPose();
         // TODO: check if negative scale is a thing
 
-        int lightmapValue = 0xF00F0;     // @todo 1.15 or 140
+        int lightmapValue = RenderHelper.MAX_BRIGHTNESS;
         bakedmodel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(matrixStack, bakedmodel, transform, false);
         renderItem.render(stack, transform, false, matrixStack, buffer, lightmapValue, OverlayTexture.NO_OVERLAY, bakedmodel);
 
