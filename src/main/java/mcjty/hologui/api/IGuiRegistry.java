@@ -1,6 +1,6 @@
 package mcjty.hologui.api;
 
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nullable;
 import java.util.function.Function;
@@ -12,8 +12,8 @@ import java.util.function.Function;
  */
 public interface IGuiRegistry {
 
-    void registerGui(String id, Function<PlayerEntity, IGuiComponent> factory);
+    void registerGui(String id, Function<Player, IGuiComponent> factory);
 
     @Nullable
-    IGuiComponent createGui(String id, PlayerEntity player);
+    IGuiComponent createGui(String id, Player player);
 }

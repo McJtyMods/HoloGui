@@ -1,18 +1,18 @@
 package mcjty.hologui.gui.components;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import mcjty.hologui.api.*;
 import mcjty.hologui.gui.ColorFromStyle;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.client.renderer.MultiBufferSource;
+// @todo 1.18 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -41,7 +41,7 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
     }
 
     @Override
-    public void hit(PlayerEntity player, IHoloGuiEntity entity, double cursorX, double cursorY) {
+    public void hit(Player player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         Pair<ItemStack, Integer> pair = getSelectedPair(player, cursorX, cursorY);
         if (hitEvent != null) {
             hitEvent.hit(this, player, entity, cursorX, cursorY, pair.getLeft(), pair.getRight());
@@ -60,9 +60,9 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
     }
 
     @Override
-    public void hitClient(PlayerEntity player, IHoloGuiEntity entity, double cursorX, double cursorY) {
+    public void hitClient(Player player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         Entity ent = entity.getEntity();
-        player.level.playSound(player, ent.getX(), ent.getY(), ent.getZ(), HoloGuiSounds.guiclick, SoundCategory.PLAYERS, 1.0f, 1.0f);
+        player.level.playSound(player, ent.getX(), ent.getY(), ent.getZ(), HoloGuiSounds.guiclick, SoundSource.PLAYERS, 1.0f, 1.0f);
         Pair<ItemStack, Integer> pair = getSelectedPair(player, cursorX, cursorY);
         selected = pair.getRight();
     }
@@ -93,7 +93,7 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
     }
 
     @Override
-    public void render(MatrixStack matrixStack, IRenderTypeBuffer buffer, PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void render(PoseStack matrixStack, MultiBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         IColor color = new ColorFromStyle(StyledColor.BORDER);
         int bc = color.getColor();
         if (bc != -1) {
@@ -135,13 +135,13 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
                 }
             }
         }
-        RenderHelper.turnBackOn();
+        // @todo 1.18 RenderHelper.turnBackOn();
     }
 
-    protected abstract List<Pair<ItemStack, Integer>> getStacks(PlayerEntity player);
+    protected abstract List<Pair<ItemStack, Integer>> getStacks(Player player);
 
     @Nonnull
-    protected Pair<ItemStack, Integer> getSelectedPair(PlayerEntity player, double cursorX, double cursorY) {
+    protected Pair<ItemStack, Integer> getSelectedPair(Player player, double cursorX, double cursorY) {
         if (!isInside(cursorX, cursorY)) {
             return Pair.of(ItemStack.EMPTY, -1);
         }
@@ -171,12 +171,12 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
     }
 
     @Nonnull
-    protected ItemStack getSelectedStack(PlayerEntity player, double cursorX, double cursorY) {
+    protected ItemStack getSelectedStack(Player player, double cursorX, double cursorY) {
         return getSelectedPair(player, cursorX, cursorY).getLeft();
     }
 
     @Override
-    public void renderTooltip(MatrixStack matrixStack, IRenderTypeBuffer buffer, PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void renderTooltip(PoseStack matrixStack, MultiBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         ItemStack stack = getSelectedStack(player, cursorX, cursorY);
         if (!stack.isEmpty()) {
             matrixStack.pushPose();
@@ -188,7 +188,7 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
             int xx = (int) (cursorX - x);
             int yy = (int) (cursorY - y);
             HoloGuiRenderTools.renderToolTip(matrixStack, buffer, stack, (int) ((xx+x) * 30 - 120), (int) ((yy+y) * 30 - 120 + 25), tooltipHandler);
-            RenderHelper.turnBackOn();
+            // @todo 1.18 RenderHelper.turnBackOn();
             matrixStack.popPose();
         }
     }

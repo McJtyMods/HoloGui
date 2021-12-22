@@ -1,16 +1,15 @@
 package mcjty.hologui.gui;
 
-import net.minecraft.client.renderer.RenderState;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexFormat;
-import org.lwjgl.opengl.GL11;
+import com.mojang.blaze3d.vertex.VertexFormat;
 
 public class HoloGuiRenderType extends RenderType {
 
     // Dummy
-    public HoloGuiRenderType(String name, VertexFormat format, int p_i225992_3_, int p_i225992_4_, boolean p_i225992_5_, boolean p_i225992_6_, Runnable setup, Runnable clear) {
-        super(name, format, p_i225992_3_, p_i225992_4_, p_i225992_5_, p_i225992_6_, setup, clear);
+    public HoloGuiRenderType(String name, VertexFormat format, VertexFormat.Mode mode, int p_173181_, boolean p_173182_, boolean p_173183_, Runnable setup, Runnable clear) {
+        super(name, format, mode, p_173181_, p_173182_, p_173183_, setup, clear);
     }
 
 //    private static final RenderType TRANSLUCENT = create("translucent", DefaultVertexFormats.BLOCK, 7, 262144, true, true, getTranslucentState());
@@ -18,19 +17,21 @@ public class HoloGuiRenderType extends RenderType {
 //    .transparency(TRANSLUCENT_TRANSPARENCY).build(true);
 
 
-    public static final RenderType HOLOGUI_BACKGROUND = create("hologui_background", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 262144, true, true,
-            State.builder().setShadeModelState(SMOOTH_SHADE)
-                    .setLightmapState(RenderState.NO_LIGHTMAP)
-                    .setTextureState(new TextureState(HoloGuiSpriteUploader.HOLOGUI_ATLAS, false, false))
+    public static final RenderType HOLOGUI_BACKGROUND = create("hologui_background", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 262144, true, true,
+            CompositeState.builder()
+                    .setShaderState(RENDERTYPE_ENTITY_SHADOW_SHADER)
+                    .setLightmapState(RenderStateShard.NO_LIGHTMAP)
+                    .setTextureState(new TextureStateShard(HoloGuiSpriteUploader.HOLOGUI_ATLAS, false, false))
                     .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
-//                    .writeMask(COLOR_WRITE)
+                    .setWriteMaskState(COLOR_WRITE)
                     .createCompositeState(true));
 
-    public static final RenderType HOLOGUI_ICONS = create("hologui_icons", DefaultVertexFormats.POSITION_TEX, GL11.GL_QUADS, 262144, true, true,
-            State.builder().setShadeModelState(SMOOTH_SHADE)
-                    .setLightmapState(RenderState.NO_LIGHTMAP)
-                    .setTextureState(new TextureState(HoloGuiSpriteUploader.HOLOGUI_ATLAS, false, false))
+    public static final RenderType HOLOGUI_ICONS = create("hologui_icons", DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 262144, true, true,
+            CompositeState.builder()
+                    .setShaderState(RENDERTYPE_ENTITY_SHADOW_SHADER)
+                    .setLightmapState(RenderStateShard.NO_LIGHTMAP)
+                    .setTextureState(new TextureStateShard(HoloGuiSpriteUploader.HOLOGUI_ATLAS, false, false))
                     .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
-//                    .writeMask(COLOR_WRITE)
+                    .setWriteMaskState(COLOR_WRITE)
                     .createCompositeState(true));
 }

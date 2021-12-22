@@ -1,26 +1,24 @@
 package mcjty.hologui.setup;
 
-
 import mcjty.hologui.ModEntities;
 import mcjty.hologui.gui.HoloGuiEntityRender;
 import mcjty.hologui.gui.HoloGuiSpriteUploader;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.IReloadableResourceManager;
-import net.minecraft.resources.IResourceManager;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraft.server.packs.resources.ReloadableResourceManager;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 
 public class ClientSetup {
 
-    public static void init(FMLClientSetupEvent event) {
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.HOLOGUI_ENTITY_TYPE.get(), HoloGuiEntityRender::new);
+    public static void entityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(ModEntities.HOLOGUI_ENTITY_TYPE.get(), HoloGuiEntityRender::new);
     }
 
     public static void setupSpriteUploader() {
-        IResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
-        if (resourceManager instanceof IReloadableResourceManager) {
+        ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
+        if (resourceManager instanceof ReloadableResourceManager) {
             HoloGuiSpriteUploader.INSTANCE = new HoloGuiSpriteUploader(Minecraft.getInstance().getTextureManager());
-            ((IReloadableResourceManager) resourceManager).registerReloadListener(HoloGuiSpriteUploader.INSTANCE);
+            ((ReloadableResourceManager) resourceManager).registerReloadListener(HoloGuiSpriteUploader.INSTANCE);
         }
     }
 }

@@ -1,14 +1,14 @@
 package mcjty.hologui.gui.components;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.components.IStackIcon;
 import mcjty.hologui.gui.HoloGuiRenderTools;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.renderer.MultiBufferSource;
+// @todo 1.18 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -50,13 +50,13 @@ public class HoloStackIcon extends AbstractHoloComponent<IStackIcon> implements 
     }
 
     @Override
-    public void render(MatrixStack matrixStack, IRenderTypeBuffer buffer, PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void render(PoseStack matrixStack, MultiBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         HoloGuiRenderTools.renderItem(matrixStack, buffer, x, y, stackSupplier.get(), null, false, scale);
-        RenderHelper.turnBackOn();
+        // @todo 1.18 RenderHelper.turnBackOn();
     }
 
     @Override
-    public void renderTooltip(MatrixStack matrixStack, IRenderTypeBuffer buffer, PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void renderTooltip(PoseStack matrixStack, MultiBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         matrixStack.pushPose();
         matrixStack.scale(0.01f, 0.01f, 0.01f);
         matrixStack.mulPose(Vector3f.YP.rotationDegrees(180));

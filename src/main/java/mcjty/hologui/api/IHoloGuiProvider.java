@@ -1,7 +1,7 @@
 package mcjty.hologui.api;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 
@@ -12,5 +12,5 @@ import javax.annotation.Nullable;
 public interface IHoloGuiProvider {
 
     @Nullable
-    IGuiTile getTile(World world, BlockPos pos);
+    IGuiTile getTile(Level world, BlockPos pos);
 }

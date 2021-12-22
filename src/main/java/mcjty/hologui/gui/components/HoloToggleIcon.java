@@ -1,16 +1,16 @@
 package mcjty.hologui.gui.components;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import mcjty.hologui.api.IEvent;
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.IImage;
 import mcjty.hologui.api.components.IIconToggle;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.sounds.SoundSource;
 
 import java.util.function.Function;
 
@@ -19,7 +19,7 @@ public class HoloToggleIcon extends AbstractHoloComponent<IIconToggle> implement
     private IImage image;
     private IImage selected;
 
-    private Function<PlayerEntity, Boolean> currentValue;
+    private Function<Player, Boolean> currentValue;
     private IEvent hitEvent;
 
     HoloToggleIcon(double x, double y, double w, double h) {
@@ -27,7 +27,7 @@ public class HoloToggleIcon extends AbstractHoloComponent<IIconToggle> implement
     }
 
     @Override
-    public IIconToggle getter(Function<PlayerEntity, Boolean> getter) {
+    public IIconToggle getter(Function<Player, Boolean> getter) {
         this.currentValue = getter;
         return this;
     }
@@ -52,7 +52,7 @@ public class HoloToggleIcon extends AbstractHoloComponent<IIconToggle> implement
 
 
     @Override
-    public void render(MatrixStack matrixStack, IRenderTypeBuffer buffer, PlayerEntity player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void render(PoseStack matrixStack, MultiBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         IImage i = image;
         if (selected != null && currentValue.apply(player)) {
             i = selected;
@@ -61,16 +61,16 @@ public class HoloToggleIcon extends AbstractHoloComponent<IIconToggle> implement
     }
 
     @Override
-    public void hit(PlayerEntity player, IHoloGuiEntity entity, double cursorX, double cursorY) {
+    public void hit(Player player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         if (hitEvent != null) {
             hitEvent.hit(this, player, entity, cursorX, cursorY);
         }
     }
 
     @Override
-    public void hitClient(PlayerEntity player, IHoloGuiEntity entity, double cursorX, double cursorY) {
+    public void hitClient(Player player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         Entity ent = entity.getEntity();
-        player.level.playSound(player, ent.getX(), ent.getY(), ent.getZ(), HoloGuiSounds.guiclick, SoundCategory.PLAYERS, 1.0f, 1.0f);
+        player.level.playSound(player, ent.getX(), ent.getY(), ent.getZ(), HoloGuiSounds.guiclick, SoundSource.PLAYERS, 1.0f, 1.0f);
     }
 
 }

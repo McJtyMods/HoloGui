@@ -3,7 +3,7 @@ package mcjty.hologui.api.components;
 import mcjty.hologui.api.IColor;
 import mcjty.hologui.api.IEvent;
 import mcjty.hologui.api.IGuiComponent;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.function.Function;
 
@@ -11,7 +11,7 @@ public interface ITextChoice extends IGuiComponent<ITextChoice> {
 
     ITextChoice addText(String text);
 
-    ITextChoice getter(Function<PlayerEntity, Integer> getter);
+    ITextChoice getter(Function<Player, Integer> getter);
 
     ITextChoice hitEvent(IEvent event);
     ITextChoice hitEventClient(IEvent event);

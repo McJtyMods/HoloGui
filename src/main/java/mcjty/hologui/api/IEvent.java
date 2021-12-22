@@ -1,8 +1,8 @@
 package mcjty.hologui.api;
 
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 
 public interface IEvent {
 
-    void hit(IGuiComponent component, PlayerEntity player, IHoloGuiEntity entity, double x, double y);
+    void hit(IGuiComponent component, Player player, IHoloGuiEntity entity, double x, double y);
 }
