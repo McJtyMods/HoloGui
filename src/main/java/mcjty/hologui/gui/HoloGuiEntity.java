@@ -5,23 +5,23 @@ import mcjty.hologui.api.CloseStrategy;
 import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.api.IGuiTile;
 import mcjty.hologui.api.IHoloGuiEntity;
-import mcjty.lib.McJtyLib;
+import mcjty.lib.varia.SafeClientTools;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
@@ -244,7 +244,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     }
 
     private void onUpdateClient() {
-        Player player = McJtyLib.proxy.getClientPlayer();
+        Player player = SafeClientTools.getClientPlayer();
         Vec3 lookVec = getLookAngle();
         Vec3 v = getIntersect3D(player, lookVec);
         Vec2 vec2d = get2DProjection(lookVec, v);
