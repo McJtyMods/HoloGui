@@ -25,9 +25,6 @@ repositories {
     maven { // JEI
         url "https://dvs1.progwml6.com/files/maven"
     }
-    maven { // Patchouli
-        url "https://maven.blamejared.com"
-    }
     maven { // TOP
         url "https://maven.k-4u.nl"
     }
@@ -130,21 +127,8 @@ jar {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
-    implementation fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}") {
-        transitive = false
-    }
-
-    if (findProject(':TheOneProbe') != null) {
-        implementation project(':TheOneProbe')
-    } else {
-        implementation fg.deobf(project.dependencies.create("mcjty.theoneprobe:theoneprobe:${top_version}") {
-            transitive = false
-        })
-    }
     if (findProject(':McJtyLib') != null) {
-        implementation project(':McJtyLib')
+        implementation(project(':McJtyLib')) { transitive = false }
     } else {
         implementation fg.deobf (project.dependencies.create("com.github.mcjty:mcjtylib:${mcjtylib_version}") {
             transitive = false
