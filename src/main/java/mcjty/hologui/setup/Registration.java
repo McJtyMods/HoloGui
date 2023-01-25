@@ -1,19 +1,39 @@
 package mcjty.hologui.setup;
 
 
+import mcjty.hologui.HoloGui;
+import mcjty.hologui.gui.HoloGuiEntity;
 import mcjty.hologui.gui.HoloGuiSounds;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 @Mod.EventBusSubscriber
 public class Registration {
 
-    @SubscribeEvent
-    public static void registerSounds(RegistryEvent.Register<SoundEvent> sounds) {
-        HoloGuiSounds.init(sounds.getRegistry());
+    public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, HoloGui.MODID);
+    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, HoloGui.MODID);
+    public static final RegistryObject<EntityType<HoloGuiEntity>> HOLOGUI_ENTITY_TYPE = ENTITIES.register("hologui", Registration::createHoloGuiType);
+
+    public static void init() {
+        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        SOUNDS.register(bus);
+        ENTITIES.register(bus);
+        HoloGuiSounds.init();   // Class loading
     }
 
-
+    private static EntityType<HoloGuiEntity> createHoloGuiType() {
+        return EntityType.Builder.of(HoloGuiEntity::new, MobCategory.MISC)
+                .sized(1, 1)
+                .setShouldReceiveVelocityUpdates(false)
+                .noSummon()
+                .fireImmune()
+                .build("hologui");
+    }
 }

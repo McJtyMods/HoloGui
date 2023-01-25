@@ -173,7 +173,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     }
 
     private void closeGui(@Nullable Player player) {
-        level.playSound(player, getX(), getY(), getZ(), HoloGuiSounds.guiopen, SoundSource.PLAYERS, 0.2f, 1.0f); // @todo configure
+        level.playSound(player, getX(), getY(), getZ(), HoloGuiSounds.GUIOPEN.get(), SoundSource.PLAYERS, 0.2f, 1.0f); // @todo configure
         discard();
     }
 

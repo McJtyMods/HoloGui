@@ -69,7 +69,7 @@ public class HoloButton extends AbstractHoloComponent<IIconButton> implements II
     @Override
     public void hitClient(Player player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         Entity ent = entity.getEntity();
-        player.level.playSound(player, ent.getX(), ent.getY(), ent.getZ(), HoloGuiSounds.guiclick, SoundSource.PLAYERS, 1.0f, 1.0f);
+        player.level.playSound(player, ent.getX(), ent.getY(), ent.getZ(), HoloGuiSounds.GUICLICK.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
         if (hitClientEvent != null) {
             hitClientEvent.hit(this, player, entity, cursorX, cursorY);
         }

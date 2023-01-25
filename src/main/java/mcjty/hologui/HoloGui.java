@@ -6,9 +6,10 @@ import mcjty.hologui.config.Config;
 import mcjty.hologui.gui.HoloGuiHandler;
 import mcjty.hologui.setup.ClientSetup;
 import mcjty.hologui.setup.ModSetup;
+import mcjty.hologui.setup.Registration;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -35,14 +36,16 @@ public class HoloGui {
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_CONFIG);
 
-        ModEntities.register();
+        Registration.init();
 
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(setup::init);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
+        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        bus.addListener(setup::init);
+        bus.addListener(this::processIMC);
+
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-            FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSetup::entityRenderers);
+            bus.addListener(ClientSetup::entityRenderers);
             // The following is needed to make sure our SpriteUploader is setup at exactly the right moment
-            FMLJavaModLoadingContext.get().getModEventBus().addListener(EventPriority.NORMAL, false, ColorHandlerEvent.Block.class, event -> ClientSetup.setupSpriteUploader());
+            bus.addListener(EventPriority.NORMAL, false, ClientSetup::setupSpriteUploader);
         });
 
         Config.loadConfig(Config.CLIENT_CONFIG, FMLPaths.CONFIGDIR.get().resolve("hologui-client.toml"));

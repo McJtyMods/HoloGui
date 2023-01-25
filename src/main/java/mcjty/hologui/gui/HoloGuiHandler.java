@@ -1,9 +1,9 @@
 package mcjty.hologui.gui;
 
 import mcjty.hologui.HoloGui;
-import mcjty.hologui.ModEntities;
 import mcjty.hologui.api.*;
 import mcjty.hologui.gui.components.GuiComponentRegistry;
+import mcjty.hologui.setup.Registration;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -54,7 +54,7 @@ public class HoloGuiHandler implements IHoloGuiHandler {
     @Override
     public IHoloGuiEntity openHoloGuiEntity(Level world, BlockPos pos, Player player, String tag, double distance) {
         if (world.isClientSide) {
-            world.playSound(player, pos.getX(), pos.getY(), pos.getZ(), HoloGuiSounds.guiopen, SoundSource.PLAYERS, 1.0f, 1.0f);
+            world.playSound(player, pos.getX(), pos.getY(), pos.getZ(), HoloGuiSounds.GUIOPEN.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
             return null;
         }
         IGuiTile guiTile = HoloGui.guiHandler.getGuiTile(world, pos);
@@ -84,9 +84,9 @@ public class HoloGuiHandler implements IHoloGuiHandler {
         Level world = player.getCommandSenderWorld();
         BlockPos pos = player.blockPosition();
 
-        world.playSound(player, pos, HoloGuiSounds.guiopen, SoundSource.PLAYERS, 1.0f, 1.0f);
+        world.playSound(player, pos, HoloGuiSounds.GUIOPEN.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
         if (world.isClientSide) {
-            world.playSound(player, pos.getX(), pos.getY(), pos.getZ(), HoloGuiSounds.guiopen, SoundSource.PLAYERS, 1.0f, 1.0f);
+            world.playSound(player, pos.getX(), pos.getY(), pos.getZ(), HoloGuiSounds.GUIOPEN.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
             return null;
         }
         HoloGuiEntity entity = createHoloGui(world, player, "", distance);
@@ -107,7 +107,7 @@ public class HoloGuiHandler implements IHoloGuiHandler {
     }
 
     private static HoloGuiEntity createHoloGui(Level world, Player player, String tag, double distance) {
-        HoloGuiEntity entity = new HoloGuiEntity(ModEntities.HOLOGUI_ENTITY_TYPE.get(), world);
+        HoloGuiEntity entity = new HoloGuiEntity(Registration.HOLOGUI_ENTITY_TYPE.get(), world);
         entity.setTag(tag);
         double x = player.getX();
         double y = player.getY()+player.getEyeHeight() - .5;
@@ -125,7 +125,7 @@ public class HoloGuiHandler implements IHoloGuiHandler {
 
     private static HoloGuiEntity createHoloGuiRelative(Level world, Entity parent, Vec3 offset, String tag) {
 //        HoloGuiEntity entity = new HoloGuiEntitySmall(world);
-        HoloGuiEntity entity = new HoloGuiEntity(ModEntities.HOLOGUI_ENTITY_TYPE.get(), world);
+        HoloGuiEntity entity = new HoloGuiEntity(Registration.HOLOGUI_ENTITY_TYPE.get(), world);
         entity.setTag(tag);
         double x = parent.getX() + offset.x;
         double y = parent.getY() + offset.y;
