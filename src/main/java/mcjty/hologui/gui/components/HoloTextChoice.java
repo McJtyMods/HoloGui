@@ -134,7 +134,7 @@ public class HoloTextChoice extends AbstractHoloComponent<ITextChoice> implement
     @Override
     public void hitClient(Player player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         Entity ent = entity.getEntity();
-        player.level.playSound(player, ent.getX(), ent.getY(), ent.getZ(), HoloGuiSounds.GUICLICK.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
+        player.level().playSound(player, ent.getX(), ent.getY(), ent.getZ(), HoloGuiSounds.GUICLICK.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
         if (hitEventClient != null) {
             hitEventClient.hit(this, player, entity, cursorX, cursorY);
         }
