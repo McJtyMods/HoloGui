@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[39,)"
+loaderVersion="[47,)"
 license="MIT License https://github.com/McJtyMods/HoloGui/blob/1.18/LICENCE"
 issueTrackerURL="http://github.com/McJtyMods/HoloGui/issues"
 displayURL="http://github.com/McJtyMods/HoloGui/"
@@ -18,12 +18,12 @@ Holographic GUI's
 [[dependencies.hologui]]
     modId="forge"
     mandatory=true
-    versionRange="[39.0.0,)"
+    versionRange="[47,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.hologui]]
     modId="mcjtylib"
     mandatory=true
-    versionRange="[1.19-7.2.2,)"
+    versionRange="[1.20-8.0.0,)"
     ordering="AFTER"
     side="BOTH"
