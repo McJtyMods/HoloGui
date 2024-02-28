@@ -5,7 +5,7 @@ import mcjty.hologui.setup.Registration;
 import mcjty.lib.varia.SoundTools;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.RegistryObject;
 
 public class HoloGuiSounds {
 

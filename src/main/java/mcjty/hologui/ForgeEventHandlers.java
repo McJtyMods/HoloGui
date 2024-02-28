@@ -1,8 +1,8 @@
 package mcjty.hologui;
 
 import mcjty.hologui.commands.ModCommands;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
 public class ForgeEventHandlers {
 

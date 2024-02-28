@@ -20,7 +20,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraftforge.client.gui.ScreenUtils;
+import net.neoforged.neoforge.client.gui.ScreenUtils;
 
 import javax.annotation.Nullable;
 import java.util.List;
