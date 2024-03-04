@@ -9,7 +9,7 @@ import mcjty.hologui.setup.ModSetup;
 import mcjty.hologui.setup.Registration;
 import net.neoforged.neoforge.api.distmarker.Dist;
 import net.neoforged.neoforge.eventbus.api.EventPriority;
-import net.neoforged.neoforge.eventbus.api.IEventBus;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.fml.DistExecutor;
 import net.neoforged.neoforge.fml.ModLoadingContext;
 import net.neoforged.neoforge.fml.common.Mod;
