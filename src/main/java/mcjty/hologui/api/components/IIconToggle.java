@@ -15,5 +15,7 @@ public interface IIconToggle extends IGuiComponent<IIconToggle> {
 
     IIconToggle selected(IImage icon);
 
+    IIconToggle background(IImage icon);
+
     IIconToggle hitEvent(IEvent event);
 }

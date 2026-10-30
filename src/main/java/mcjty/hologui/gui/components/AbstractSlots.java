@@ -1,7 +1,7 @@
 package mcjty.hologui.gui.components;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import mcjty.hologui.api.*;
 import mcjty.hologui.gui.ColorFromStyle;
 import mcjty.hologui.gui.HoloGuiRenderTools;
@@ -181,8 +181,8 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
         if (!stack.isEmpty()) {
             matrixStack.pushPose();
             matrixStack.scale(0.01f, 0.01f, 0.01f);
-            matrixStack.mulPose(Vector3f.YP.rotationDegrees(180));
-            matrixStack.mulPose(Vector3f.ZP.rotationDegrees(180));
+            matrixStack.mulPose(Axis.YP.rotationDegrees(180));
+            matrixStack.mulPose(Axis.ZP.rotationDegrees(180));
             matrixStack.translate(0, 0, -10);
             matrixStack.scale(0.4f, 0.4f, 0.0f);
             int xx = (int) (cursorX - x);

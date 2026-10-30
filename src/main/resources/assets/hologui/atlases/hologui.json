@@ -1,0 +1,44 @@
+{
+  "sources": [
+    {
+      "type": "minecraft:single",
+      "resource": "hologui:gui/hologui_blue",
+      "sprite": "hologui:hologui_blue"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "hologui:gui/hologui_blue_sharpblack",
+      "sprite": "hologui:hologui_blue_sharpblack"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "hologui:gui/hologui_blue_sharpwhite",
+      "sprite": "hologui:hologui_blue_sharpwhite"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "hologui:gui/hologui_blue_softblack",
+      "sprite": "hologui:hologui_blue_softblack"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "hologui:gui/hologui_blue_softwhite",
+      "sprite": "hologui:hologui_blue_softwhite"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "hologui:gui/hologui_gray_sharpblack",
+      "sprite": "hologui:hologui_gray_sharpblack"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "hologui:gui/hologui_gray_sharpwhite",
+      "sprite": "hologui:hologui_gray_sharpwhite"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "hologui:gui/hologui_gray_softblack",
+      "sprite": "hologui:hologui_gray_softblack"
+    }
+  ]
+}

@@ -9,6 +9,7 @@ import mcjty.lib.varia.SafeClientTools;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -64,7 +65,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 
 
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
@@ -147,7 +148,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         // @todo 1.14?
         setScale(getScale());
 
-        if (level.isClientSide) {
+        if (level().isClientSide) {
             String id = getGuiId();
             if (id != null && !id.isEmpty()) {
                 if (!id.equals(lastGuiId)) {
@@ -173,7 +174,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     }
 
     private void closeGui(@Nullable Player player) {
-        level.playSound(player, getX(), getY(), getZ(), HoloGuiSounds.GUIOPEN.get(), SoundSource.PLAYERS, 0.2f, 1.0f); // @todo configure
+        level().playSound(player, getX(), getY(), getZ(), HoloGuiSounds.GUIOPEN.get(), SoundSource.PLAYERS, 0.2f, 1.0f); // @todo configure
         discard();
     }
 
@@ -197,7 +198,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
                     return;
                 }
 
-                IGuiTile guiTile = HoloGui.guiHandler.getGuiTile(level, tile);
+                IGuiTile guiTile = HoloGui.guiHandler.getGuiTile(level(), tile);
                 if (guiTile == null) {
                     // Block connected to GUI has been destroyed.
                     closeGui();
@@ -215,7 +216,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
                 closeGui();
             }
             if (hasCloseStrategy(CloseStrategy.TIMEOUT_RESET)) {
-                if (level.getEntitiesOfClass(Player.class, playerDetectionBox)
+                if (level().getEntitiesOfClass(Player.class, playerDetectionBox)
                         .stream()
                         .anyMatch(this::playerLooksAtMe)) {
                     timeout = maxTimeout;
@@ -284,7 +285,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
             } else {
                 BlockPos tile = getGuiTile();
                 if (tile != null) {
-                    IGuiTile guiTile = HoloGui.guiHandler.getGuiTile(level, tile);
+                    IGuiTile guiTile = HoloGui.guiHandler.getGuiTile(level(), tile);
                     if (guiTile != null) {
                         panel = guiTile.createGui(getTag(), HoloGui.guiHandler.getComponentRegistry());
                     }
@@ -296,7 +297,8 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 
     @Override
     public boolean canBeCollidedWith() {
-        return true;
+        // Ray targeting uses isPickable; an overlapping GUI must not lower the player's pose.
+        return false;
     }
 
     @Override
@@ -400,7 +402,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
                 x = vec2d.x * 10 / factor - offset;
                 y = vec2d.y * 10 / factor - offset;
 
-                if (!level.isClientSide) {
+                if (!level().isClientSide) {
                     gui.hit(player, this, x, y);
                 } else {
                     gui.hitClient(player, this, x, y);

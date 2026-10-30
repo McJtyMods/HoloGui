@@ -1,9 +1,12 @@
 package mcjty.hologui.gui;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.Util;
+
+import java.util.function.Function;
 
 public class HoloGuiRenderType extends RenderType {
 
@@ -12,26 +15,32 @@ public class HoloGuiRenderType extends RenderType {
         super(name, format, mode, p_173181_, p_173182_, p_173183_, setup, clear);
     }
 
-//    private static final RenderType TRANSLUCENT = create("translucent", DefaultVertexFormats.BLOCK, 7, 262144, true, true, getTranslucentState());
-//      return RenderType.State.getBuilder().shadeModel(SHADE_ENABLED).lightmap(LIGHTMAP_ENABLED).texture(BLOCK_SHEET_MIPPED)
-//    .transparency(TRANSLUCENT_TRANSPARENCY).build(true);
+    private static final Function<ResourceLocation, RenderType> IMAGES = Util.memoize(HoloGuiRenderType::createImageType);
 
+    public static final RenderType HOLOGUI_BACKGROUND = image(HoloGuiSpriteUploader.HOLOGUI_ATLAS);
 
-    public static final RenderType HOLOGUI_BACKGROUND = create("hologui_background", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 262144, true, true,
+    public static final RenderType HOLOGUI_COLOR = create("hologui_color", DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS, 256, false, false,
             CompositeState.builder()
-                    .setShaderState(RENDERTYPE_ENTITY_SHADOW_SHADER)
-                    .setLightmapState(RenderStateShard.NO_LIGHTMAP)
-                    .setTextureState(new TextureStateShard(HoloGuiSpriteUploader.HOLOGUI_ATLAS, false, false))
+                    .setShaderState(POSITION_COLOR_SHADER)
+                    .setCullState(NO_CULL)
                     .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
-                    .setWriteMaskState(COLOR_WRITE)
-                    .createCompositeState(true));
+                    .setWriteMaskState(COLOR_DEPTH_WRITE)
+                    .createCompositeState(false));
 
-    public static final RenderType HOLOGUI_ICONS = create("hologui_icons", DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 262144, true, true,
-            CompositeState.builder()
-                    .setShaderState(RENDERTYPE_ENTITY_SHADOW_SHADER)
-                    .setLightmapState(RenderStateShard.NO_LIGHTMAP)
-                    .setTextureState(new TextureStateShard(HoloGuiSpriteUploader.HOLOGUI_ATLAS, false, false))
-                    .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
-                    .setWriteMaskState(COLOR_WRITE)
-                    .createCompositeState(true));
+    public static RenderType image(ResourceLocation texture) {
+        return IMAGES.apply(texture);
+    }
+
+    private static RenderType createImageType(ResourceLocation texture) {
+        // Unlit textured quads with depth writes, including the panel behind the widgets.
+        return create("hologui_image", DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, VertexFormat.Mode.QUADS, 256, false, true,
+                CompositeState.builder()
+                        .setShaderState(RENDERTYPE_TEXT_SHADER)
+                        .setTextureState(new TextureStateShard(texture, false, false))
+                        .setLightmapState(LIGHTMAP)
+                        .setCullState(NO_CULL)
+                        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                        .setWriteMaskState(COLOR_DEPTH_WRITE)
+                        .createCompositeState(false));
+    }
 }

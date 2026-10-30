@@ -1,26 +1,24 @@
 package mcjty.hologui.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
-import mcjty.lib.client.CustomRenderTypes;
-import mcjty.lib.client.RenderHelper;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraftforge.client.model.pipeline.VertexConsumerWrapper;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraftforge.client.gui.ScreenUtils;
+import net.minecraft.client.renderer.RenderType;
+import org.joml.Matrix4f;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -32,33 +30,45 @@ public class HoloGuiRenderTools {
     public static void renderText(PoseStack matrixStack, MultiBufferSource buffer, double x, double y, String text, int color, float scale) {
         matrixStack.pushPose();
         matrixStack.scale(0.01f*scale, 0.01f*scale, 0.01f);
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees(180));
-        matrixStack.mulPose(Vector3f.ZP.rotationDegrees(180));
+        matrixStack.mulPose(Axis.YP.rotationDegrees(180));
+        matrixStack.mulPose(Axis.ZP.rotationDegrees(180));
         Minecraft.getInstance().font.drawInBatch(text, (float) (x * 10 / scale - 40 / scale), (float) (y * 10 / scale - 40 / scale), color,
-                false, matrixStack.last().pose(), buffer, false, 0, 0xf000f0);  // @todo 1.15 or 140?
+                false, matrixStack.last().pose(), buffer, Font.DisplayMode.NORMAL, 0, 0xf000f0);  // @todo 1.15 or 140?
         matrixStack.popPose();
     }
 
     public static void renderTextShadow(PoseStack matrixStack, MultiBufferSource buffer, double x, double y, String text, int color, float scale) {
         matrixStack.pushPose();
         matrixStack.scale(0.01f*scale, 0.01f*scale, 0.01f);
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees(180));
-        matrixStack.mulPose(Vector3f.ZP.rotationDegrees(180));
+        matrixStack.mulPose(Axis.YP.rotationDegrees(180));
+        matrixStack.mulPose(Axis.ZP.rotationDegrees(180));
         Minecraft.getInstance().font.drawInBatch(text, (float) (x * 10 / scale - 40 / scale), (float) (y * 10 / scale - 40 / scale), color,
-                true, matrixStack.last().pose(), buffer, false, 0, 0xf000f0);  // @todo 1.15 or 140?
+                true, matrixStack.last().pose(), buffer, Font.DisplayMode.NORMAL, 0, 0xf000f0);  // @todo 1.15 or 140?
         matrixStack.popPose();
     }
 
     public static void renderImage(PoseStack matrixStack, MultiBufferSource buffer, double x, double y, int u, int v, int w, int h, int txtw, int txth, ResourceLocation image) {
         matrixStack.pushPose();
         matrixStack.scale(0.01f, 0.01f, 0.01f);
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees(180));
-        matrixStack.mulPose(Vector3f.ZP.rotationDegrees(180));
-        matrixStack.scale(1, 1, 0.01f);
+        matrixStack.mulPose(Axis.YP.rotationDegrees(180));
+        matrixStack.mulPose(Axis.ZP.rotationDegrees(180));
 
-        float zLevel = Minecraft.getInstance().getItemRenderer().blitOffset + 250F;
-
-        ScreenUtils.blitWithBorder(matrixStack, image, (int) (x * 10 - 46), (int) (y * 10 - 44), u, v, w, h, txtw, txth, 0, zLevel);
+        Matrix4f pose = matrixStack.last().pose();
+        VertexConsumer vertices = buffer.getBuffer(HoloGuiRenderType.image(image));
+        float left = (float) (x * 10 - 46);
+        float top = (float) (y * 10 - 44);
+        float u0 = (float) u / txtw;
+        float v0 = (float) v / txth;
+        float u1 = (float) (u + w) / txtw;
+        float v1 = (float) (v + h) / txth;
+        vertices.vertex(pose, left, top + h, 0).color(255, 255, 255, 255).uv(u0, v1)
+                .uv2(LightTexture.FULL_BRIGHT).endVertex();
+        vertices.vertex(pose, left + w, top + h, 0).color(255, 255, 255, 255).uv(u1, v1)
+                .uv2(LightTexture.FULL_BRIGHT).endVertex();
+        vertices.vertex(pose, left + w, top, 0).color(255, 255, 255, 255).uv(u1, v0)
+                .uv2(LightTexture.FULL_BRIGHT).endVertex();
+        vertices.vertex(pose, left, top, 0).color(255, 255, 255, 255).uv(u0, v0)
+                .uv2(LightTexture.FULL_BRIGHT).endVertex();
         matrixStack.popPose();
     }
 
@@ -78,112 +88,60 @@ public class HoloGuiRenderTools {
     }
 
     public static void renderBorder(PoseStack matrixStack, MultiBufferSource buffer, double x, double y, double w, double h, int r, int g, int b, int a) {
+        float left = (float) (x * .1 - .42);
+        float top = (float) (.42 - y * .1);
+        float right = left + (float) w * .1f;
+        float bottom = top - (float) h * .1f;
+        float thickness = .0015f;
+        VertexConsumer vertices = buffer.getBuffer(HoloGuiRenderType.HOLOGUI_COLOR);
+        Matrix4f pose = matrixStack.last().pose();
+        coloredQuad(vertices, pose, left, right, top - thickness, top, r, g, b, a);
+        coloredQuad(vertices, pose, left, right, bottom, bottom + thickness, r, g, b, a);
+        coloredQuad(vertices, pose, left, left + thickness, bottom, top, r, g, b, a);
+        coloredQuad(vertices, pose, right - thickness, right, bottom, top, r, g, b, a);
+    }
 
-        y += h-1;
-
-        x *= 1.05;
-        y *= 0.85;
-        y += .45;
-
-        matrixStack.pushPose();
-        matrixStack.scale(0.1f, 0.1f, 0.1f);
-        matrixStack.translate(x * 0.95 - 3.7, 4.2 - y * 1.2, 0);
-        matrixStack.scale(1, 1, 0.1f);
-
-        VertexConsumer builder = buffer.getBuffer(CustomRenderTypes.LINESTRIP);
-        x /= 200;
-        x -= 0.47;
-        y /= 100;
-        y -= 0.5;
-
-
-        double z = 0.3;
-        builder.vertex(x, y, z).color(r, g, b, a).endVertex();
-        builder.vertex(x + w, y, z).color(r, g, b, a).endVertex();
-        builder.vertex(x + w, y + h, z).color(r, g, b, a).endVertex();
-        builder.vertex(x, y + h, z).color(r, g, b, a).endVertex();
-        builder.vertex(x, y, z).color(r, g, b, a).endVertex();
-
-        matrixStack.popPose();
+    private static void coloredQuad(VertexConsumer vertices, Matrix4f pose, float left, float right, float bottom, float top, int r, int g, int b, int a) {
+        vertices.vertex(pose, left, bottom, .001f).color(r, g, b, a).endVertex();
+        vertices.vertex(pose, right, bottom, .001f).color(r, g, b, a).endVertex();
+        vertices.vertex(pose, right, top, .001f).color(r, g, b, a).endVertex();
+        vertices.vertex(pose, left, top, .001f).color(r, g, b, a).endVertex();
     }
 
     public static void renderItem(PoseStack matrixStack, MultiBufferSource buffer, double x, double y, ItemStack stack, @Nullable ResourceLocation lightmap, boolean border, float scale) {
-
-        x *= 1.05;
-        y *= 0.85;
-        y += .45;
-
-        matrixStack.pushPose();
-        matrixStack.scale(0.1f * scale, 0.1f * scale, 0.1f * scale);
-        matrixStack.translate((x * 0.95 - 3.7) / scale, (4.2 - y * 1.2) / scale, 0);
-        matrixStack.scale(1, 1, 0.1f);
-        if (!stack.isEmpty()) {
-
-            ItemRenderer renderItem = Minecraft.getInstance().getItemRenderer();
-            BakedModel ibakedmodel = renderItem.getModel(stack, null, null, 1);
-            renderItemModel(matrixStack, buffer, stack, ibakedmodel, ItemTransforms.TransformType.NONE, lightmap);
-            if (border) {
-                VertexConsumer builder = buffer.getBuffer(CustomRenderTypes.LINESTRIP);
-                x /= 200;
-                x -= 0.47;
-                y /= 100;
-                y -= 0.5;
-
-                double z = 0.3;
-                double w = 0.9;
-                builder.vertex(x, y, z).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
-                builder.vertex(x + w, y, z).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
-                builder.vertex(x + w, y + w, z).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
-                builder.vertex(x, y + w, z).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
-                builder.vertex(x, y, z).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
-            }
+        if (stack.isEmpty()) {
+            return;
         }
+        matrixStack.pushPose();
+        matrixStack.translate(x * .09975 - .37, .366 - y * .102, 0);
+        // GUI item transforms keep blocks and flat items readable at every viewing angle.
+        // Flatten depth so even large item models stay in front of the panel.
+        matrixStack.scale(.1f * scale, .1f * scale, .0001f * scale);
+        ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
+        BakedModel model = renderer.getModel(stack, null, null, 1);
+        MultiBufferSource itemBuffer = buffer;
+        if (lightmap != null) {
+            boolean invalid = lightmap.getPath().equals("textures/gui/darken_red.png");
+            // Disabled icons used to bind a fake lightmap, leaking state into other widgets.
+            itemBuffer = type -> new VertexConsumerWrapper(buffer.getBuffer(type)) {
+
+                @Override
+                public VertexConsumer color(int r, int g, int b, int a) {
+                    return super.color(invalid ? r : r * 2 / 5, g * 2 / 5, b * 2 / 5, a);
+                }
+            };
+        }
+        renderer.render(stack, ItemDisplayContext.GUI, false, matrixStack, itemBuffer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, model);
         matrixStack.popPose();
+        if (border) {
+            renderBorder(matrixStack, buffer, x, y, 1, 1, 255, 255, 255, 255);
+        }
     }
 
-    private static void renderItemModel(PoseStack matrixStack, MultiBufferSource buffer, ItemStack stack, BakedModel bakedmodel, ItemTransforms.TransformType transform, @Nullable ResourceLocation lightmap) {
-        ItemRenderer renderItem = Minecraft.getInstance().getItemRenderer();
-
-        // @todo 1.15
-        TextureManager textureManager = Minecraft.getInstance().getTextureManager();
-        textureManager.bindForSetup(InventoryMenu.BLOCK_ATLAS);
-        textureManager.getTexture(InventoryMenu.BLOCK_ATLAS).setFilter(false, false);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        // @todo 1.18 GlStateManager._enableRescaleNormal();
-        // @todo 1.18 GlStateManager._alphaFunc(516, 0.1F);
-        GlStateManager._enableBlend();
-        GlStateManager._blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA.value, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA.value, GlStateManager.SourceFactor.ONE.value, GlStateManager.DestFactor.ZERO.value);
-
-        if (lightmap != null) {
-            Minecraft.getInstance().gameRenderer.lightTexture().turnOnLightLayer();
-            // @todo 1.15
-//            GlStateManager.activeTexture(GLX.GL_TEXTURE1);
-
-//            Minecraft.getInstance()().getTextureManager().bind(new ResourceLocation(Ariente.MODID, "textures/gui/darken.png"));
-            textureManager.bindForSetup(lightmap);
-            // @todo 1.15
-//            GlStateManager.activeTexture(GLX.GL_TEXTURE0);
-        }
-
-        matrixStack.pushPose();
-        // TODO: check if negative scale is a thing
-
-        int lightmapValue = RenderHelper.MAX_BRIGHTNESS;
-        bakedmodel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(matrixStack, bakedmodel, transform, false);
-        renderItem.render(stack, transform, false, matrixStack, buffer, lightmapValue, OverlayTexture.NO_OVERLAY, bakedmodel);
-
-        // @todo 1.15
-//        GlStateManager.cullFace(GlStateManager.CullFace.BACK);
-        matrixStack.popPose();
-        // @todo 1.18 GlStateManager._disableRescaleNormal();
-        GlStateManager._disableBlend();
-        GlStateManager._depthMask(false);
-        textureManager.bindForSetup(InventoryMenu.BLOCK_ATLAS);
-        textureManager.getTexture(InventoryMenu.BLOCK_ATLAS).restoreLastBlurMipmap();
-
-        if (lightmap != null) {
-            Minecraft.getInstance().gameRenderer.lightTexture().turnOffLightLayer();
-        }
+    public static RenderType guiRenderType(RenderType type) {
+        // Fabulous normally sends translucent item icons to a separate world framebuffer.
+        // Keep GUI items with the panel so they share its depth and draw order.
+        return type == Sheets.translucentItemSheet() ? Sheets.translucentCullBlockSheet() : type;
     }
 
 

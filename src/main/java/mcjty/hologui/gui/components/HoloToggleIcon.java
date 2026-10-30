@@ -18,6 +18,7 @@ public class HoloToggleIcon extends AbstractHoloComponent<IIconToggle> implement
 
     private IImage image;
     private IImage selected;
+    private IImage background;
 
     private Function<Player, Boolean> currentValue;
     private IEvent hitEvent;
@@ -45,6 +46,12 @@ public class HoloToggleIcon extends AbstractHoloComponent<IIconToggle> implement
     }
 
     @Override
+    public IIconToggle background(IImage icon) {
+        this.background = icon;
+        return this;
+    }
+
+    @Override
     public IIconToggle hitEvent(IEvent event) {
         this.hitEvent = event;
         return this;
@@ -54,8 +61,12 @@ public class HoloToggleIcon extends AbstractHoloComponent<IIconToggle> implement
     @Override
     public void render(PoseStack matrixStack, MultiBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         IImage i = image;
-        if (selected != null && currentValue.apply(player)) {
+        if (selected != null && Boolean.TRUE.equals(currentValue.apply(player))) {
             i = selected;
+        }
+        if (background != null) {
+            HoloGuiRenderTools.renderImage(matrixStack, buffer, x, y, background.getU(), background.getV(), 16, 16,
+                    background.getWidth(), background.getHeight(), background.getImage());
         }
         HoloGuiRenderTools.renderImage(matrixStack, buffer, x, y, i.getU(), i.getV(), 16, 16, i.getWidth(), i.getHeight(), i.getImage());
     }

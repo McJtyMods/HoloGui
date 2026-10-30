@@ -1,6 +1,7 @@
 package mcjty.hologui.setup;
 
 
+import java.util.function.Supplier;
 import mcjty.hologui.HoloGui;
 import mcjty.hologui.gui.HoloGuiEntity;
 import mcjty.hologui.gui.HoloGuiSounds;

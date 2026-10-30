@@ -1,7 +1,7 @@
 package mcjty.hologui.gui.components;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.components.IStackIcon;
 import mcjty.hologui.gui.HoloGuiRenderTools;
@@ -59,8 +59,8 @@ public class HoloStackIcon extends AbstractHoloComponent<IStackIcon> implements 
     public void renderTooltip(PoseStack matrixStack, MultiBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         matrixStack.pushPose();
         matrixStack.scale(0.01f, 0.01f, 0.01f);
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees(180));
-        matrixStack.mulPose(Vector3f.ZP.rotationDegrees(180));
+        matrixStack.mulPose(Axis.YP.rotationDegrees(180));
+        matrixStack.mulPose(Axis.ZP.rotationDegrees(180));
         matrixStack.translate(0, 0, -10);
         matrixStack.scale(0.4f, 0.4f, 0.0f);
         HoloGuiRenderTools.renderToolTip(matrixStack, buffer, stackSupplier.get(), (int) (x * 30 - 120), (int) (y * 30 - 120), tooltipHandler);

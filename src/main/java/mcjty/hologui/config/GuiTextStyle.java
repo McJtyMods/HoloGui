@@ -91,7 +91,7 @@ public enum GuiTextStyle {
         private static final int DEFAULT_TITLE = 0xffaaccff;
         public static final int DEFAULT_ERROR = 0xffff0000;
         public static final int DEFAULT_WARNING = 0xffdd9900;
-        public static final int DEFAULT_LABEL = 0xff888888;
+        public static final int DEFAULT_LABEL = 0xff201850;
         public static final int DEFAULT_INFO = 0xfffffffe;        // Not ffffffff because that's -1
         public static final int BLACK_TITLE = 0xff000000;
         public static final int BLACK_ERROR = 0xffff0000;
