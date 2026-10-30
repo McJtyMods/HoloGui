@@ -109,6 +109,15 @@ public class HoloGuiRenderTools {
     }
 
     public static void renderItem(PoseStack matrixStack, MultiBufferSource buffer, double x, double y, ItemStack stack, @Nullable ResourceLocation lightmap, boolean border, float scale) {
+        boolean invalid = lightmap != null && lightmap.getPath().equals("textures/gui/darken_red.png");
+        renderItem(matrixStack, buffer, x, y, stack, lightmap == null ? 1 : .4f, invalid, border, scale);
+    }
+
+    public static void renderItem(PoseStack matrixStack, MultiBufferSource buffer, double x, double y, ItemStack stack, float brightness, boolean border, float scale) {
+        renderItem(matrixStack, buffer, x, y, stack, brightness, false, border, scale);
+    }
+
+    private static void renderItem(PoseStack matrixStack, MultiBufferSource buffer, double x, double y, ItemStack stack, float brightness, boolean invalid, boolean border, float scale) {
         if (stack.isEmpty()) {
             return;
         }
@@ -120,14 +129,13 @@ public class HoloGuiRenderTools {
         ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
         BakedModel model = renderer.getModel(stack, null, null, 1);
         MultiBufferSource itemBuffer = buffer;
-        if (lightmap != null) {
-            boolean invalid = lightmap.getPath().equals("textures/gui/darken_red.png");
+        if (brightness < 1 || invalid) {
             // Disabled icons used to bind a fake lightmap, leaking state into other widgets.
             itemBuffer = type -> new VertexConsumerWrapper(buffer.getBuffer(type)) {
 
                 @Override
                 public VertexConsumer color(int r, int g, int b, int a) {
-                    return super.color(invalid ? r : r * 2 / 5, g * 2 / 5, b * 2 / 5, a);
+                    return super.color(invalid ? r : (int) (r * brightness), (int) (g * brightness), (int) (b * brightness), a);
                 }
             };
         }

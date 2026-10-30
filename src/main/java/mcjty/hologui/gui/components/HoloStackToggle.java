@@ -63,15 +63,9 @@ public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> impleme
     @Override
     public void render(PoseStack matrixStack, MultiBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         Boolean state = currentValue.apply(player);
-        ResourceLocation lightmap = null;
-        boolean border = false;
-        if (state == null) {
-            lightmap = DARKEN;
-        } else if (!state) {
-        } else {
-            border = true;
-        }
-        HoloGuiRenderTools.renderItem(matrixStack, buffer, x, y, stack, lightmap, border, scale);
+        // Installed is bright and bordered; inventory-only is dim; unavailable is darker still.
+        float brightness = state == null ? .25f : state ? 1 : .55f;
+        HoloGuiRenderTools.renderItem(matrixStack, buffer, x, y, stack, brightness, Boolean.TRUE.equals(state), scale);
         // @todo 1.18 RenderHelper.turnBackOn();
     }
 
