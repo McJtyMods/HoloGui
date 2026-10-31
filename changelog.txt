@@ -1,3 +1,6 @@
+1.20-0.0.10-beta:
+- Ported HoloGui to Minecraft 1.20.1 for Forge.
+
 Upcoming:
 - Fixed a problem with 'opaque' mode not working
 - Various cleanups and fixes

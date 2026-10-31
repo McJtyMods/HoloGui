@@ -184,7 +184,7 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
             matrixStack.mulPose(Axis.YP.rotationDegrees(180));
             matrixStack.mulPose(Axis.ZP.rotationDegrees(180));
             matrixStack.translate(0, 0, -10);
-            matrixStack.scale(0.4f, 0.4f, 0.0f);
+            matrixStack.scale(0.4f, 0.4f, 1.0f);
             int xx = (int) (cursorX - x);
             int yy = (int) (cursorY - y);
             HoloGuiRenderTools.renderToolTip(matrixStack, buffer, stack, (int) ((xx+x) * 30 - 120), (int) ((yy+y) * 30 - 120 + 25), tooltipHandler);

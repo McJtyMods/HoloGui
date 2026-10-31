@@ -61,6 +61,7 @@ publishing {
     tasks.publish.dependsOn 'build'
     publications {
         mavenJava(MavenPublication) {
+            artifactId = archivesBaseName
             from components.java
             artifact apiJar
         }
@@ -75,6 +76,10 @@ publishing {
     }
 }
 
+
+tasks.withType(AbstractPublishToMaven).configureEach {
+    dependsOn 'reobfJar'
+}
 
 task("uploadJars", dependsOn: "reobf") {
     description = "uploads JARs"

@@ -76,7 +76,7 @@ public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> impleme
         matrixStack.mulPose(Axis.YP.rotationDegrees(180));
         matrixStack.mulPose(Axis.ZP.rotationDegrees(180));
         matrixStack.translate(0, 0, -10);
-        matrixStack.scale(0.4f, 0.4f, 0.0f);
+        matrixStack.scale(0.4f, 0.4f, 1.0f);
         HoloGuiRenderTools.renderToolTip(matrixStack, buffer, stack, (int) (x * 30 - 120), (int) (y * 30 - 120), tooltipHandler);
         matrixStack.popPose();
     }

@@ -22,6 +22,8 @@ import org.joml.Matrix4f;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.ArrayList;
+import net.minecraft.util.FormattedCharSequence;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
@@ -154,35 +156,33 @@ public class HoloGuiRenderTools {
 
 
     public static void renderToolTip(PoseStack matrixStack, MultiBufferSource buffer, ItemStack stack, int x, int y, BiConsumer<ItemStack, List<String>> tooltipHandler) {
-        // @todo 1.18 GuiUtils.preItemToolTip(stack);
-
-        // @todo 1.18 net.minecraft.client.renderer.RenderHelper.setupForFlatItems();
-
+        if (stack.isEmpty()) {
+            return;
+        }
         Minecraft mc = Minecraft.getInstance();
         TooltipFlag flag = mc.options.advancedItemTooltips ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL;
-        // @todo 1.14 check?
-        List<String> list = stack.getTooltipLines(mc.player, flag).stream().map(Component::getString).collect(Collectors.toList());
-
-        for (int i = 0; i < list.size(); ++i) {
-            if (i == 0) {
-//                list.set(i, stack.getRarity().rarityColor + list.get(i));
-                // @todo 1.14
-                list.set(i, list.get(i));
-            } else {
-//                list.set(i, TextFormatting.GRAY + list.get(i));
-                // @todo 1.16
-                list.set(i, list.get(i));
-            }
-        }
-        tooltipHandler.accept(stack, list);
-
+        List<String> text = stack.getTooltipLines(mc.player, flag).stream().map(Component::getString).collect(Collectors.toList());
+        tooltipHandler.accept(stack, text);
         Font font = mc.font;
-        // @todo 1.18 GuiUtils.drawHoveringText(matrixStack, list, x, y, 600, 500, -1, font);
-
-        // @todo 1.15 need to begone!
-        // @todo 1.18 net.minecraft.client.renderer.RenderHelper.turnOff();
-
-        // @todo 1.18 GuiUtils.postItemToolTip();
+        List<FormattedCharSequence> lines = new ArrayList<>();
+        for (String line : text) {
+            lines.addAll(font.split(Component.literal(line), 210));
+        }
+        if (lines.isEmpty()) {
+            return;
+        }
+        int width = lines.stream().mapToInt(font::width).max().orElse(0);
+        int height = Math.min(22, lines.size()) * (font.lineHeight + 1);
+        int left = Math.max(-118, Math.min(x + 8, 118 - width));
+        int top = Math.max(-118, Math.min(y + 8, 118 - height));
+        coloredQuad(buffer.getBuffer(HoloGuiRenderType.HOLOGUI_COLOR), matrixStack.last().pose(),
+                left - 3, left + width + 3, top + height + 2, top - 3, 12, 8, 24, 245);
+        matrixStack.pushPose();
+        matrixStack.translate(0, 0, -.5);
+        for (int i = 0; i < Math.min(22, lines.size()); i++) {
+            font.drawInBatch(lines.get(i), left, top + i * (font.lineHeight + 1), i == 0 ? 0xffffff : 0xcccccc,
+                    false, matrixStack.last().pose(), buffer, Font.DisplayMode.NORMAL, 0, LightTexture.FULL_BRIGHT);
+        }
+        matrixStack.popPose();
     }
-
 }

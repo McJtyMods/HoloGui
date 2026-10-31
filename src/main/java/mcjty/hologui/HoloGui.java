@@ -43,6 +43,7 @@ public class HoloGui {
         bus.addListener(this::processIMC);
 
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+            ClientSetup.registerConfigScreen();
             bus.addListener(ClientSetup::entityRenderers);
             // The following is needed to make sure our SpriteUploader is setup at exactly the right moment
             bus.addListener(EventPriority.NORMAL, false, ClientSetup::setupSpriteUploader);
