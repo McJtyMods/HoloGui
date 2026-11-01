@@ -46,10 +46,14 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
 
     @Override
     public void render(HoloGuiEntity entity, float yaw, float partialTicks, PoseStack stack, MultiBufferSource buffer, int light) {
-        doActualRender(entity, stack, buffer);
+        doActualRender(entity, partialTicks, stack, buffer);
     }
 
     public static void doActualRender(HoloGuiEntity entity, PoseStack matrixStack, MultiBufferSource buffer) {
+        doActualRender(entity, Minecraft.getInstance().getFrameTime(), matrixStack, buffer);
+    }
+
+    private static void doActualRender(HoloGuiEntity entity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer) {
 
         // Keep the panel and its widgets ordered independently of the world's deferred buffers.
         // All GUI passes target the main framebuffer, including translucent item icons.
@@ -57,7 +61,7 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
         Lighting.setupForFlatItems();
         matrixStack.pushPose();
         try {
-            renderPanel(entity, matrixStack, guiBuffer);
+            renderPanel(entity, partialTicks, matrixStack, guiBuffer);
             GUI_BUFFERS.endBatch();
         } finally {
             matrixStack.popPose();
@@ -69,8 +73,8 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
         }
     }
 
-    private static void renderPanel(HoloGuiEntity entity, PoseStack matrixStack, MultiBufferSource buffer) {
-        matrixStack.mulPose(Axis.YP.rotationDegrees(180.0F - entity.getViewYRot(0)));
+    private static void renderPanel(HoloGuiEntity entity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer) {
+        matrixStack.mulPose(Axis.YP.rotationDegrees(180.0F - entity.getViewYRot(partialTicks)));
         matrixStack.translate(0, .5, 0);
         float scale = entity.getScale();
         scale = 1f - (1f-scale) * (.4f / .25f);
@@ -103,6 +107,7 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
 
         // The transformed panel's +Z points toward the player. Widgets must stay in front of it.
         matrixStack.translate(0, 0, .01);
+        entity.updateCursor(Minecraft.getInstance().player, partialTicks);
         float cursorX = (float) entity.getCursorX();
         float cursorY = (float) entity.getCursorY();
 

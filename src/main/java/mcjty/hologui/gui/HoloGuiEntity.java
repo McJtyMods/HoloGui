@@ -14,6 +14,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -80,6 +81,11 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 
     public double getCursorY() {
         return cursorY;
+    }
+
+    @Override
+    public float getViewYRot(float partialTicks) {
+        return Mth.rotLerp(partialTicks, yRotO, getYRot());
     }
 
     @Override
@@ -227,9 +233,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 
 
     private boolean playerLooksAtMe(Player player) {
-        Vec3 lookVec = getLookAngle();
-        Vec3 v = getIntersect3D(player, lookVec);
-        Vec2 vec2d = get2DProjection(lookVec, v);
+        Vec2 vec2d = intersect(player);
 
         double cx;
         double cy;
@@ -245,10 +249,14 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     }
 
     private void onUpdateClient() {
-        Player player = SafeClientTools.getClientPlayer();
-        Vec3 lookVec = getLookAngle();
-        Vec3 v = getIntersect3D(player, lookVec);
-        Vec2 vec2d = get2DProjection(lookVec, v);
+        updateCursor(SafeClientTools.getClientPlayer(), 1.0f);
+    }
+
+    public void updateCursor(Player player, float partialTicks) {
+        Vec3 origin = getPosition(partialTicks);
+        Vec3 lookVec = getViewVector(partialTicks);
+        Vec3 v = getIntersect3D(player, origin, lookVec, partialTicks);
+        Vec2 vec2d = get2DProjection(origin, lookVec, v);
 
         float scale = getScale();
 
@@ -328,8 +336,9 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 
     private Vec2 intersect(Player player) {
         Vec3 lookVec = getLookAngle();
-        Vec3 v = getIntersect3D(player, lookVec);
-        return get2DProjection(lookVec, v);
+        Vec3 origin = position();
+        Vec3 v = getIntersect3D(player, origin, lookVec, 1.0f);
+        return get2DProjection(origin, lookVec, v);
     }
 
     @Override
@@ -337,7 +346,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         return true;
     }
 
-    private Vec2 get2DProjection(Vec3 lookVec, Vec3 v) {
+    private Vec2 get2DProjection(Vec3 origin, Vec3 lookVec, Vec3 v) {
         double x = v.x;
         double y = v.y;
         double z = v.z;
@@ -347,16 +356,16 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         Vec3 vx = lookVec.cross(new Vec3(0, 1, 0));    // @todo optimize
         Vec3 vy = new Vec3(0, -1, 0);
 //        Vector3d vy = vx.crossProduct(new Vector3d(1, 0, 0));
-        x -= getX();
-        y -= getY();
-        z -= getZ();
+        x -= origin.x;
+        y -= origin.y;
+        z -= origin.z;
         double x2d = vx.x * x + vx.y * y + vx.z * z + .5;
         double y2d = vy.x * x + vy.y * y + vy.z * z + 1;
 
         return new Vec2((float)x2d, (float)y2d);
     }
 
-    private Vec3 getIntersect3D(Player player, Vec3 lookVec) {
+    private Vec3 getIntersect3D(Player player, Vec3 origin, Vec3 lookVec, float partialTicks) {
         // Center point of plane: getPosX(), getPosY(), getPosZ()
         // Perpendicular to the plane: getLookVec()
         double xn = lookVec.x;
@@ -364,16 +373,17 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         double zn = lookVec.z;
 
         // Plane: Ax + By + Cz + D = 0
-        double D = -(xn * getX() + yn * getY() + zn * getZ());
+        double D = -lookVec.dot(origin);
         double A = xn;
         double B = yn;
         double C = zn;
 
         // Line (from player): (x = x1 + at, y = y1 + bt, z = z1 + ct)
-        double x1 = player.getX();
-        double y1 = player.getY() + player.getEyeHeight();
-        double z1 = player.getZ();
-        Vec3 playerLookVec = player.getLookAngle();
+        Vec3 eye = player.getEyePosition(partialTicks);
+        double x1 = eye.x;
+        double y1 = eye.y;
+        double z1 = eye.z;
+        Vec3 playerLookVec = player.getViewVector(partialTicks);
         double a = playerLookVec.x;
         double b = playerLookVec.y;
         double c = playerLookVec.z;
