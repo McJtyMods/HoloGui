@@ -123,8 +123,8 @@ public class HoloTextChoice extends AbstractHoloComponent<ITextChoice> implement
             HoloGuiRenderTools.renderBorder(matrixStack, buffer, x, y, w, h,
                     bc & 255, (bc >> 8) & 255, (bc >> 16) & 255, (bc >> 24) & 255);
         }
-        HoloGuiRenderTools.renderFittedText(matrixStack, buffer, x + .1, y + (h - scale) / 2,
-                i, color, scale, Math.max(.2, w - 1.3));
+        HoloGuiRenderTools.renderControlText(matrixStack, buffer, x + .18, y, Math.max(.2, w - 1.2), h,
+                i, color, scale);
         HoloGuiRenderTools.renderCycleSymbol(matrixStack, buffer, x + w - .85, y + (h - .7) / 2, .7,
                 isInside(cursorX, cursorY) ? 0xffffff : 0x8de7f5);
     }

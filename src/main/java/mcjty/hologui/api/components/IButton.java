@@ -10,6 +10,9 @@ public interface IButton extends IGuiComponent<IButton> {
 
     IButton scale(float scale);
 
+    /** Show a framed color-picker button with a live color sample beside the label. */
+    IButton swatch(IColor color);
+
     @Deprecated
     IButton color(int color);
     IButton color(IColor color);

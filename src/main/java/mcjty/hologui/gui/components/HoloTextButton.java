@@ -21,6 +21,7 @@ public class HoloTextButton extends AbstractHoloComponent<IButton> implements IB
     private IColor color;
     private IColor hoverColor;
     private IColor borderColor;
+    private IColor swatch;
     private String text;
     private float scale = 1;
 
@@ -40,6 +41,12 @@ public class HoloTextButton extends AbstractHoloComponent<IButton> implements IB
     @Override
     public IButton scale(float scale) {
         this.scale = scale;
+        return this;
+    }
+
+    @Override
+    public IButton swatch(IColor color) {
+        swatch = color;
         return this;
     }
 
@@ -99,11 +106,21 @@ public class HoloTextButton extends AbstractHoloComponent<IButton> implements IB
         } else {
             color = this.color.getColor();
         }
+        if (swatch != null) {
+            HoloGuiRenderTools.renderControl(matrixStack, buffer, x, y, w, h, isInside(cursorX, cursorY));
+            double size = Math.min(.5, h - .24);
+            double sx = x + w - .18 - size;
+            double sy = y + (h - size) / 2;
+            HoloGuiRenderTools.renderFill(matrixStack, buffer, sx, sy, size, size, swatch.getColor());
+            HoloGuiRenderTools.renderBorder(matrixStack, buffer, sx, sy, size, size, 192, 231, 240, 255);
+            HoloGuiRenderTools.renderControlText(matrixStack, buffer, x + .18, y, w - size - .55, h, text, color, scale);
+        } else {
+            HoloGuiRenderTools.renderText(matrixStack, buffer, x, y, text, color, scale);
+        }
         int bc = borderColor.getColor();
         if (bc != -1) {
             HoloGuiRenderTools.renderBorder(matrixStack, buffer, x, y, w, h, bc & 255, (bc >> 8) & 255, (bc >> 16) & 255, (bc >> 24) & 255);
         }
-        HoloGuiRenderTools.renderText(matrixStack, buffer, x, y, text, color, scale);
     }
 
     @Override

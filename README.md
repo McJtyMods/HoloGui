@@ -19,7 +19,10 @@ A color picker exposes a live `color` supplier and a server-side `selected`
 callback receiving opaque `0xRRGGBB`. Its bottom strip changes hue; clicking the
 shade palette selects a color. Use `switchGui` or `switchTag` in that callback
 to return to the previous GUI, and provide a separate close button when needed.
-Text buttons also accept `scale(float)` for compact control labels.
+Text buttons also accept `scale(float)` for compact control labels. Add
+`swatch(() -> selectedColor)` to give a color-picker button the shared control
+frame, a vertically centered label and a live color sample. Both the label and
+swatch open the picker through the button's normal hit callback.
 
 Keyboard editor classes remain client-only; text sanitization and edit-session
 validation run on dedicated servers. Text sends one commit and a small focus

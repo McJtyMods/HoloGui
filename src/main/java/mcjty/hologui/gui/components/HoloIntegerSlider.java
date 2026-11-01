@@ -122,11 +122,15 @@ public class HoloIntegerSlider extends AbstractHoloComponent<IIntegerSlider> imp
     public void render(PoseStack poses, MultiBufferSource buffer, Player player, IHoloGuiEntity holo, double cx, double cy) {
         int value = Mth.clamp(getter.apply(player, holo), min, max);
         boolean hovered = isInside(cx, cy);
-        HoloGuiRenderTools.renderControl(poses, buffer, x, y + .15, .7, h - .15, hovered && cx < x + .85);
-        HoloGuiRenderTools.renderControl(poses, buffer, x + w - .7, y + .15, .7, h - .15, hovered && cx > x + w - .85);
-        HoloGuiRenderTools.renderText(poses, buffer, x + .05, y + .3, "<", 0xc1f5ff, .6f);
-        HoloGuiRenderTools.renderText(poses, buffer, x + w - .65, y + .3, ">", 0xc1f5ff, .6f);
-        HoloGuiRenderTools.renderFittedText(poses, buffer, x + .95, y, label + ": " + value + suffix, 0xd9f9ff, .45f, w - 1.9);
+        double arrowSize = Math.min(.5, h - .1);
+        double centerY = y + h - .26;
+        HoloGuiRenderTools.renderControl(poses, buffer, x + .1, centerY - arrowSize / 2, arrowSize, arrowSize, hovered && cx < x + .85);
+        HoloGuiRenderTools.renderControl(poses, buffer, x + w - .1 - arrowSize, centerY - arrowSize / 2,
+                arrowSize, arrowSize, hovered && cx > x + w - .85);
+        HoloGuiRenderTools.renderChevron(poses, buffer, x + .1 + arrowSize / 2, centerY, false, 0xc1f5ff);
+        HoloGuiRenderTools.renderChevron(poses, buffer, x + w - .1 - arrowSize / 2, centerY, true, 0xc1f5ff);
+        HoloGuiRenderTools.renderControlText(poses, buffer, x + 1, y, w - 2, .5,
+                label + ": " + value + suffix, 0xd9f9ff, .45f);
         double fraction = max == min ? 0 : logarithmic ? Math.log1p(value - (double) min) / Math.log1p((double) max - min)
                 : (value - (double) min) / ((double) max - min);
         poses.pushPose();

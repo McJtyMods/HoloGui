@@ -114,6 +114,28 @@ public class HoloGuiRenderTools {
         renderText(poses, buffer, x, y, text, color, Math.max(.1f, fitted));
     }
 
+    /** Fit and vertically center text in the same coordinate system as control backgrounds. */
+    public static void renderControlText(PoseStack poses, MultiBufferSource buffer, double x, double y, double w, double h,
+                                         String text, int color, float scale) {
+        Font font = Minecraft.getInstance().font;
+        int pixels = font.width(text);
+        int glyphHeight = font.lineHeight - 1;
+        float fitted = Math.min(scale, (float) (h * 10 / glyphHeight));
+        if (pixels > 0) {
+            fitted = Math.min(fitted, (float) (w * 10 / pixels));
+        }
+        // Legacy text starts .2 GUI units right and below the origin used by fills and borders.
+        renderText(poses, buffer, x - .2, y + (h - glyphHeight * fitted / 10) / 2 - .2, text, color, fitted);
+    }
+
+    public static void renderChevron(PoseStack poses, MultiBufferSource buffer, double centerX, double centerY,
+                                     boolean right, int rgb) {
+        double tip = centerX + (right ? .08 : -.08);
+        double back = centerX + (right ? -.08 : .08);
+        renderLine(poses, buffer, back, centerY - .14, tip, centerY, .045, rgb);
+        renderLine(poses, buffer, tip, centerY, back, centerY + .14, .045, rgb);
+    }
+
     public static void renderLine(PoseStack poses, MultiBufferSource buffer, double x1, double y1, double x2, double y2, double thickness, int rgb) {
         double length = Math.hypot(x2 - x1, y2 - y1);
         if (length < .00001) {
