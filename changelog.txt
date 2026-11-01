@@ -1,4 +1,5 @@
 1.20-0.0.10-beta:
+- Installed item toggles now use brightness without a white outline.
 - Numeric sliders can show percentage units, and panels can hide controls that do not apply to the current selection.
 - Added in-world integer sliders with dragging and precise arrow controls, plus a consistent looping-arrow style for cycle choices.
 - Added multiline text entry with standard editing and clipboard controls, plus a holographic color picker with buttons showing the selected color.
