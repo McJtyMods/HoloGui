@@ -22,6 +22,7 @@ public class HoloTextButton extends AbstractHoloComponent<IButton> implements IB
     private IColor hoverColor;
     private IColor borderColor;
     private String text;
+    private float scale = 1;
 
     HoloTextButton(double x, double y, double w, double h) {
         super(x, y, w, h);
@@ -33,6 +34,12 @@ public class HoloTextButton extends AbstractHoloComponent<IButton> implements IB
     @Override
     public IButton text(String text) {
         this.text = text;
+        return this;
+    }
+
+    @Override
+    public IButton scale(float scale) {
+        this.scale = scale;
         return this;
     }
 
@@ -96,7 +103,7 @@ public class HoloTextButton extends AbstractHoloComponent<IButton> implements IB
         if (bc != -1) {
             HoloGuiRenderTools.renderBorder(matrixStack, buffer, x, y, w, h, bc & 255, (bc >> 8) & 255, (bc >> 16) & 255, (bc >> 24) & 255);
         }
-        HoloGuiRenderTools.renderText(matrixStack, buffer, x, y, text, color, 1.0f);
+        HoloGuiRenderTools.renderText(matrixStack, buffer, x, y, text, color, scale);
     }
 
     @Override

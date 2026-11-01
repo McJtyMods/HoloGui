@@ -89,6 +89,61 @@ public class HoloGuiRenderTools {
 //        GlStateManager.popMatrix();
     }
 
+    public static void renderFill(PoseStack poses, MultiBufferSource buffer, double x, double y, double w, double h, int rgb) {
+        float left = (float) (x * .1 - .42);
+        float top = (float) (.42 - y * .1);
+        coloredQuad(buffer.getBuffer(HoloGuiRenderType.HOLOGUI_COLOR), poses.last().pose(),
+                left, left + (float) w * .1f, top - (float) h * .1f, top,
+                (rgb >> 16) & 255, (rgb >> 8) & 255, rgb & 255, 255);
+    }
+
+    public static void renderControl(PoseStack poses, MultiBufferSource buffer, double x, double y, double w, double h, boolean hover) {
+        poses.pushPose();
+        poses.translate(0, 0, -.003);
+        float left = (float) (x * .1 - .42);
+        float top = (float) (.42 - y * .1);
+        coloredQuad(buffer.getBuffer(HoloGuiRenderType.HOLOGUI_COLOR), poses.last().pose(),
+                left, left + (float) w * .1f, top - (float) h * .1f, top, 8, 25, 40, hover ? 195 : 145);
+        poses.popPose();
+        renderBorder(poses, buffer, x, y, w, h, hover ? 165 : 85, hover ? 246 : 180, 225, 220);
+    }
+
+    public static void renderFittedText(PoseStack poses, MultiBufferSource buffer, double x, double y, String text, int color, float scale, double width) {
+        int pixels = Minecraft.getInstance().font.width(text);
+        float fitted = pixels == 0 ? scale : Math.min(scale, (float) (width * 10 / pixels));
+        renderText(poses, buffer, x, y, text, color, Math.max(.1f, fitted));
+    }
+
+    public static void renderLine(PoseStack poses, MultiBufferSource buffer, double x1, double y1, double x2, double y2, double thickness, int rgb) {
+        double length = Math.hypot(x2 - x1, y2 - y1);
+        if (length < .00001) {
+            return;
+        }
+        double ox = -(y2 - y1) / length * thickness / 2;
+        double oy = (x2 - x1) / length * thickness / 2;
+        VertexConsumer vertices = buffer.getBuffer(HoloGuiRenderType.HOLOGUI_COLOR);
+        Matrix4f pose = poses.last().pose();
+        int red = rgb >> 16 & 255;
+        int green = rgb >> 8 & 255;
+        int blue = rgb & 255;
+        vertices.vertex(pose, (float) ((x1 + ox) * .1 - .42), (float) (.42 - (y1 + oy) * .1), .001f).color(red, green, blue, 255).endVertex();
+        vertices.vertex(pose, (float) ((x2 + ox) * .1 - .42), (float) (.42 - (y2 + oy) * .1), .001f).color(red, green, blue, 255).endVertex();
+        vertices.vertex(pose, (float) ((x2 - ox) * .1 - .42), (float) (.42 - (y2 - oy) * .1), .001f).color(red, green, blue, 255).endVertex();
+        vertices.vertex(pose, (float) ((x1 - ox) * .1 - .42), (float) (.42 - (y1 - oy) * .1), .001f).color(red, green, blue, 255).endVertex();
+    }
+
+    /** A two-arrow loop, drawn as geometry rather than a font-dependent Unicode glyph. */
+    private static final double[][] CYCLE_PATH = {{.15, .5, .15, .32}, {.15, .32, .3, .18}, {.3, .18, .8, .18},
+            {.8, .18, .65, .03}, {.8, .18, .65, .33}, {.85, .5, .85, .68},
+            {.85, .68, .7, .82}, {.7, .82, .2, .82}, {.2, .82, .35, .67}, {.2, .82, .35, .97}};
+
+    public static void renderCycleSymbol(PoseStack poses, MultiBufferSource buffer, double x, double y, double size, int rgb) {
+        for (double[] line : CYCLE_PATH) {
+            renderLine(poses, buffer, x + line[0] * size, y + line[1] * size,
+                    x + line[2] * size, y + line[3] * size, size * .1, rgb);
+        }
+    }
+
     public static void renderBorder(PoseStack matrixStack, MultiBufferSource buffer, double x, double y, double w, double h, int r, int g, int b, int a) {
         float left = (float) (x * .1 - .42);
         float top = (float) (.42 - y * .1);

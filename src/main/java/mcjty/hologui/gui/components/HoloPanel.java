@@ -11,10 +11,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 
 public class HoloPanel extends AbstractHoloComponent<IPanel> implements IPanel {
 
     private final List<IGuiComponent<?>> children = new ArrayList<>();
+    private BooleanSupplier visible = () -> true;
 
     HoloPanel(double x, double y, double w, double h) {
         super(x, y, w, h);
@@ -27,7 +29,21 @@ public class HoloPanel extends AbstractHoloComponent<IPanel> implements IPanel {
     }
 
     @Override
+    public IPanel visible(BooleanSupplier visible) {
+        this.visible = visible;
+        return this;
+    }
+
+    @Override
+    public boolean isInside(double x, double y) {
+        return visible.getAsBoolean() && super.isInside(x, y);
+    }
+
+    @Override
     public void render(PoseStack matrixStack, MultiBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+        if (!visible.getAsBoolean()) {
+            return;
+        }
         for (IGuiComponent<?> child : children) {
             child.render(matrixStack, buffer, player, holo, cursorX, cursorY);
         }
@@ -35,6 +51,9 @@ public class HoloPanel extends AbstractHoloComponent<IPanel> implements IPanel {
 
     @Override
     public IGuiComponent<?> findHoveringWidget(double cursorX, double cursorY) {
+        if (!visible.getAsBoolean()) {
+            return null;
+        }
         for (IGuiComponent<?> child : children) {
             if (child.isInside(cursorX, cursorY)) {
                 return child.findHoveringWidget(cursorX, cursorY);
@@ -45,6 +64,9 @@ public class HoloPanel extends AbstractHoloComponent<IPanel> implements IPanel {
 
     @Override
     public Optional<IGuiComponent<?>> findChild(String name) {
+        if (!visible.getAsBoolean()) {
+            return Optional.empty();
+        }
         for (IGuiComponent<?> child : children) {
             Optional<IGuiComponent<?>> result = child.findChild(name);
             if (result.isPresent()) {
@@ -56,6 +78,9 @@ public class HoloPanel extends AbstractHoloComponent<IPanel> implements IPanel {
 
     @Override
     public void hit(Player player, IHoloGuiEntity entity, double cursorX, double cursorY) {
+        if (!visible.getAsBoolean()) {
+            return;
+        }
         for (IGuiComponent<?> child : children) {
             if (child.isInside(cursorX, cursorY)) {
                 child.hit(player, entity, cursorX, cursorY);
@@ -65,6 +90,9 @@ public class HoloPanel extends AbstractHoloComponent<IPanel> implements IPanel {
 
     @Override
     public void hitClient(Player player, IHoloGuiEntity entity, double cursorX, double cursorY) {
+        if (!visible.getAsBoolean()) {
+            return;
+        }
         for (IGuiComponent<?> child : children) {
             if (child.isInside(cursorX, cursorY)) {
                 child.hitClient(player, entity, cursorX, cursorY);

@@ -8,6 +8,8 @@ public interface IButton extends IGuiComponent<IButton> {
 
     IButton text(String text);
 
+    IButton scale(float scale);
+
     @Deprecated
     IButton color(int color);
     IButton color(IColor color);

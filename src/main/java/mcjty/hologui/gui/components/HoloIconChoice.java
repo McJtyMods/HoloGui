@@ -53,6 +53,12 @@ public class HoloIconChoice extends AbstractHoloComponent<IIconChoice> implement
         }
         IImage i = images.get(value);
         HoloGuiRenderTools.renderImage(matrixStack, buffer, x, y, i.getU(), i.getV(), 16, 16, i.getWidth(), i.getHeight(), i.getImage());
+        matrixStack.pushPose();
+        matrixStack.translate(0, 0, .004);
+        HoloGuiRenderTools.renderControl(matrixStack, buffer, x + w - .45, y + h - .45, .45, .45, isInside(cursorX, cursorY));
+        HoloGuiRenderTools.renderCycleSymbol(matrixStack, buffer, x + w - .45, y + h - .45, .45,
+                isInside(cursorX, cursorY) ? 0xffffff : 0x8de7f5);
+        matrixStack.popPose();
     }
 
     @Override

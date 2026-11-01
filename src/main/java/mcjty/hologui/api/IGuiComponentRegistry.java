@@ -38,6 +38,8 @@ public interface IGuiComponentRegistry {
      */
     INumber number(double x, double y, double w, double h);
 
+    IIntegerSlider integerSlider(double x, double y, double w, double h);
+
     /**
      * Create a panel that can itself hold other components
      */
@@ -57,6 +59,10 @@ public interface IGuiComponentRegistry {
      * Just text
      */
     IText text(double x, double y, double w, double h);
+
+    ITextEntry textEntry(double x, double y, double w, double h);
+
+    IColorPicker colorPicker(double x, double y, double w, double h);
 
     /**
      * A choice of text

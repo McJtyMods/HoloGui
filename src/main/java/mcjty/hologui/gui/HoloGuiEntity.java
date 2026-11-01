@@ -5,6 +5,8 @@ import mcjty.hologui.api.CloseStrategy;
 import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.api.IGuiTile;
 import mcjty.hologui.api.IHoloGuiEntity;
+import mcjty.hologui.api.components.ITextEntry;
+import mcjty.hologui.api.components.IIntegerSlider;
 import mcjty.lib.varia.SafeClientTools;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -29,6 +31,7 @@ import net.minecraftforge.network.NetworkHooks;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
+import java.util.UUID;
 
 public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 
@@ -44,6 +47,13 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     private int maxTimeout;
     private int ticks;  // For syncing TE to client
     private IGuiComponent<?> panel;
+    private UUID textEditor;
+    private String textComponent;
+    private long textDeadline;
+    private UUID sliderEditor;
+    private String sliderComponent;
+    private long sliderDeadline;
+    private long lastSliderUpdate = -1;
 
     // Client side only
     private double cursorX;
@@ -145,6 +155,8 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
             return;
         }
         setTag(tag);
+        textEditor = null;
+        sliderEditor = null;
         panel = null;
     }
 
@@ -184,6 +196,70 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         discard();
     }
 
+    public void beginTextEntry(Player player, String component) {
+        textEditor = player.getUUID();
+        textComponent = component;
+        textDeadline = level().getGameTime() + 1200;
+    }
+
+    public void renewTextEntry(Player player, String component) {
+        if (player.getUUID().equals(textEditor) && component.equals(textComponent) && level().getGameTime() <= textDeadline) {
+            textDeadline = level().getGameTime() + 1200;
+        }
+    }
+
+    public void commitTextEntry(Player player, String component, String text) {
+        if (player.getUUID().equals(textEditor) && component.equals(textComponent) && level().getGameTime() <= textDeadline) {
+            findComponent(component).filter(ITextEntry.class::isInstance).map(ITextEntry.class::cast)
+                    .ifPresent(field -> field.commit(player, this, text));
+            textEditor = null;
+            textComponent = null;
+            timeout = maxTimeout;
+        }
+    }
+
+    public void beginSlider(Player player, String component) {
+        sliderEditor = player.getUUID();
+        sliderComponent = component;
+        sliderDeadline = level().getGameTime() + 40;
+        lastSliderUpdate = -1;
+    }
+
+    public void dragSlider(Player player, String component, boolean finish, Vec3 look) {
+        long now = level().getGameTime();
+        if (!player.getUUID().equals(sliderEditor) || !component.equals(sliderComponent) || now > sliderDeadline) {
+            return;
+        }
+        if (finish || lastSliderUpdate < 0 || now - lastSliderUpdate >= 2) {
+            Vec3 normal = getLookAngle();
+            double denominator = look.dot(normal);
+            if (Math.abs(denominator) < .0001) {
+                return;
+            }
+            Vec3 eye = player.getEyePosition();
+            double distance = position().subtract(eye).dot(normal) / denominator;
+            if (distance <= 0 || distance > 8) {
+                return;
+            }
+            Vec2 point = get2DProjection(position(), normal, eye.add(look.scale(distance)));
+            float scale = getScale();
+            float factor = 1f - (1f - scale) * (.4f / .25f);
+            float offset = .8f + (1f - scale) * (3.3f / .25f);
+            double x = point.x * 10 / factor - offset;
+            double y = point.y * 10 / factor - offset;
+            findComponent(component).filter(IIntegerSlider.class::isInstance).map(IIntegerSlider.class::cast)
+                    .filter(slider -> Double.isFinite(x) && Double.isFinite(y) && Math.abs(y - slider.getY()) <= 2)
+                    .ifPresent(slider -> slider.drag(player, this, x, y));
+            lastSliderUpdate = now;
+            sliderDeadline = now + 40;
+            timeout = maxTimeout;
+        }
+        if (finish) {
+            sliderEditor = null;
+            sliderComponent = null;
+        }
+    }
+
     private void onUpdateServer() {
         if (playerDetectionBox == null) {
             playerDetectionBox = new AABB(getX() - 10, getY() - 10, getZ() - 10, getX() + 10, getY() + 10, getZ() + 10);
@@ -216,7 +292,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
             }
         }
 
-        if (hasCloseStrategy(CloseStrategy.TIMEOUT)) {
+        if (hasCloseStrategy(CloseStrategy.TIMEOUT) && !(textEditor != null && level().getGameTime() <= textDeadline)) {
             timeout--;
             if (timeout <= 0) {
                 closeGui();
@@ -272,6 +348,8 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     @Override
     public void switchGui(String guiId) {
         setGuiId(guiId);
+        textEditor = null;
+        sliderEditor = null;
         panel = null;
     }
 

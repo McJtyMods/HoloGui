@@ -37,6 +37,11 @@ public class GuiComponentRegistry implements IGuiComponentRegistry {
     }
 
     @Override
+    public IIntegerSlider integerSlider(double x, double y, double w, double h) {
+        return new HoloIntegerSlider(x, y, w, h);
+    }
+
+    @Override
     public IPanel panel(double x, double y, double w, double h) {
         return new HoloPanel(x, y, w, h);
     }
@@ -54,6 +59,16 @@ public class GuiComponentRegistry implements IGuiComponentRegistry {
     @Override
     public IText text(double x, double y, double w, double h) {
         return new HoloText(x, y, w, h);
+    }
+
+    @Override
+    public ITextEntry textEntry(double x, double y, double w, double h) {
+        return new HoloTextEntry(x, y, w, h);
+    }
+
+    @Override
+    public IColorPicker colorPicker(double x, double y, double w, double h) {
+        return new HoloColorPicker(x, y, w, h);
     }
 
     @Override
