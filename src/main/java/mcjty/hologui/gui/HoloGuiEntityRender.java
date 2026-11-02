@@ -10,12 +10,15 @@ import mcjty.hologui.config.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+
+import java.util.Map;
 
 public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
 
@@ -28,7 +31,16 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
     public static final ResourceLocation GUI_BACKGROUND_7 = new ResourceLocation(HoloGui.MODID, "hologui_gray_sharpwhite");
     public static final ResourceLocation GUI_BACKGROUND_8 = new ResourceLocation(HoloGui.MODID, "hologui_gray_softblack");
 
-    private static final MultiBufferSource.BufferSource GUI_BUFFERS = MultiBufferSource.immediate(new BufferBuilder(4096));
+    // Foil combines a glint consumer with the item's consumer. They need distinct builders:
+    // the fallback builder is reused between render types and would cause Duplicate delegates.
+    private static final MultiBufferSource.BufferSource GUI_BUFFERS = MultiBufferSource.immediateWithBuffers(Map.of(
+            RenderType.glint(), new BufferBuilder(256),
+            RenderType.glintDirect(), new BufferBuilder(256),
+            RenderType.glintTranslucent(), new BufferBuilder(256),
+            RenderType.entityGlint(), new BufferBuilder(256),
+            RenderType.entityGlintDirect(), new BufferBuilder(256),
+            RenderType.armorGlint(), new BufferBuilder(256),
+            RenderType.armorEntityGlint(), new BufferBuilder(256)), new BufferBuilder(4096));
 
     public HoloGuiEntityRender(EntityRendererProvider.Context renderManager) {
         super(renderManager);
