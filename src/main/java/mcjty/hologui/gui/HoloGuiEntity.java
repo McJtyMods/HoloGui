@@ -7,6 +7,7 @@ import mcjty.hologui.api.IGuiTile;
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.components.ITextEntry;
 import mcjty.hologui.api.components.IIntegerSlider;
+import mcjty.hologui.gui.components.HoloWindowPanel;
 import mcjty.lib.varia.SafeClientTools;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -15,6 +16,7 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -32,14 +34,20 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
+
+    private static final Map<MinecraftServer, UUID> PIN_SESSIONS = new WeakHashMap<>();
 
     private static final EntityDataAccessor<Optional<BlockPos>> GUITILE = SynchedEntityData.defineId(HoloGuiEntity.class, EntityDataSerializers.OPTIONAL_BLOCK_POS);
     private static final EntityDataAccessor<String> TAG = SynchedEntityData.defineId(HoloGuiEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<String> GUIID = SynchedEntityData.defineId(HoloGuiEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Float> SCALE = SynchedEntityData.defineId(HoloGuiEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> CLOSESTRATEGY = SynchedEntityData.defineId(HoloGuiEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> PINNED = SynchedEntityData.defineId(HoloGuiEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Optional<UUID>> OWNER = SynchedEntityData.defineId(HoloGuiEntity.class, EntityDataSerializers.OPTIONAL_UUID);
 
     private AABB playerDetectionBox = null;
 
@@ -123,12 +131,31 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     public void setScale(float scale) {
         this.entityData.set(SCALE, scale);
     }
+
     public void setGuiTile(BlockPos guiTile) {
         this.entityData.set(GUITILE, Optional.ofNullable(guiTile));
     }
 
     public BlockPos getGuiTile() {
         return (BlockPos) ((Optional) this.entityData.get(GUITILE)).orElse(null);
+    }
+
+    @Nullable
+    public UUID getOwnerUUID() {
+        return entityData.get(OWNER).orElse(null);
+    }
+
+    public void setOwnerUUID(UUID owner) {
+        entityData.set(OWNER, Optional.ofNullable(owner));
+    }
+
+    public void positionFor(Player player, double distance) {
+        Vec3 look = player.getLookAngle();
+        look = new Vec3(look.x, 0, look.z).normalize();
+        moveTo(player.getX() + look.x * distance, player.getY() + player.getEyeHeight() - .5,
+                player.getZ() + look.z * distance, player.getYRot(), 0);
+        playerDetectionBox = null;
+        timeout = maxTimeout;
     }
 
     @Override
@@ -189,6 +216,38 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 
     private void closeGui() {
         closeGui((Player)null);
+    }
+
+    @Override
+    public boolean canClose() {
+        return !isPassenger();
+    }
+
+    @Override
+    public boolean canPin() {
+        return canClose() && getGuiTile() != null;
+    }
+
+    @Override
+    public boolean isPinned() {
+        return entityData.get(PINNED);
+    }
+
+    @Override
+    public void setPinned(boolean pinned) {
+        entityData.set(PINNED, pinned && canPin());
+        timeout = maxTimeout;
+    }
+
+    private UUID pinSession() {
+        return PIN_SESSIONS.computeIfAbsent(level().getServer(), server -> UUID.randomUUID());
+    }
+
+    @Override
+    public void close() {
+        if (canClose() && !level().isClientSide) {
+            closeGui();
+        }
     }
 
     private void closeGui(@Nullable Player player) {
@@ -292,7 +351,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
             }
         }
 
-        if (hasCloseStrategy(CloseStrategy.TIMEOUT) && !(textEditor != null && level().getGameTime() <= textDeadline)) {
+        if (!isPinned() && hasCloseStrategy(CloseStrategy.TIMEOUT) && !(textEditor != null && level().getGameTime() <= textDeadline)) {
             timeout--;
             if (timeout <= 0) {
                 closeGui();
@@ -309,6 +368,11 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 
 
     private boolean playerLooksAtMe(Player player) {
+        Vec3 normal = getLookAngle();
+        double direction = player.getViewVector(1).dot(normal);
+        if (Math.abs(direction) < .0001 || position().subtract(player.getEyePosition()).dot(normal) / direction <= 0) {
+            return false;
+        }
         Vec2 vec2d = intersect(player);
 
         double cx;
@@ -377,6 +441,9 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
                     }
                 }
             }
+            if (panel != null) {
+                panel = new HoloWindowPanel(panel, this);
+            }
         }
         return panel;
     }
@@ -406,7 +473,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
         // The small holo is used as a child on the flux levitator. It doesn't close like this
-        if (hasCloseStrategy(CloseStrategy.RIGHTCLICK)) {
+        if (canClose() && hasCloseStrategy(CloseStrategy.RIGHTCLICK)) {
             closeGui(player);
         }
         return InteractionResult.PASS;
@@ -519,10 +586,15 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         this.entityData.define(GUIID, "");
         this.entityData.define(SCALE, 1.0f);
         this.entityData.define(CLOSESTRATEGY, CloseStrategy.TIMEOUT + CloseStrategy.TIMEOUT_RESET + CloseStrategy.RIGHTCLICK);
+        this.entityData.define(PINNED, false);
+        this.entityData.define(OWNER, Optional.empty());
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
+        // An entity can reload with its chunk during play; a new server session clears pins.
+        entityData.set(PINNED, false);
+        setOwnerUUID(compound.hasUUID("owner") ? compound.getUUID("owner") : null);
         this.timeout = compound.getInt("timeout");
         this.maxTimeout = compound.getInt("maxTimeout");
         if (compound.contains("guix")) {
@@ -538,6 +610,9 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         }
         if (compound.contains("closeStrategy")) {
             setCloseStrategy(compound.getInt("closeStrategy"));
+        }
+        if (!level().isClientSide && compound.hasUUID("pinSession") && compound.getUUID("pinSession").equals(pinSession())) {
+            setPinned(true);
         }
     }
 
@@ -561,5 +636,11 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         }
         compound.putFloat("scale", getScale());
         compound.putInt("closeStrategy", getCloseStrategy());
+        if (getOwnerUUID() != null) {
+            compound.putUUID("owner", getOwnerUUID());
+        }
+        if (isPinned() && !level().isClientSide) {
+            compound.putUUID("pinSession", pinSession());
+        }
     }
 }

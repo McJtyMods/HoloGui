@@ -28,6 +28,7 @@ public interface IHoloGuiHandler {
      * call this function from your onBlockActivated() implementation.
      * On the server this returns false if no holo gui was found. On the
      * client this will always return true.
+     * Reopening a block repositions that player's existing panel and retains its pin state.
      */
     boolean openHoloGui(Level world, BlockPos pos, Player player);
 
@@ -35,6 +36,7 @@ public interface IHoloGuiHandler {
      * Open a holo gui for a given block (using the IGuiTile gotten from
      * your IHoloGuiProvider) but with a specific tag and distance from the player. On the client
      * this will always return null (and just play a sound)
+     * An existing unmounted panel for this player and block is reused with the requested tag.
      */
     @Nullable
     IHoloGuiEntity openHoloGuiEntity(Level world, BlockPos pos, Player player, String tag, double distance);

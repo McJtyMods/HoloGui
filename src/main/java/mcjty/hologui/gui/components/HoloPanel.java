@@ -2,6 +2,7 @@ package mcjty.hologui.gui.components;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import mcjty.hologui.api.IGuiComponent;
+import mcjty.hologui.api.IEvent;
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.components.IPanel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -17,6 +18,7 @@ public class HoloPanel extends AbstractHoloComponent<IPanel> implements IPanel {
 
     private final List<IGuiComponent<?>> children = new ArrayList<>();
     private BooleanSupplier visible = () -> true;
+    private IEvent helpEvent;
 
     HoloPanel(double x, double y, double w, double h) {
         super(x, y, w, h);
@@ -32,6 +34,17 @@ public class HoloPanel extends AbstractHoloComponent<IPanel> implements IPanel {
     public IPanel visible(BooleanSupplier visible) {
         this.visible = visible;
         return this;
+    }
+
+    @Override
+    public IPanel help(IEvent event) {
+        helpEvent = event;
+        return this;
+    }
+
+    @Override
+    public IEvent getHelpEvent() {
+        return helpEvent;
     }
 
     @Override

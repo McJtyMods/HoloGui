@@ -5,6 +5,7 @@ import mcjty.hologui.api.*;
 import mcjty.hologui.gui.components.GuiComponentRegistry;
 import mcjty.hologui.setup.Registration;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.core.BlockPos;
@@ -62,6 +63,17 @@ public class HoloGuiHandler implements IHoloGuiHandler {
             return null;
         }
 
+        if (world instanceof ServerLevel serverLevel) {
+            for (Entity existing : serverLevel.getAllEntities()) {
+                if (existing instanceof HoloGuiEntity holo && holo.isAlive() && !holo.isPassenger()
+                        && pos.equals(holo.getGuiTile()) && holo.getGuiId().isEmpty()
+                        && player.getUUID().equals(holo.getOwnerUUID())) {
+                    holo.switchTag(tag);
+                    holo.positionFor(player, distance);
+                    return holo;
+                }
+            }
+        }
         HoloGuiEntity entity = createHoloGui(world, player, tag, distance);
         entity.setGuiTile(pos);
         return entity;
@@ -109,16 +121,8 @@ public class HoloGuiHandler implements IHoloGuiHandler {
     private static HoloGuiEntity createHoloGui(Level world, Player player, String tag, double distance) {
         HoloGuiEntity entity = new HoloGuiEntity(Registration.HOLOGUI_ENTITY_TYPE.get(), world);
         entity.setTag(tag);
-        double x = player.getX();
-        double y = player.getY()+player.getEyeHeight() - .5;
-        double z = player.getZ();
-        Vec3 lookVec = player.getLookAngle();
-        lookVec = new Vec3(lookVec.x, 0, lookVec.z).normalize();
-        x += lookVec.x * distance;
-        y += lookVec.y;
-        z += lookVec.z * distance;
-        entity.setPos(x, y, z);
-        entity.moveTo(x, y, z, player.getYRot(), 0);
+        entity.setOwnerUUID(player.getUUID());
+        entity.positionFor(player, distance);
         world.addFreshEntity(entity);
         return entity;
     }

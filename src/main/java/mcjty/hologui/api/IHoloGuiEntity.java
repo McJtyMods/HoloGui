@@ -37,6 +37,21 @@ public interface IHoloGuiEntity {
      */
     boolean hasCloseStrategy(int strategy);
 
+    /** Whether this block's panel is pinned for the current session. */
+    boolean isPinned();
+
+    /** Pin or unpin a block panel. Unpinning restarts its normal timeout. */
+    void setPinned(boolean pinned);
+
+    /** Mounted panels cannot be closed independently of their vehicle. */
+    boolean canClose();
+
+    /** Only unmounted panels associated with a block can be pinned. */
+    boolean canPin();
+
+    /** Manually close this panel, including when it is pinned. */
+    void close();
+
     float getScale();
 
     /**

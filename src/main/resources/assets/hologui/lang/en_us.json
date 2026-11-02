@@ -1,4 +1,8 @@
 {
   "entity.hologui": "Holo GUI",
-  "entity.hologui_small": "Holo GUI"
+  "entity.hologui_small": "Holo GUI",
+  "gui.hologui.close": "Close panel",
+  "gui.hologui.help": "Open manual",
+  "gui.hologui.pin": "Pin panel",
+  "gui.hologui.unpin": "Unpin panel"
 }
