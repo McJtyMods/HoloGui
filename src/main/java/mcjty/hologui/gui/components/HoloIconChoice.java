@@ -52,11 +52,20 @@ public class HoloIconChoice extends AbstractHoloComponent<IIconChoice> implement
             return;
         }
         IImage i = images.get(value);
+        float iconScale = (float) Math.min(1, Math.min(w, h));
+        double originX = x * .1 - .42;
+        double originY = .42 - y * .1;
+        matrixStack.pushPose();
+        matrixStack.translate(originX, originY, 0);
+        matrixStack.scale(iconScale, iconScale, 1);
+        matrixStack.translate(-originX, -originY, 0);
         HoloGuiRenderTools.renderImage(matrixStack, buffer, x, y, i.getU(), i.getV(), 16, 16, i.getWidth(), i.getHeight(), i.getImage());
+        matrixStack.popPose();
+        double cycleSize = .45 * iconScale;
         matrixStack.pushPose();
         matrixStack.translate(0, 0, .004);
-        HoloGuiRenderTools.renderControl(matrixStack, buffer, x + w - .45, y + h - .45, .45, .45, isInside(cursorX, cursorY));
-        HoloGuiRenderTools.renderCycleSymbol(matrixStack, buffer, x + w - .45, y + h - .45, .45,
+        HoloGuiRenderTools.renderControl(matrixStack, buffer, x + w - cycleSize, y + h - cycleSize, cycleSize, cycleSize, isInside(cursorX, cursorY));
+        HoloGuiRenderTools.renderCycleSymbol(matrixStack, buffer, x + w - cycleSize, y + h - cycleSize, cycleSize,
                 isInside(cursorX, cursorY) ? 0xffffff : 0x8de7f5);
         matrixStack.popPose();
     }
