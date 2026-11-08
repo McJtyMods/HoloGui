@@ -1,6 +1,32 @@
 # HoloGui
 HoloGui is a mod about holographic gui's
 
+## Building and Jenkins
+
+For Minecraft 1.21.1 / NeoForge, select Java 21 and **Use Gradle Wrapper** in
+Jenkins (Gradle 8.14.2). Use tasks `clean build publish`, equivalent to:
+
+```sh
+./gradlew clean build publish
+```
+
+NeoGradle manages mapped dependencies through build tasks, so no ForgeGradle 5
+cache workaround is needed. Set `local_maven` to the Jenkins Maven repository
+directory, or override it with `-Pmavendir=...`. Without either setting, `publish`
+writes to the local Maven cache. The publication includes the mod jar, API jar
+and POM.
+
+The shared `gradletools.gradle` keeps NeoGradle's library-list caches specific to
+the current checkout, so Jenkins jobs can share a Gradle user home without
+restoring paths into another job's workspace. Standalone builds use the matching
+`MultiWorkspace` branch's script when no local copy is present.
+
+Jenkins's `BUILD_NUMBER` is appended to the published version. After publishing
+HoloGui, build Ariente and ArienteWorld with
+`-Phologui_version=<published HoloGui version>`, including that suffix. An
+additional dependency repository can be supplied with
+`-Pariente_dependency_repository=<repository URL>`.
+
 ## Text entry and color picking
 
 The component registry now provides `textEntry(x, y, width, height)` and
