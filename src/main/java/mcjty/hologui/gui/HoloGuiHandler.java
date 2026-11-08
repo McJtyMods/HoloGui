@@ -1,20 +1,19 @@
 package mcjty.hologui.gui;
 
-import mcjty.hologui.HoloGui;
 import mcjty.hologui.api.*;
-import mcjty.hologui.gui.components.GuiComponentRegistry;
-import mcjty.hologui.setup.Registration;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.level.Level;
-
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nullable;
+import mcjty.hologui.HoloGui;
+import mcjty.hologui.gui.components.GuiComponentRegistry;
+import mcjty.hologui.setup.Registration;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 public class HoloGuiHandler implements IHoloGuiHandler {
 
@@ -78,7 +77,6 @@ public class HoloGuiHandler implements IHoloGuiHandler {
         entity.setGuiTile(pos);
         return entity;
     }
-
 
     @Override
     public IGuiComponent createNoAccessPanel() {

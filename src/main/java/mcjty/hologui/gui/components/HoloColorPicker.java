@@ -1,14 +1,13 @@
 package mcjty.hologui.gui.components;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import java.util.function.Supplier;
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.components.IColorPicker;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
-
-import java.util.function.Supplier;
 
 public class HoloColorPicker extends AbstractHoloComponent<IColorPicker> implements IColorPicker {
 

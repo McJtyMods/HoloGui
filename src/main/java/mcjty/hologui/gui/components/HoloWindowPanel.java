@@ -1,16 +1,15 @@
 package mcjty.hologui.gui.components;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import mcjty.hologui.api.IEvent;
 import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.components.IPanel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.player.Player;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 /** Shared window controls, independent of a panel's content and current page. */
 public class HoloWindowPanel extends AbstractHoloComponent<HoloWindowPanel> {

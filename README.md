@@ -58,3 +58,9 @@ the current settings. The condition is evaluated live on both sides: hidden
 panels do not render, expose named children, hover, or handle clicks. Child
 coordinates remain absolute in the normal GUI coordinate system. This also keeps
 hidden sliders and text entries unavailable to server interaction handlers.
+
+
+Development target: Minecraft 1.21.1, NeoForge 21.1.215, Java 21, branch `1.21_neo`.
+Build with `./gradlew build` standalone, or `./gradlew :ModHoloGui:build` from MultiWorkspace.
+The workspace uses the included McJtyLib and The One Probe sources. Ariente and ArienteWorld also use included HoloGui/Ariente sources. Published Maven artifacts are standalone fallbacks.
+Unpublished port dependencies can be provided with `-Pariente_dependency_repository=<repository URL>`; `-Pgradletools_path=<file>` selects an explicit shared Gradle script.

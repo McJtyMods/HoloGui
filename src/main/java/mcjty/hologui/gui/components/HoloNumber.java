@@ -1,15 +1,14 @@
 package mcjty.hologui.gui.components;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import mcjty.hologui.api.IColor;
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.components.INumber;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.player.Player;
-
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 public class HoloNumber extends AbstractHoloComponent<INumber> implements INumber {
 

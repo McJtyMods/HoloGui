@@ -1,12 +1,11 @@
 package mcjty.hologui.gui.components;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import java.util.Optional;
 import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.api.IHoloGuiEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.player.Player;
-
-import java.util.Optional;
 
 public abstract class AbstractHoloComponent<P extends IGuiComponent<P>> implements IGuiComponent<P> {
 

@@ -1,13 +1,12 @@
 package mcjty.hologui.config;
 
+import java.util.Arrays;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-
-import java.util.Arrays;
 
 public class HoloGuiModConfigGui extends Screen {
 
@@ -41,7 +40,7 @@ public class HoloGuiModConfigGui extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(graphics);
+        renderBackground(graphics, mouseX, mouseY, partialTick);
         graphics.drawCenteredString(font, title, width / 2, 30, 0xffffff);
         super.render(graphics, mouseX, mouseY, partialTick);
     }

@@ -2,6 +2,10 @@ package mcjty.hologui.gui.components;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import javax.annotation.Nonnull;
 import mcjty.hologui.HoloGui;
 import mcjty.hologui.api.IEvent;
 import mcjty.hologui.api.IHoloGuiEntity;
@@ -9,17 +13,13 @@ import mcjty.hologui.api.components.IStackToggle;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
 import net.minecraft.client.renderer.MultiBufferSource;
-// @todo 1.18 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.sounds.SoundSource;
 
-import javax.annotation.Nonnull;
-import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
+// @todo 1.18 import RenderHelper;
 
 public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> implements IStackToggle {
 
@@ -29,8 +29,8 @@ public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> impleme
     float scale = 1.0f;
     private BiConsumer<ItemStack, List<String>> tooltipHandler = (itemStack, strings) -> {};
 
-    public static final ResourceLocation DARKEN = new ResourceLocation(HoloGui.MODID, "textures/gui/darken.png");
-    public static final ResourceLocation INVALID = new ResourceLocation(HoloGui.MODID, "textures/gui/darken_red.png");
+    public static final ResourceLocation DARKEN = ResourceLocation.fromNamespaceAndPath(HoloGui.MODID, "textures/gui/darken.png");
+    public static final ResourceLocation INVALID = ResourceLocation.fromNamespaceAndPath(HoloGui.MODID, "textures/gui/darken_red.png");
 
     HoloStackToggle(double x, double y, double w, double h) {
         super(x, y, w, h);
@@ -99,6 +99,5 @@ public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> impleme
         Entity ent = entity.getEntity();
         player.level().playSound(player, ent.getX(), ent.getY(), ent.getZ(), HoloGuiSounds.GUICLICK.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
     }
-
 
 }

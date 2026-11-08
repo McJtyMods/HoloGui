@@ -1,9 +1,8 @@
 package mcjty.hologui.api;
 
-import net.minecraft.world.entity.player.Player;
-
-import javax.annotation.Nullable;
 import java.util.function.Function;
+import javax.annotation.Nullable;
+import net.minecraft.world.entity.player.Player;
 
 /**
  * The GUI Registry can be used to register gui's that are not tied to a specific

@@ -1,10 +1,9 @@
 package mcjty.hologui.api.components;
 
+import java.util.function.BiFunction;
 import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.api.IHoloGuiEntity;
 import net.minecraft.world.entity.player.Player;
-
-import java.util.function.BiFunction;
 
 /** Bounded integer input: click/drag the track, or use either arrow for one exact step. */
 public interface IIntegerSlider extends IGuiComponent<IIntegerSlider> {

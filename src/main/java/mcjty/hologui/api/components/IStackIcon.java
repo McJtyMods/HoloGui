@@ -1,12 +1,11 @@
 package mcjty.hologui.api.components;
 
-import mcjty.hologui.api.IGuiComponent;
-import net.minecraft.world.item.ItemStack;
-
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
+import javax.annotation.Nonnull;
+import mcjty.hologui.api.IGuiComponent;
+import net.minecraft.world.item.ItemStack;
 
 public interface IStackIcon extends IGuiComponent<IStackIcon> {
 

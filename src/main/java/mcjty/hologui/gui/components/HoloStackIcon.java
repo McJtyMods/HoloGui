@@ -2,18 +2,18 @@ package mcjty.hologui.gui.components;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
+import javax.annotation.Nonnull;
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.components.IStackIcon;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import net.minecraft.client.renderer.MultiBufferSource;
-// @todo 1.18 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nonnull;
-import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
+// @todo 1.18 import RenderHelper;
 
 public class HoloStackIcon extends AbstractHoloComponent<IStackIcon> implements IStackIcon {
 

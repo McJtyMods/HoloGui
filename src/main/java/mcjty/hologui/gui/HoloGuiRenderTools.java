@@ -3,29 +3,29 @@ package mcjty.hologui.gui;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraftforge.client.model.pipeline.VertexConsumerWrapper;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.client.renderer.RenderType;
-import org.joml.Matrix4f;
-
-import javax.annotation.Nullable;
-import java.util.List;
 import java.util.ArrayList;
-import net.minecraft.util.FormattedCharSequence;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
+import javax.annotation.Nullable;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.neoforged.neoforge.client.model.pipeline.VertexConsumerWrapper;
+import org.joml.Matrix4f;
 
 public class HoloGuiRenderTools {
 
@@ -63,14 +63,14 @@ public class HoloGuiRenderTools {
         float v0 = (float) v / txth;
         float u1 = (float) (u + w) / txtw;
         float v1 = (float) (v + h) / txth;
-        vertices.vertex(pose, left, top + h, 0).color(255, 255, 255, 255).uv(u0, v1)
-                .uv2(LightTexture.FULL_BRIGHT).endVertex();
-        vertices.vertex(pose, left + w, top + h, 0).color(255, 255, 255, 255).uv(u1, v1)
-                .uv2(LightTexture.FULL_BRIGHT).endVertex();
-        vertices.vertex(pose, left + w, top, 0).color(255, 255, 255, 255).uv(u1, v0)
-                .uv2(LightTexture.FULL_BRIGHT).endVertex();
-        vertices.vertex(pose, left, top, 0).color(255, 255, 255, 255).uv(u0, v0)
-                .uv2(LightTexture.FULL_BRIGHT).endVertex();
+        vertices.addVertex(pose, left, top + h, 0).setColor(255, 255, 255, 255).setUv(u0, v1)
+                .setLight(LightTexture.FULL_BRIGHT);
+        vertices.addVertex(pose, left + w, top + h, 0).setColor(255, 255, 255, 255).setUv(u1, v1)
+                .setLight(LightTexture.FULL_BRIGHT);
+        vertices.addVertex(pose, left + w, top, 0).setColor(255, 255, 255, 255).setUv(u1, v0)
+                .setLight(LightTexture.FULL_BRIGHT);
+        vertices.addVertex(pose, left, top, 0).setColor(255, 255, 255, 255).setUv(u0, v0)
+                .setLight(LightTexture.FULL_BRIGHT);
         matrixStack.popPose();
     }
 
@@ -148,10 +148,10 @@ public class HoloGuiRenderTools {
         int red = rgb >> 16 & 255;
         int green = rgb >> 8 & 255;
         int blue = rgb & 255;
-        vertices.vertex(pose, (float) ((x1 + ox) * .1 - .42), (float) (.42 - (y1 + oy) * .1), .001f).color(red, green, blue, 255).endVertex();
-        vertices.vertex(pose, (float) ((x2 + ox) * .1 - .42), (float) (.42 - (y2 + oy) * .1), .001f).color(red, green, blue, 255).endVertex();
-        vertices.vertex(pose, (float) ((x2 - ox) * .1 - .42), (float) (.42 - (y2 - oy) * .1), .001f).color(red, green, blue, 255).endVertex();
-        vertices.vertex(pose, (float) ((x1 - ox) * .1 - .42), (float) (.42 - (y1 - oy) * .1), .001f).color(red, green, blue, 255).endVertex();
+        vertices.addVertex(pose, (float) ((x1 + ox) * .1 - .42), (float) (.42 - (y1 + oy) * .1), .001f).setColor(red, green, blue, 255);
+        vertices.addVertex(pose, (float) ((x2 + ox) * .1 - .42), (float) (.42 - (y2 + oy) * .1), .001f).setColor(red, green, blue, 255);
+        vertices.addVertex(pose, (float) ((x2 - ox) * .1 - .42), (float) (.42 - (y2 - oy) * .1), .001f).setColor(red, green, blue, 255);
+        vertices.addVertex(pose, (float) ((x1 - ox) * .1 - .42), (float) (.42 - (y1 - oy) * .1), .001f).setColor(red, green, blue, 255);
     }
 
     /** A two-arrow loop, drawn as geometry rather than a font-dependent Unicode glyph. */
@@ -181,10 +181,10 @@ public class HoloGuiRenderTools {
     }
 
     private static void coloredQuad(VertexConsumer vertices, Matrix4f pose, float left, float right, float bottom, float top, int r, int g, int b, int a) {
-        vertices.vertex(pose, left, bottom, .001f).color(r, g, b, a).endVertex();
-        vertices.vertex(pose, right, bottom, .001f).color(r, g, b, a).endVertex();
-        vertices.vertex(pose, right, top, .001f).color(r, g, b, a).endVertex();
-        vertices.vertex(pose, left, top, .001f).color(r, g, b, a).endVertex();
+        vertices.addVertex(pose, left, bottom, .001f).setColor(r, g, b, a);
+        vertices.addVertex(pose, right, bottom, .001f).setColor(r, g, b, a);
+        vertices.addVertex(pose, right, top, .001f).setColor(r, g, b, a);
+        vertices.addVertex(pose, left, top, .001f).setColor(r, g, b, a);
     }
 
     public static void renderItem(PoseStack matrixStack, MultiBufferSource buffer, double x, double y, ItemStack stack, @Nullable ResourceLocation lightmap, boolean border, float scale) {
@@ -213,8 +213,8 @@ public class HoloGuiRenderTools {
             itemBuffer = type -> new VertexConsumerWrapper(buffer.getBuffer(type)) {
 
                 @Override
-                public VertexConsumer color(int r, int g, int b, int a) {
-                    return super.color(invalid ? r : (int) (r * brightness), (int) (g * brightness), (int) (b * brightness), a);
+                public VertexConsumer setColor(int r, int g, int b, int a) {
+                    return super.setColor(invalid ? r : (int) (r * brightness), (int) (g * brightness), (int) (b * brightness), a);
                 }
             };
         }
@@ -231,14 +231,13 @@ public class HoloGuiRenderTools {
         return type == Sheets.translucentItemSheet() ? Sheets.translucentCullBlockSheet() : type;
     }
 
-
     public static void renderToolTip(PoseStack matrixStack, MultiBufferSource buffer, ItemStack stack, int x, int y, BiConsumer<ItemStack, List<String>> tooltipHandler) {
         if (stack.isEmpty()) {
             return;
         }
         Minecraft mc = Minecraft.getInstance();
         TooltipFlag flag = mc.options.advancedItemTooltips ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL;
-        List<String> text = stack.getTooltipLines(mc.player, flag).stream().map(Component::getString).collect(Collectors.toList());
+        List<String> text = stack.getTooltipLines(Item.TooltipContext.of(mc.level), mc.player, flag).stream().map(Component::getString).collect(Collectors.toList());
         tooltipHandler.accept(stack, text);
         Font font = mc.font;
         List<FormattedCharSequence> lines = new ArrayList<>();

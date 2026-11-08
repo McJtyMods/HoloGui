@@ -1,10 +1,9 @@
 package mcjty.hologui.api;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import java.util.Optional;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.player.Player;
-
-import java.util.Optional;
 
 public interface IGuiComponent<P extends IGuiComponent<P>> {
 

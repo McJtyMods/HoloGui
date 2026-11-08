@@ -1,10 +1,9 @@
 package mcjty.hologui.api.components;
 
+import java.util.function.Supplier;
 import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.api.IHoloGuiEntity;
 import net.minecraft.world.entity.player.Player;
-
-import java.util.function.Supplier;
 
 /** A named multiline field. Changes are committed on Escape or clicking away. */
 public interface ITextEntry extends IGuiComponent<ITextEntry> {

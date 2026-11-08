@@ -1,6 +1,9 @@
 package mcjty.hologui.gui.components;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
 import mcjty.hologui.api.IEvent;
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.IImage;
@@ -8,13 +11,9 @@ import mcjty.hologui.api.components.IIconChoice;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.sounds.SoundSource;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Function;
 
 public class HoloIconChoice extends AbstractHoloComponent<IIconChoice> implements IIconChoice {
 

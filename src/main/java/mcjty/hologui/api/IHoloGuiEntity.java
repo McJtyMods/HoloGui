@@ -1,9 +1,8 @@
 package mcjty.hologui.api;
 
-import net.minecraft.world.entity.Entity;
-
-import javax.annotation.Nonnull;
 import java.util.Optional;
+import javax.annotation.Nonnull;
+import net.minecraft.world.entity.Entity;
 
 public interface IHoloGuiEntity {
 

@@ -1,12 +1,11 @@
 package mcjty.hologui.gui;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import net.minecraft.client.renderer.RenderType;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.Util;
-
 import java.util.function.Function;
+import net.minecraft.Util;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.ResourceLocation;
 
 public class HoloGuiRenderType extends RenderType {
 

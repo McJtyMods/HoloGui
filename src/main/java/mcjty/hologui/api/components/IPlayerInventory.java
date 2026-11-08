@@ -1,13 +1,12 @@
 package mcjty.hologui.api.components;
 
+import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.api.IImage;
 import mcjty.hologui.api.IStackEvent;
 import net.minecraft.world.item.ItemStack;
-
-import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 
 public interface IPlayerInventory extends IGuiComponent<IPlayerInventory> {
 

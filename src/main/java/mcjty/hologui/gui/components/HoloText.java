@@ -1,6 +1,7 @@
 package mcjty.hologui.gui.components;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import java.util.function.Supplier;
 import mcjty.hologui.api.IColor;
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.StyledColor;
@@ -8,10 +9,9 @@ import mcjty.hologui.api.components.IText;
 import mcjty.hologui.gui.ColorFromStyle;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import net.minecraft.client.renderer.MultiBufferSource;
-// @todo 1.18 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.world.entity.player.Player;
 
-import java.util.function.Supplier;
+// @todo 1.18 import RenderHelper;
 
 public class HoloText extends AbstractHoloComponent<IText> implements IText {
 

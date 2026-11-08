@@ -1,3 +1,6 @@
+1.21-0.0.10-beta:
+- Ported to Minecraft 1.21.1 on NeoForge.
+
 1.20-0.0.10-beta:
 - Reopening a block repositions that player's existing panel while preserving its pin state; other players' panels stay separate.
 - Added uniform bordered window controls with hover tooltips, optional manual help and session-only pinning for block panels. Mounted panels have no close or pin controls.

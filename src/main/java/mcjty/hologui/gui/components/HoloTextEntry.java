@@ -1,6 +1,7 @@
 package mcjty.hologui.gui.components;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import java.util.function.Supplier;
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.components.ITextEntry;
 import mcjty.hologui.gui.HoloGuiEntity;
@@ -9,10 +10,8 @@ import mcjty.hologui.gui.TextEntryScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-
-import java.util.function.Supplier;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class HoloTextEntry extends AbstractHoloComponent<ITextEntry> implements ITextEntry {
 

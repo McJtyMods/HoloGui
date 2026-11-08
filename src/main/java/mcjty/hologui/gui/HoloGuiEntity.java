@@ -1,18 +1,22 @@
 package mcjty.hologui.gui;
 
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.WeakHashMap;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import mcjty.hologui.HoloGui;
 import mcjty.hologui.api.CloseStrategy;
 import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.api.IGuiTile;
 import mcjty.hologui.api.IHoloGuiEntity;
-import mcjty.hologui.api.components.ITextEntry;
 import mcjty.hologui.api.components.IIntegerSlider;
+import mcjty.hologui.api.components.ITextEntry;
 import mcjty.hologui.gui.components.HoloWindowPanel;
 import mcjty.lib.varia.SafeClientTools;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -28,14 +32,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkHooks;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.Map;
-import java.util.WeakHashMap;
 
 public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 
@@ -80,12 +76,6 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         // @todo 1.14
         setScale(1);
 //        setSize(1f, 1f);
-    }
-
-
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
@@ -366,7 +356,6 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         }
     }
 
-
     private boolean playerLooksAtMe(Player player) {
         Vec3 normal = getLookAngle();
         double direction = player.getViewVector(1).dot(normal);
@@ -419,9 +408,9 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 
     @Nonnull
     @Override
-    public java.util.Optional<IGuiComponent<?>> findComponent(String name) {
+    public Optional<IGuiComponent<?>> findComponent(String name) {
         if (panel == null) {
-            return java.util.Optional.empty();
+            return Optional.empty();
         }
 
         return panel.findChild(name);
@@ -578,16 +567,15 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 //        return pass == 1;
 //    }
 
-
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(GUITILE, Optional.empty());
-        this.entityData.define(TAG, "");
-        this.entityData.define(GUIID, "");
-        this.entityData.define(SCALE, 1.0f);
-        this.entityData.define(CLOSESTRATEGY, CloseStrategy.TIMEOUT + CloseStrategy.TIMEOUT_RESET + CloseStrategy.RIGHTCLICK);
-        this.entityData.define(PINNED, false);
-        this.entityData.define(OWNER, Optional.empty());
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(GUITILE, Optional.empty());
+        builder.define(TAG, "");
+        builder.define(GUIID, "");
+        builder.define(SCALE, 1.0f);
+        builder.define(CLOSESTRATEGY, CloseStrategy.TIMEOUT + CloseStrategy.TIMEOUT_RESET + CloseStrategy.RIGHTCLICK);
+        builder.define(PINNED, false);
+        builder.define(OWNER, Optional.empty());
     }
 
     @Override

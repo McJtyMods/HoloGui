@@ -1,13 +1,12 @@
 package mcjty.hologui.gui;
 
-import mcjty.hologui.api.IGuiComponent;
-import mcjty.hologui.api.IGuiRegistry;
-import net.minecraft.world.entity.player.Player;
-
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import javax.annotation.Nullable;
+import mcjty.hologui.api.IGuiComponent;
+import mcjty.hologui.api.IGuiRegistry;
+import net.minecraft.world.entity.player.Player;
 
 public class GuiRegistry implements IGuiRegistry {
 

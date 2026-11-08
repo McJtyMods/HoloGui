@@ -1,7 +1,10 @@
 package mcjty.hologui.gui.components;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import mcjty.hologui.api.*;
+import com.mojang.blaze3d.vertex.PoseStack;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BiFunction;
 import mcjty.hologui.api.components.IPlayerInventory;
 import mcjty.hologui.gui.ColorFromStyle;
 import mcjty.hologui.gui.HoloGuiRenderTools;
@@ -9,10 +12,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.BiFunction;
 
 public class HoloPlayerInventory extends AbstractSlots<IPlayerInventory> implements IPlayerInventory {
 

@@ -1,15 +1,14 @@
 package mcjty.hologui.gui.components;
 
-import mcjty.hologui.HoloGui;
 import mcjty.hologui.api.*;
 import mcjty.hologui.api.components.*;
+import mcjty.hologui.HoloGui;
 import mcjty.hologui.gui.ColorFromStyle;
 import net.minecraft.resources.ResourceLocation;
 
 public class GuiComponentRegistry implements IGuiComponentRegistry {
 
-    private ResourceLocation STANDARD = new ResourceLocation(HoloGui.MODID, "textures/gui/guielements.png");
-
+    private ResourceLocation STANDARD = ResourceLocation.fromNamespaceAndPath(HoloGui.MODID, "textures/gui/guielements.png");
 
     @Override
     public IIconButton iconButton(double x, double y, double w, double h) {

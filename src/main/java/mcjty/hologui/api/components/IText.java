@@ -1,9 +1,8 @@
 package mcjty.hologui.api.components;
 
+import java.util.function.Supplier;
 import mcjty.hologui.api.IColor;
 import mcjty.hologui.api.IGuiComponent;
-
-import java.util.function.Supplier;
 
 public interface IText extends IGuiComponent<IText> {
     IText text(String text);

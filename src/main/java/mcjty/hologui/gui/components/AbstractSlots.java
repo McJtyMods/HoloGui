@@ -1,13 +1,17 @@
 package mcjty.hologui.gui.components;
 
+import mcjty.hologui.api.*;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import mcjty.hologui.api.*;
+import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
+import javax.annotation.Nonnull;
 import mcjty.hologui.gui.ColorFromStyle;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
 import net.minecraft.client.renderer.MultiBufferSource;
-// @todo 1.18 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -15,11 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.tuple.Pair;
 
-import javax.annotation.Nonnull;
-import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.BiPredicate;
+// @todo 1.18 import RenderHelper;
 
 public abstract class AbstractSlots<P extends IGuiComponent<P>> extends AbstractHoloComponent<P> {
 

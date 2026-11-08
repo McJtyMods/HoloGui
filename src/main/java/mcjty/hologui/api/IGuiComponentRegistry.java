@@ -89,7 +89,6 @@ public interface IGuiComponentRegistry {
      */
     IPlayerInventory playerInventory(double y);
 
-
     /**
      * One of the standard icons
      */

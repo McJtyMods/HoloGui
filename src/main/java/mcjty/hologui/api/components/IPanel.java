@@ -1,11 +1,9 @@
 package mcjty.hologui.api.components;
 
-import mcjty.hologui.api.IGuiComponent;
-import mcjty.hologui.api.IEvent;
-
-import javax.annotation.Nullable;
-
 import java.util.function.BooleanSupplier;
+import javax.annotation.Nullable;
+import mcjty.hologui.api.IEvent;
+import mcjty.hologui.api.IGuiComponent;
 
 public interface IPanel extends IGuiComponent<IPanel> {
 

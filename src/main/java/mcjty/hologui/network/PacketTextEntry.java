@@ -1,23 +1,32 @@
 package mcjty.hologui.network;
 
 import mcjty.hologui.gui.HoloGuiEntity;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import java.util.function.Supplier;
+public record PacketTextEntry(int entityId, String guiId, String tag, String component, String text, boolean commit) implements CustomPacketPayload {
 
-public record PacketTextEntry(int entityId, String guiId, String tag, String component, String text, boolean commit) {
+    public static final Type<PacketTextEntry> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath("hologui", "packet_text_entry"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketTextEntry> CODEC = StreamCodec.ofMember(PacketTextEntry::toBytes, PacketTextEntry::new);
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
 
     public PacketTextEntry(int entityId, String guiId, String tag, String component, String text) {
         this(entityId, guiId, tag, component, text, true);
     }
 
-    public PacketTextEntry(FriendlyByteBuf buffer) {
+    public PacketTextEntry(RegistryFriendlyByteBuf buffer) {
         this(buffer.readVarInt(), buffer.readUtf(128), buffer.readUtf(128), buffer.readUtf(128), buffer.readUtf(2048), buffer.readBoolean());
     }
 
-    public void toBytes(FriendlyByteBuf buffer) {
+    public void toBytes(RegistryFriendlyByteBuf buffer) {
         buffer.writeVarInt(entityId);
         buffer.writeUtf(guiId, 128);
         buffer.writeUtf(tag, 128);
@@ -26,10 +35,9 @@ public record PacketTextEntry(int entityId, String guiId, String tag, String com
         buffer.writeBoolean(commit);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> supplier) {
-        NetworkEvent.Context context = supplier.get();
+    public void handle(IPayloadContext context) {
         context.enqueueWork(() -> {
-            ServerPlayer player = context.getSender();
+            ServerPlayer player = (ServerPlayer) context.player();
             if (player != null && player.level().getEntity(entityId) instanceof HoloGuiEntity holo
                     && holo.isAlive() && player.distanceToSqr(holo) < 64
                     && guiId.equals(holo.getGuiId()) && tag.equals(holo.getTag())) {
@@ -40,6 +48,5 @@ public record PacketTextEntry(int entityId, String guiId, String tag, String com
                 }
             }
         });
-        context.setPacketHandled(true);
     }
 }

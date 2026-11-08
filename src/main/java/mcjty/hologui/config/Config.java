@@ -1,19 +1,15 @@
 package mcjty.hologui.config;
 
-import com.electronwill.nightconfig.core.file.CommentedFileConfig;
-import com.electronwill.nightconfig.core.io.WritingMode;
-import net.minecraftforge.common.ForgeConfigSpec;
-
-import java.nio.file.Path;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class Config {
 
     public static final String CATEGORY_GUI = "gui";
 
-    public static ForgeConfigSpec.ConfigValue<GuiStyle> GUI_STYLE;
-    public static ForgeConfigSpec.ConfigValue<GuiTextStyle> GUI_TEXT_STYLE;
+    public static ModConfigSpec.ConfigValue<GuiStyle> GUI_STYLE;
+    public static ModConfigSpec.ConfigValue<GuiTextStyle> GUI_TEXT_STYLE;
 
-    static final ForgeConfigSpec.Builder CLIENT_BUILDER = new ForgeConfigSpec.Builder();
+    static final ModConfigSpec.Builder CLIENT_BUILDER = new ModConfigSpec.Builder();
 
     static {
         CLIENT_BUILDER.comment("GUI settings").push(CATEGORY_GUI);
@@ -30,7 +26,7 @@ public class Config {
         CLIENT_CONFIG = CLIENT_BUILDER.build();
     }
 
-    public static ForgeConfigSpec CLIENT_CONFIG;
+    public static ModConfigSpec CLIENT_CONFIG;
 
     public static void setGuiStyle(GuiStyle style) {
         GUI_STYLE.set(style);
@@ -40,15 +36,4 @@ public class Config {
         GUI_TEXT_STYLE.set(style);
     }
 
-    public static void loadConfig(ForgeConfigSpec spec, Path path) {
-
-        final CommentedFileConfig configData = CommentedFileConfig.builder(path)
-                .sync()
-                .autosave()
-                .writingMode(WritingMode.REPLACE)
-                .build();
-
-        configData.load();
-        spec.setConfig(configData);
-    }
 }

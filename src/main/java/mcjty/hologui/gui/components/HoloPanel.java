@@ -1,18 +1,17 @@
 package mcjty.hologui.gui.components;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import mcjty.hologui.api.IGuiComponent;
-import mcjty.hologui.api.IEvent;
-import mcjty.hologui.api.IHoloGuiEntity;
-import mcjty.hologui.api.components.IPanel;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.world.entity.player.Player;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
+import mcjty.hologui.api.IEvent;
+import mcjty.hologui.api.IGuiComponent;
+import mcjty.hologui.api.IHoloGuiEntity;
+import mcjty.hologui.api.components.IPanel;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.world.entity.player.Player;
 
 public class HoloPanel extends AbstractHoloComponent<IPanel> implements IPanel {
 

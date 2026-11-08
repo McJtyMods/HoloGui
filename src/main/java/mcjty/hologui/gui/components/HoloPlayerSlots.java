@@ -1,16 +1,15 @@
 package mcjty.hologui.gui.components;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import mcjty.hologui.api.IImage;
 import mcjty.hologui.api.IStackEvent;
 import mcjty.hologui.api.components.IPlayerSlots;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.BiFunction;
-import java.util.function.BiPredicate;
 
 public class HoloPlayerSlots extends AbstractSlots<IPlayerSlots> implements IPlayerSlots {
 

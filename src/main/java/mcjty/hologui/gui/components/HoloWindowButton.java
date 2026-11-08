@@ -2,6 +2,7 @@ package mcjty.hologui.gui.components;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import java.util.Locale;
 import mcjty.hologui.api.IEvent;
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.gui.HoloGuiRenderTools;
@@ -11,8 +12,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-
-import java.util.Locale;
 
 /** Small geometric symbols stay sharp at every hologram scale and viewing angle. */
 class HoloWindowButton extends AbstractHoloComponent<HoloWindowButton> {

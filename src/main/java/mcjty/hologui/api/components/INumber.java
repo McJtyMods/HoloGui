@@ -1,12 +1,11 @@
 package mcjty.hologui.api.components;
 
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import mcjty.hologui.api.IColor;
 import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.api.IHoloGuiEntity;
 import net.minecraft.world.entity.player.Player;
-
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 public interface INumber extends IGuiComponent<INumber> {
 
