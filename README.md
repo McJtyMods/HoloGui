@@ -6,20 +6,21 @@ HoloGui is a mod about holographic gui's
 Build the 1.20 branch with Java 17 and the checked-in Gradle wrapper (7.6.4):
 
 ```sh
-./gradlew build
+./gradlew clean build
 ```
 
 In Jenkins, select Java 17 and **Use Gradle Wrapper** instead of the installed
 Gradle 4.10.3. To build and publish to the Jenkins Maven repository, use tasks
-`build publish`, equivalent to:
+`clean build publish`, equivalent to:
 
 ```sh
-./gradlew build publish
+./gradlew clean build publish
 ```
 
-For a clean build, run `./gradlew clean` in a separate invocation first (a
-separate Jenkins build step). ForgeGradle 5 creates mapped dependencies during
-configuration; combining `clean` and `build` can delete them before compilation.
+The `clean` task removes build outputs while preserving `build/fg_cache`, where
+ForgeGradle 5 resolves mapped Minecraft dependencies during configuration. This
+allows `clean build publish` in one invocation without deleting the compiler's
+Minecraft and Forge classpath.
 
 Set `local_maven` to the Maven repository directory. An explicit `-Pmavendir=...`
 overrides that destination; without either setting, `publish` writes to the local
