@@ -1,5 +1,5 @@
 {
-  "entity.hologui": "Holo GUI",
+  "entity.hologui.hologui": "Holo GUI",
   "entity.hologui_small": "Holo GUI",
   "gui.hologui.close": "Close panel",
   "gui.hologui.help": "Open manual",
