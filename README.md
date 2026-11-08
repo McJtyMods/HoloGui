@@ -1,6 +1,32 @@
 # HoloGui
 HoloGui is a mod about holographic gui's
 
+## Building and Jenkins
+
+Build the 1.20 branch with Java 17 and the checked-in Gradle wrapper (7.6.4):
+
+```sh
+./gradlew build
+```
+
+In Jenkins, select Java 17 and **Use Gradle Wrapper** instead of the installed
+Gradle 4.10.3. To build and publish to the Jenkins Maven repository, use tasks
+`build publish`, equivalent to:
+
+```sh
+./gradlew build publish
+```
+
+For a clean build, run `./gradlew clean` in a separate invocation first (a
+separate Jenkins build step). ForgeGradle 5 creates mapped dependencies during
+configuration; combining `clean` and `build` can delete them before compilation.
+
+Set `local_maven` to the Maven repository directory. An explicit `-Pmavendir=...`
+overrides that destination; without either setting, `publish` writes to the local
+Maven cache. Both the reobfuscated mod jar and API jar are published with the POM.
+Use `publish` in place of `uploadArchives` or `uploadJars`; the legacy Maven plugin
+and `uploadArchives` were removed in Gradle 7.
+
 ## Text entry and color picking
 
 The component registry now provides `textEntry(x, y, width, height)` and

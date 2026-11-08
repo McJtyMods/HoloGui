@@ -64,12 +64,43 @@ publishing {
             artifactId = archivesBaseName
             from components.java
             artifact apiJar
+            pom {
+                name = 'HoloGui'
+                description = 'HoloGui'
+                scm {
+                    url = 'https://github.com/McJtyMods/HoloGui'
+                    connection = 'scm:git:git@github.com:McJtyMods/HoloGui.git'
+                    developerConnection = 'scm:git:git@github.com:McJtyMods/HoloGui.git'
+                }
+                issueManagement {
+                    system = 'github'
+                    url = 'https://github.com/McJtyMods/HoloGui/issues'
+                }
+                licenses {
+                    license {
+                        name = 'MIT'
+                        distribution = 'repo'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'McJty'
+                        name = 'McJty'
+                        roles = ['developer']
+                    }
+                }
+            }
         }
     }
 
     repositories {
         if (project.hasProperty('mavendir')) {
             maven { url mavendir }
+        } else if (System.getenv('local_maven') != null) {
+            maven {
+                name = 'local'
+                url = uri(System.getenv('local_maven'))
+            }
         } else {
             mavenLocal()
         }
@@ -79,50 +110,4 @@ publishing {
 
 tasks.withType(AbstractPublishToMaven).configureEach {
     dependsOn 'reobfJar'
-}
-
-task("uploadJars", dependsOn: "reobf") {
-    description = "uploads JARs"
-    if (System.getenv("local_maven") != null) {
-        apply plugin: 'maven'
-        uploadArchives {
-            repositories {
-                mavenDeployer {
-                    repository(url: "file://" + System.getenv("local_maven"))
-                    pom {
-                        groupId = project.group
-                        version = project.version
-                        artifactId = project.archivesBaseName
-                        project {
-                            name project.archivesBaseName
-                            packaging 'jar'
-                            description 'HoloGui'
-                            scm {
-                                url 'https://github.com/McJtyMods/HoloGui'
-                                connection 'scm:git:git@github.com:McJtyMods/HoloGui.git'
-                                developerConnection 'scm:git:git@github.com:McJtyMods/HoloGui.git'
-                            }
-                            issueManagement {
-                                system 'github'
-                                url 'https://github.com/McJtyMods/HoloGui/issues'
-                            }
-                            licenses {
-                                license {
-                                    name 'MIT'
-                                    distribution 'repo'
-                                }
-                            }
-                            developers {
-                                developer {
-                                    id 'McJty'
-                                    name 'McJty'
-                                    roles { role 'developer' }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
 }
