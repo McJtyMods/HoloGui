@@ -1,13 +1,17 @@
 package mcjty.hologui.network;
 
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import mcjty.lib.network.PayloadContext;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 public class HoloMessages {
 
-    public static void register(RegisterPayloadHandlersEvent event) {
-        PayloadRegistrar registrar = event.registrar("hologui").versioned("1");
-        registrar.playToServer(PacketSliderInput.TYPE, PacketSliderInput.CODEC, PacketSliderInput::handle);
-        registrar.playToServer(PacketTextEntry.TYPE, PacketTextEntry.CODEC, PacketTextEntry::handle);
+    public static void register() {
+        PayloadTypeRegistry.serverboundPlay().register(PacketSliderInput.TYPE, PacketSliderInput.CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(PacketTextEntry.TYPE, PacketTextEntry.CODEC);
+        ServerPlayNetworking.registerGlobalReceiver(PacketSliderInput.TYPE,
+                (packet, context) -> packet.handle(new PayloadContext(context.player(), context.server())));
+        ServerPlayNetworking.registerGlobalReceiver(PacketTextEntry.TYPE,
+                (packet, context) -> packet.handle(new PayloadContext(context.player(), context.server())));
     }
 }

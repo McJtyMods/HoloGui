@@ -6,7 +6,6 @@ import java.util.List;
 import javax.annotation.Nullable;
 import mcjty.hologui.HoloGui;
 import mcjty.hologui.gui.components.GuiComponentRegistry;
-import mcjty.hologui.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
@@ -117,7 +116,7 @@ public class HoloGuiHandler implements IHoloGuiHandler {
     }
 
     private static HoloGuiEntity createHoloGui(Level world, Player player, String tag, double distance) {
-        HoloGuiEntity entity = new HoloGuiEntity(Registration.HOLOGUI_ENTITY_TYPE.get(), world);
+        HoloGuiEntity entity = new HoloGuiEntity(mcjty.hologui.setup.Registration.HOLOGUI_ENTITY_TYPE.get(), world);
         entity.setTag(tag);
         entity.setOwnerUUID(player.getUUID());
         entity.positionFor(player, distance);
@@ -127,7 +126,7 @@ public class HoloGuiHandler implements IHoloGuiHandler {
 
     private static HoloGuiEntity createHoloGuiRelative(Level world, Entity parent, Vec3 offset, String tag) {
 //        HoloGuiEntity entity = new HoloGuiEntitySmall(world);
-        HoloGuiEntity entity = new HoloGuiEntity(Registration.HOLOGUI_ENTITY_TYPE.get(), world);
+        HoloGuiEntity entity = new HoloGuiEntity(mcjty.hologui.setup.Registration.HOLOGUI_ENTITY_TYPE.get(), world);
         entity.setTag(tag);
         double x = parent.getX() + offset.x;
         double y = parent.getY() + offset.y;

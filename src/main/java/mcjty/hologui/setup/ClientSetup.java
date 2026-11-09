@@ -1,26 +1,28 @@
 package mcjty.hologui.setup;
 
-import mcjty.hologui.config.HoloGuiModConfigGui;
-import mcjty.hologui.gui.HoloGuiEntityRender;
-import mcjty.hologui.gui.HoloGuiSpriteUploader;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.event.RegisterTextureAtlasesEvent;
 import net.minecraft.client.resources.model.sprite.AtlasManager;
-import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
-public class ClientSetup {
+import mcjty.hologui.gui.HoloGuiEntityRender;
+import mcjty.hologui.gui.HoloGuiRenderType;
+import mcjty.hologui.gui.HoloGuiSpriteUploader;
+import mcjty.hologui.gui.SliderInput;
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.AtlasRegistry;
+import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
+import net.minecraft.world.InteractionResult;
 
-    public static void registerConfigScreen(ModContainer mod) {
-        mod.registerExtensionPoint(IConfigScreenFactory.class, (container, parent) -> new HoloGuiModConfigGui(parent));
-    }
+public class ClientSetup implements ClientModInitializer {
 
-    public static void entityRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(Registration.HOLOGUI_ENTITY_TYPE.get(), HoloGuiEntityRender::new);
-    }
-
-    public static void setupSpriteUploader(RegisterTextureAtlasesEvent event) {
-        event.register(new AtlasManager.AtlasConfig(HoloGuiSpriteUploader.HOLOGUI_ATLAS,
-                HoloGuiSpriteUploader.ATLAS_ID, false));
+    @Override
+    public void onInitializeClient() {
+        EntityRendererRegistry.register(Registration.HOLOGUI_ENTITY_TYPE.get(), HoloGuiEntityRender::new);
+        AtlasRegistry.register(new AtlasManager.AtlasConfig(
+                HoloGuiSpriteUploader.HOLOGUI_ATLAS, HoloGuiSpriteUploader.ATLAS_ID, false));
+        HoloGuiRenderType.registerPipelines();
+        ClientTickEvents.END_CLIENT_TICK.register(client -> SliderInput.tick());
+        AttackBlockCallback.EVENT.register((player, level, hand, pos, direction) ->
+                level.isClientSide() && SliderInput.isDragging() ? InteractionResult.FAIL : InteractionResult.PASS);
     }
 }

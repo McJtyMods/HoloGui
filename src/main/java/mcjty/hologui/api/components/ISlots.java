@@ -8,7 +8,7 @@ import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.api.IImage;
 import mcjty.hologui.api.IStackEvent;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
+import mcjty.lib.container.IItemHandler;
 
 public interface ISlots extends IGuiComponent<ISlots> {
 

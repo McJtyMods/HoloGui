@@ -1,5 +1,8 @@
 package mcjty.hologui.gui;
 
+import com.mojang.blaze3d.vertex.QuadInstance;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+
 import net.minecraft.client.renderer.texture.TextureAtlas;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -9,7 +12,6 @@ import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.world.item.ItemDisplayContext;
-import net.neoforged.neoforge.client.model.quad.BakedColors;
 
 final class ItemTintCollector extends OrderedSubmitCollector {
 
@@ -35,16 +37,19 @@ final class ItemTintCollector extends OrderedSubmitCollector {
     public void submitItem(PoseStack poses, ItemDisplayContext context, int light, int overlay, int outline,
                            int[] tints, List<BakedQuad> quads, ItemStackRenderState.FoilType foil) {
         if (brightness != 1 || invalid || alpha != 1) {
-            quads = quads.stream().map(quad -> {
-                var colors = quad.bakedColors();
-                var info = quad.materialInfo();
-                if (alpha < 1) info = new BakedQuad.MaterialInfo(info.sprite(), info.layer(), (info.sprite().atlasLocation().equals(TextureAtlas.LOCATION_ITEMS)
-                        ? Sheets.translucentItemSheet() : Sheets.translucentBlockItemSheet()),
-                        info.tintIndex(), info.shade(), info.lightEmission(), info.ambientOcclusion());
-                return new BakedQuad(quad.position0(), quad.position1(), quad.position2(), quad.position3(),
-                        quad.packedUV0(), quad.packedUV1(), quad.packedUV2(), quad.packedUV3(), quad.direction(), info,
-                        quad.bakedNormals(), BakedColors.of(tint(colors.color(0)), tint(colors.color(1)), tint(colors.color(2)), tint(colors.color(3))));
-            }).toList();
+            for (BakedQuad quad : quads) {
+                var material = quad.materialInfo();
+                int base = material.isTinted() && material.tintIndex() < tints.length ? tints[material.tintIndex()] : 0xffffffff;
+                int color = tint(base);
+                delegate.submitCustomGeometry(poses, RenderTypes.entityTranslucent(material.sprite().atlasLocation()), (pose, buffer) -> {
+                    var instance = new QuadInstance();
+                    instance.setColor(color);
+                    instance.setLightCoords(light);
+                    instance.setOverlayCoords(overlay);
+                    buffer.putBakedQuad(pose, quad, instance);
+                });
+            }
+            return;
         }
         delegate.submitItem(poses, context, light, overlay, outline, tints, quads, foil);
     }
