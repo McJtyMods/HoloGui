@@ -8,7 +8,7 @@ import mcjty.hologui.api.IEvent;
 import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.components.IPanel;
-import net.minecraft.client.renderer.MultiBufferSource;
+import mcjty.lib.client.RenderBufferSource;
 import net.minecraft.world.entity.player.Player;
 
 /** Shared window controls, independent of a panel's content and current page. */
@@ -50,7 +50,7 @@ public class HoloWindowPanel extends AbstractHoloComponent<HoloWindowPanel> {
     }
 
     @Override
-    public void render(PoseStack poses, MultiBufferSource buffer, Player player, IHoloGuiEntity entity, double x, double y) {
+    public void render(PoseStack poses, RenderBufferSource buffer, Player player, IHoloGuiEntity entity, double x, double y) {
         content.render(poses, buffer, player, entity, x, y);
         poses.pushPose();
         poses.translate(0, 0, .004);

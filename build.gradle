@@ -25,14 +25,14 @@ def localGradleTools = [
         file('../Multi_neo/gradletools.gradle'),
         file('gradletools.gradle')
 ].find { it != null && it.isFile() }
-apply from: localGradleTools ?: 'https://raw.githubusercontent.com/McJtyMods/MultiWorkspace/26.1.2_neo/gradletools.gradle'
+apply from: localGradleTools ?: 'https://raw.githubusercontent.com/McJtyMods/MultiWorkspace/26.2_neo/gradletools.gradle'
 
 
 
 group = "com.github.mcjty"
 base.archivesName = "hologui"
 java.toolchain.languageVersion = JavaLanguageVersion.of(25)
-neo_version = '26.1.2.99'
+neo_version = '26.2.0.75'
 
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "-${System.getenv('BUILD_NUMBER')}"

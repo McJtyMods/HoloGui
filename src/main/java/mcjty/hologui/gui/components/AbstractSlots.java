@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
 import mcjty.hologui.gui.ColorFromStyle;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
-import net.minecraft.client.renderer.MultiBufferSource;
+import mcjty.lib.client.RenderBufferSource;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -93,7 +93,7 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
     }
 
     @Override
-    public void render(PoseStack matrixStack, MultiBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void render(PoseStack matrixStack, RenderBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         IColor color = new ColorFromStyle(StyledColor.BORDER);
         int bc = color.getColor();
         if (bc != -1) {
@@ -176,7 +176,7 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
     }
 
     @Override
-    public void renderTooltip(PoseStack matrixStack, MultiBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void renderTooltip(PoseStack matrixStack, RenderBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         ItemStack stack = getSelectedStack(player, cursorX, cursorY);
         if (!stack.isEmpty()) {
             matrixStack.pushPose();

@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.components.IColorPicker;
 import mcjty.hologui.gui.HoloGuiRenderTools;
-import net.minecraft.client.renderer.MultiBufferSource;
+import mcjty.lib.client.RenderBufferSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 
@@ -61,7 +61,7 @@ public class HoloColorPicker extends AbstractHoloComponent<IColorPicker> impleme
     }
 
     @Override
-    public void render(PoseStack poses, MultiBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void render(PoseStack poses, RenderBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         for (int row = 0; row < 16; row++) {
             for (int col = 0; col < 24; col++) {
                 int rgb = Mth.hsvToRgb(hue, col / 23f, 1 - row / 15f);

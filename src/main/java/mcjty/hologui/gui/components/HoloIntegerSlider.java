@@ -7,7 +7,7 @@ import mcjty.hologui.api.components.IIntegerSlider;
 import mcjty.hologui.gui.HoloGuiEntity;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.SliderInput;
-import net.minecraft.client.renderer.MultiBufferSource;
+import mcjty.lib.client.RenderBufferSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 
@@ -116,7 +116,7 @@ public class HoloIntegerSlider extends AbstractHoloComponent<IIntegerSlider> imp
     }
 
     @Override
-    public void render(PoseStack poses, MultiBufferSource buffer, Player player, IHoloGuiEntity holo, double cx, double cy) {
+    public void render(PoseStack poses, RenderBufferSource buffer, Player player, IHoloGuiEntity holo, double cx, double cy) {
         int value = Mth.clamp(getter.apply(player, holo), min, max);
         boolean hovered = isInside(cx, cy);
         double arrowSize = Math.min(.5, h - .1);

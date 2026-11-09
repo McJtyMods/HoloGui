@@ -35,7 +35,7 @@ public class HoloGuiModConfigGui extends Screen {
     @Override
     public void onClose() {
         Config.CLIENT_CONFIG.save();
-        minecraft.setScreen(parent);
+        minecraft.gui.setScreen(parent);
     }
 
     @Override

@@ -10,7 +10,7 @@ import mcjty.hologui.api.IEvent;
 import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.components.IPanel;
-import net.minecraft.client.renderer.MultiBufferSource;
+import mcjty.lib.client.RenderBufferSource;
 import net.minecraft.world.entity.player.Player;
 
 public class HoloPanel extends AbstractHoloComponent<IPanel> implements IPanel {
@@ -52,7 +52,7 @@ public class HoloPanel extends AbstractHoloComponent<IPanel> implements IPanel {
     }
 
     @Override
-    public void render(PoseStack matrixStack, MultiBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void render(PoseStack matrixStack, RenderBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         if (!visible.getAsBoolean()) {
             return;
         }

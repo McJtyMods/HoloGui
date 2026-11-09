@@ -7,7 +7,7 @@ import mcjty.hologui.api.IColor;
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.api.components.INumber;
 import mcjty.hologui.gui.HoloGuiRenderTools;
-import net.minecraft.client.renderer.MultiBufferSource;
+import mcjty.lib.client.RenderBufferSource;
 import net.minecraft.world.entity.player.Player;
 
 public class HoloNumber extends AbstractHoloComponent<INumber> implements INumber {
@@ -45,7 +45,7 @@ public class HoloNumber extends AbstractHoloComponent<INumber> implements INumbe
     }
 
     @Override
-    public void render(PoseStack matrixStack, MultiBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void render(PoseStack matrixStack, RenderBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         String text = Integer.toString(getter.apply(player, holo));
         HoloGuiRenderTools.renderText(matrixStack, buffer, x, y+.1, text, colorGetter.apply(player), 1.0f);
     }

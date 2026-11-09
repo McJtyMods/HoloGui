@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.Optional;
 import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.api.IHoloGuiEntity;
-import net.minecraft.client.renderer.MultiBufferSource;
+import mcjty.lib.client.RenderBufferSource;
 import net.minecraft.world.entity.player.Player;
 
 public abstract class AbstractHoloComponent<P extends IGuiComponent<P>> implements IGuiComponent<P> {
@@ -29,7 +29,7 @@ public abstract class AbstractHoloComponent<P extends IGuiComponent<P>> implemen
     }
 
     @Override
-    public void renderTooltip(PoseStack matrixStack, MultiBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void renderTooltip(PoseStack matrixStack, RenderBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
 
     }
 

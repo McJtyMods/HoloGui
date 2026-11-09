@@ -8,7 +8,7 @@ import java.util.function.BiFunction;
 import mcjty.hologui.api.components.IPlayerInventory;
 import mcjty.hologui.gui.ColorFromStyle;
 import mcjty.hologui.gui.HoloGuiRenderTools;
-import net.minecraft.client.renderer.MultiBufferSource;
+import mcjty.lib.client.RenderBufferSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.tuple.Pair;
@@ -65,7 +65,7 @@ public class HoloPlayerInventory extends AbstractSlots<IPlayerInventory> impleme
     }
 
     @Override
-    public void render(PoseStack matrixStack, MultiBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void render(PoseStack matrixStack, RenderBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         IColor color = new ColorFromStyle(StyledColor.BORDER);
         int bc = color.getColor();
         if (bc != -1) {

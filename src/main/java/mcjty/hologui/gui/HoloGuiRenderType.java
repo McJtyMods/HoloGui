@@ -1,8 +1,8 @@
 package mcjty.hologui.gui;
 
+import com.mojang.blaze3d.PrimitiveTopology;
 import com.mojang.blaze3d.pipeline.DepthStencilState;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat;
 
 import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.ColorTargetState;
@@ -17,10 +17,10 @@ import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
 
 public final class HoloGuiRenderType {
 
-    private static final RenderPipeline IMAGE = RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
+    private static final RenderPipeline IMAGE = RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET)
             .withLocation(Identifier.fromNamespaceAndPath("hologui", "pipeline/image"))
             .withVertexShader("core/position_tex_color").withFragmentShader("core/position_tex_color")
-            .withSampler("Sampler0").withVertexFormat(DefaultVertexFormat.POSITION_TEX_COLOR, VertexFormat.Mode.QUADS)
+            .withVertexBinding(0, DefaultVertexFormat.POSITION_TEX_COLOR).withPrimitiveTopology(PrimitiveTopology.QUADS)
             .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
             .withDepthStencilState(DepthStencilState.DEFAULT)
             .withCull(false).build();

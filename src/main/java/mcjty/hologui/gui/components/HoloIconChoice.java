@@ -10,7 +10,7 @@ import mcjty.hologui.api.IImage;
 import mcjty.hologui.api.components.IIconChoice;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
-import net.minecraft.client.renderer.MultiBufferSource;
+import mcjty.lib.client.RenderBufferSource;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -45,7 +45,7 @@ public class HoloIconChoice extends AbstractHoloComponent<IIconChoice> implement
     }
 
     @Override
-    public void render(PoseStack matrixStack, MultiBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void render(PoseStack matrixStack, RenderBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         Integer value = currentValue.apply(player);
         if (value < 0 || value >= images.size()) {
             return;

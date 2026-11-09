@@ -7,7 +7,7 @@ import mcjty.hologui.api.IEvent;
 import mcjty.hologui.api.IHoloGuiEntity;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
-import net.minecraft.client.renderer.MultiBufferSource;
+import mcjty.lib.client.RenderBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -44,7 +44,7 @@ class HoloWindowButton extends AbstractHoloComponent<HoloWindowButton> {
     }
 
     @Override
-    public void render(PoseStack poses, MultiBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void render(PoseStack poses, RenderBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         boolean hover = isInside(cursorX, cursorY);
         boolean pinned = kind == Kind.PIN && holo.isPinned();
         HoloGuiRenderTools.renderControl(poses, buffer, x, y, w, h, hover || pinned);
@@ -87,12 +87,12 @@ class HoloWindowButton extends AbstractHoloComponent<HoloWindowButton> {
         poses.popPose();
     }
 
-    private void line(PoseStack poses, MultiBufferSource buffer, double x1, double y1, double x2, double y2, int color) {
+    private void line(PoseStack poses, RenderBufferSource buffer, double x1, double y1, double x2, double y2, int color) {
         HoloGuiRenderTools.renderLine(poses, buffer, x + x1 * w, y + y1 * h, x + x2 * w, y + y2 * h, .0315, color);
     }
 
     @Override
-    public void renderTooltip(PoseStack poses, MultiBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void renderTooltip(PoseStack poses, RenderBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         String key = kind == Kind.PIN ? holo.isPinned() ? "unpin" : "pin" : kind == Kind.HELP ? "help" : "close";
         double left = Math.min(x, RIGHT - 2.7);
         poses.pushPose();

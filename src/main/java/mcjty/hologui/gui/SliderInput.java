@@ -44,7 +44,7 @@ public class SliderInput {
             return;
         }
         Minecraft mc = Minecraft.getInstance();
-        boolean finish = mc.player == null || mc.screen != null || !mc.options.keyAttack.isDown()
+        boolean finish = mc.player == null || mc.gui.screen() != null || !mc.options.keyAttack.isDown()
                 || !holo.isAlive() || mc.player.distanceToSqr(holo) >= 64 || !guiId.equals(holo.getGuiId()) || !tag.equals(holo.getTag());
         if (finish || ++ticks % 2 == 0) {
             if (mc.getConnection() != null && mc.player != null && (finish || !Double.isFinite(lastX) || Math.abs(holo.getCursorX() - lastX) > .01 || ticks % 20 == 0)) {

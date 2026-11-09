@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
+import mcjty.lib.client.RenderBufferSource;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.rendertype.RenderType;
@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
 /** Captures widget geometry and item state during extraction, with no live world access at submission. */
-public final class HoloRenderBatch implements MultiBufferSource {
+public class HoloRenderBatch implements RenderBufferSource {
 
     private final List<BiConsumer<PoseStack, SubmitNodeCollector>> draws = new ArrayList<>();
 

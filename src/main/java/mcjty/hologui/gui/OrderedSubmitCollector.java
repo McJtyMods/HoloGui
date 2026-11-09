@@ -6,7 +6,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.block.MovingBlockRenderState;
-import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
@@ -23,6 +22,9 @@ import org.joml.Quaternionf;
 import org.jspecify.annotations.Nullable;
 import net.minecraft.client.renderer.OrderedSubmitNodeCollector;
 import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.gizmos.DrawableGizmoPrimitives;
+import net.minecraft.client.renderer.state.level.QuadParticleRenderState;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 /** Gives nested item and special-model submits the widget's explicit draw order. */
 public class OrderedSubmitCollector implements SubmitNodeCollector {
@@ -50,9 +52,8 @@ public class OrderedSubmitCollector implements SubmitNodeCollector {
         Component name,
         boolean seeThrough,
         int lightCoords,
-        double distanceToCameraSq,
         CameraRenderState camera) {
-        delegate.submitNameTag(poseStack, nameTagAttachment, offset, name, seeThrough, lightCoords, distanceToCameraSq, camera);
+        delegate.submitNameTag(poseStack, nameTagAttachment, offset, name, seeThrough, lightCoords, camera);
     }
 
     @Override
@@ -100,17 +101,15 @@ public class OrderedSubmitCollector implements SubmitNodeCollector {
         int lightCoords,
         int overlayCoords,
         @Nullable TextureAtlasSprite sprite,
-        boolean sheeted,
-        boolean hasFoil,
         int tintedColor,
         ModelFeatureRenderer.@Nullable CrumblingOverlay crumblingOverlay,
         int outlineColor) {
-        delegate.submitModelPart(modelPart, poseStack, renderType, lightCoords, overlayCoords, sprite, sheeted, hasFoil, tintedColor, crumblingOverlay, outlineColor);
+        delegate.submitModelPart(modelPart, poseStack, renderType, lightCoords, overlayCoords, sprite, tintedColor, crumblingOverlay, outlineColor);
     }
 
     @Override
-    public void submitMovingBlock(PoseStack poseStack, MovingBlockRenderState movingBlockRenderState) {
-        delegate.submitMovingBlock(poseStack, movingBlockRenderState);
+    public void submitMovingBlock(PoseStack poseStack, MovingBlockRenderState movingBlockRenderState, int outlineColor) {
+        delegate.submitMovingBlock(poseStack, movingBlockRenderState, outlineColor);
     }
 
     @Override
@@ -125,8 +124,8 @@ public class OrderedSubmitCollector implements SubmitNodeCollector {
     }
 
     @Override
-    public void submitBreakingBlockModel(PoseStack poseStack, BlockStateModel model, long seed, int progress) {
-        delegate.submitBreakingBlockModel(poseStack, model, seed, progress);
+    public void submitBreakingBlockModel(PoseStack poseStack, List<BlockStateModelPart> parts, int progress) {
+        delegate.submitBreakingBlockModel(poseStack, parts, progress);
     }
 
     @Override
@@ -147,7 +146,17 @@ public class OrderedSubmitCollector implements SubmitNodeCollector {
     }
 
     @Override
-    public void submitParticleGroup(SubmitNodeCollector.ParticleGroupRenderer particleGroupRenderer) {
-        delegate.submitParticleGroup(particleGroupRenderer);
+    public void submitQuadParticleGroup(QuadParticleRenderState particles) {
+        delegate.submitQuadParticleGroup(particles);
+    }
+
+    @Override
+    public void submitShapeOutline(PoseStack poses, VoxelShape shape, RenderType type, int color, float width, boolean afterTerrain) {
+        delegate.submitShapeOutline(poses, shape, type, color, width, afterTerrain);
+    }
+
+    @Override
+    public void submitGizmoPrimitives(DrawableGizmoPrimitives.Group group, CameraRenderState camera, boolean onTop) {
+        delegate.submitGizmoPrimitives(group, camera, onTop);
     }
 }

@@ -8,7 +8,7 @@ import mcjty.hologui.gui.HoloGuiEntity;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.TextEntryScreen;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
+import mcjty.lib.client.RenderBufferSource;
 import net.minecraft.world.entity.player.Player;
 
 public class HoloTextEntry extends AbstractHoloComponent<ITextEntry> implements ITextEntry {
@@ -71,12 +71,12 @@ public class HoloTextEntry extends AbstractHoloComponent<ITextEntry> implements 
 
     public void hitClient(Player player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         if (getName() != null && entity instanceof HoloGuiEntity holo) {
-            Minecraft.getInstance().setScreen(new TextEntryScreen(holo, this));
+            Minecraft.getInstance().gui.setScreen(new TextEntryScreen(holo, this));
         }
     }
 
     @Override
-    public void render(PoseStack poses, MultiBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
+    public void render(PoseStack poses, RenderBufferSource buffer, Player player, IHoloGuiEntity holo, double cursorX, double cursorY) {
         HoloGuiRenderTools.renderBorder(poses, buffer, x, y, w, h, 75, 225, 255, 220);
         String[] lines = getText().split("\\n", -1);
         int maxChars = Math.max(1, (int) (w * 10 / 3));

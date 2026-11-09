@@ -8,7 +8,7 @@ import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.config.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.LightCoordsUtil;
-import net.minecraft.client.renderer.MultiBufferSource;
+import mcjty.lib.client.RenderBufferSource;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
@@ -72,7 +72,7 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity, HoloGuiEn
         extract(entity, Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(true)).submit(poses, collector);
     }
 
-    public static void renderPanel(HoloGuiEntity entity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer) {
+    public static void renderPanel(HoloGuiEntity entity, float partialTicks, PoseStack matrixStack, RenderBufferSource buffer) {
         matrixStack.mulPose(Axis.YP.rotationDegrees(180.0F - entity.getViewYRot(partialTicks)));
         matrixStack.translate(0, .5, 0);
         float scale = entity.getScale();
