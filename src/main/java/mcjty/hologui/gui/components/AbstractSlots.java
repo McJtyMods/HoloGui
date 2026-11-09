@@ -181,8 +181,8 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
         if (!stack.isEmpty()) {
             matrixStack.pushPose();
             matrixStack.scale(0.01f, 0.01f, 0.01f);
-            matrixStack.mulPose(Axis.YP.rotationDegrees(180));
-            matrixStack.mulPose(Axis.ZP.rotationDegrees(180));
+            matrixStack.rotate(Axis.YP.rotationDegrees(180));
+            matrixStack.rotate(Axis.ZP.rotationDegrees(180));
             matrixStack.translate(0, 0, -10);
             matrixStack.scale(0.4f, 0.4f, 1.0f);
             int xx = (int) (cursorX - x);

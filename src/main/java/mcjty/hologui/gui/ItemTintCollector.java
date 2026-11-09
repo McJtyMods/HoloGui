@@ -3,7 +3,7 @@ package mcjty.hologui.gui;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import java.util.List;
+import net.minecraft.client.resources.model.geometry.ItemQuads;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
@@ -33,18 +33,18 @@ final class ItemTintCollector extends OrderedSubmitCollector {
 
     @Override
     public void submitItem(PoseStack poses, ItemDisplayContext context, int light, int overlay, int outline,
-                           int[] tints, List<BakedQuad> quads, ItemStackRenderState.FoilType foil) {
+                           int[] tints, ItemQuads quads, ItemStackRenderState.FoilType foil) {
         if (brightness != 1 || invalid || alpha != 1) {
-            quads = quads.stream().map(quad -> {
+            quads = ItemQuads.split(quads.all().stream().map(quad -> {
                 var colors = quad.bakedColors();
                 var info = quad.materialInfo();
                 if (alpha < 1) info = new BakedQuad.MaterialInfo(info.sprite(), info.layer(), (info.sprite().atlasLocation().equals(TextureAtlas.LOCATION_ITEMS)
                         ? Sheets.translucentItemSheet() : Sheets.translucentBlockItemSheet()),
-                        info.tintIndex(), info.shade(), info.lightEmission(), info.ambientOcclusion());
+                        info.itemGlintRenderType(), info.itemGlintSpecialRenderType(), info.tintIndex(), info.shadeDirectionOverride(), info.lightEmission(), info.ambientOcclusion());
                 return new BakedQuad(quad.position0(), quad.position1(), quad.position2(), quad.position3(),
                         quad.packedUV0(), quad.packedUV1(), quad.packedUV2(), quad.packedUV3(), quad.direction(), info,
                         quad.bakedNormals(), BakedColors.of(tint(colors.color(0)), tint(colors.color(1)), tint(colors.color(2)), tint(colors.color(3))));
-            }).toList();
+            }).toList());
         }
         delegate.submitItem(poses, context, light, overlay, outline, tints, quads, foil);
     }

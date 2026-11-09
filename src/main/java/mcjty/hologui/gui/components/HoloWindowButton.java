@@ -69,7 +69,7 @@ class HoloWindowButton extends AbstractHoloComponent<HoloWindowButton> {
                 double cx = x + w / 2;
                 double cy = y + h / 2;
                 poses.translate(cx * .1 - .42, .42 - cy * .1, 0);
-                poses.mulPose(Axis.ZP.rotationDegrees(-30));
+                poses.rotate(Axis.ZP.rotationDegrees(-30));
                 poses.translate(-(cx * .1 - .42), -(.42 - cy * .1), 0);
             }
             line(poses, buffer, .32, .22, .68, .22, color);

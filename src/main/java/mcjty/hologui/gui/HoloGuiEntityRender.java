@@ -73,7 +73,7 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity, HoloGuiEn
     }
 
     public static void renderPanel(HoloGuiEntity entity, float partialTicks, PoseStack matrixStack, RenderBufferSource buffer) {
-        matrixStack.mulPose(Axis.YP.rotationDegrees(180.0F - entity.getViewYRot(partialTicks)));
+        matrixStack.rotate(Axis.YP.rotationDegrees(180.0F - entity.getViewYRot(partialTicks)));
         matrixStack.translate(0, .5, 0);
         float scale = entity.getScale();
         scale = 1f - (1f-scale) * (.4f / .25f);

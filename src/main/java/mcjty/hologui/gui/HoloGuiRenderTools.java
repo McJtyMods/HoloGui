@@ -32,8 +32,8 @@ public class HoloGuiRenderTools {
     public static void renderText(PoseStack matrixStack, RenderBufferSource buffer, double x, double y, String text, int color, float scale) {
         matrixStack.pushPose();
         matrixStack.scale(0.01f*scale, 0.01f*scale, 0.01f);
-        matrixStack.mulPose(Axis.YP.rotationDegrees(180));
-        matrixStack.mulPose(Axis.ZP.rotationDegrees(180));
+        matrixStack.rotate(Axis.YP.rotationDegrees(180));
+        matrixStack.rotate(Axis.ZP.rotationDegrees(180));
         renderText(matrixStack, buffer, Language.getInstance().getVisualOrder(ComponentFactory.formatted(text)),
                 (float) (x * 10 / scale - 40 / scale), (float) (y * 10 / scale - 40 / scale), color | 0xff000000, false);
         matrixStack.popPose();
@@ -42,8 +42,8 @@ public class HoloGuiRenderTools {
     public static void renderTextShadow(PoseStack matrixStack, RenderBufferSource buffer, double x, double y, String text, int color, float scale) {
         matrixStack.pushPose();
         matrixStack.scale(0.01f*scale, 0.01f*scale, 0.01f);
-        matrixStack.mulPose(Axis.YP.rotationDegrees(180));
-        matrixStack.mulPose(Axis.ZP.rotationDegrees(180));
+        matrixStack.rotate(Axis.YP.rotationDegrees(180));
+        matrixStack.rotate(Axis.ZP.rotationDegrees(180));
         renderText(matrixStack, buffer, Language.getInstance().getVisualOrder(ComponentFactory.formatted(text)),
                 (float) (x * 10 / scale - 40 / scale), (float) (y * 10 / scale - 40 / scale), color | 0xff000000, true);
         matrixStack.popPose();
@@ -52,8 +52,8 @@ public class HoloGuiRenderTools {
     public static void renderImage(PoseStack matrixStack, RenderBufferSource buffer, double x, double y, int u, int v, int w, int h, int txtw, int txth, Identifier image) {
         matrixStack.pushPose();
         matrixStack.scale(0.01f, 0.01f, 0.01f);
-        matrixStack.mulPose(Axis.YP.rotationDegrees(180));
-        matrixStack.mulPose(Axis.ZP.rotationDegrees(180));
+        matrixStack.rotate(Axis.YP.rotationDegrees(180));
+        matrixStack.rotate(Axis.ZP.rotationDegrees(180));
 
         Matrix4f pose = matrixStack.last().pose();
         VertexConsumer vertices = buffer.getBuffer(HoloGuiRenderType.image(image));

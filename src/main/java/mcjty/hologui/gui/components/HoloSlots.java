@@ -9,12 +9,13 @@ import mcjty.hologui.api.IStackEvent;
 import mcjty.hologui.api.components.ISlots;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class HoloSlots extends AbstractSlots<ISlots> implements ISlots {
 
-    private IItemHandler handler;
+    private ResourceHandler<ItemResource> handler;
 
     public HoloSlots(double x, double y, double w, double h) {
         super(x, y, w, h);
@@ -33,8 +34,8 @@ public class HoloSlots extends AbstractSlots<ISlots> implements ISlots {
     @Override
     protected List<Pair<ItemStack, Integer>> getStacks(Player player) {
         List<Pair<ItemStack, Integer>> stacks = new ArrayList<>();
-        for (int i = 0 ; i < handler.getSlots() ; i++) {
-            ItemStack stack = handler.getStackInSlot(i);
+        for (int i = 0 ; i < handler.size() ; i++) {
+            ItemStack stack = handler.getResource(i).toStack((int) handler.getAmountAsLong(i));
             if (filter.test(stack, i)) {
                 stacks.add(Pair.of(stack, i));
             }
@@ -43,7 +44,7 @@ public class HoloSlots extends AbstractSlots<ISlots> implements ISlots {
     }
 
     @Override
-    public ISlots itemHandler(IItemHandler handler) {
+    public ISlots itemHandler(ResourceHandler<ItemResource> handler) {
         this.handler = handler;
         return this;
     }

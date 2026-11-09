@@ -28,7 +28,7 @@ public class HoloRenderBatch implements RenderBufferSource {
             collector.submitCustomGeometry(poses, type, (pose, output) -> {
             for (Vertex v : vertices) {
                 output.addVertex(pose, v.x, v.y, v.z).setColor(v.color).setUv(v.u, v.v)
-                        .setOverlay(v.overlay).setLight(v.light).setNormal(pose, v.nx, v.ny, v.nz).setLineWidth(v.width);
+                        .setUv3(v.u3, v.v3).setOverlay(v.overlay).setLight(v.light).setNormal(pose, v.nx, v.ny, v.nz).setLineWidth(v.width);
             }
             });
         });
@@ -69,6 +69,13 @@ public class HoloRenderBatch implements RenderBufferSource {
             @Override
             public VertexConsumer setUv2(int u, int v) {
                 current.light = u | v << 16;
+                return this;
+            }
+
+            @Override
+            public VertexConsumer setUv3(float u, float v) {
+                current.u3 = u;
+                current.v3 = v;
                 return this;
             }
 
@@ -120,7 +127,7 @@ public class HoloRenderBatch implements RenderBufferSource {
     private static final class Vertex {
         private final float x, y, z;
         private int color = -1, overlay, light = LightCoordsUtil.FULL_BRIGHT;
-        private float u, v, nx, ny, nz = 1, width = 1;
+        private float u, v, u3, v3, nx, ny, nz = 1, width = 1;
 
         private Vertex(float x, float y, float z) {
             this.x = x;
