@@ -15,7 +15,6 @@ import net.minecraft.client.renderer.rendertype.RenderSetup;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
-import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
 
 public final class HoloGuiRenderType {
 
@@ -30,7 +29,7 @@ public final class HoloGuiRenderType {
             .withLocation(Identifier.fromNamespaceAndPath("hologui", "pipeline/color"))
             .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
             .withCull(false).build();
-    private static final OitPipelineSet IMAGE_OIT = OitPipelineSet.builder(Identifier.parse("hologui:image"),
+    private static final OitPipelineSet IMAGE_OIT = OitPipelineSet.builder("hologui_image",
             RenderPipeline.builder()
                     .withBindGroupLayout(BindGroupLayouts.DYNAMIC_TRANSFORMS).withBindGroupLayout(BindGroupLayouts.SAMPLER0)
                     .withVertexShader("core/position_tex_color").withFragmentShader(Identifier.parse("hologui:image"))
@@ -48,9 +47,9 @@ public final class HoloGuiRenderType {
         return IMAGES.apply(texture);
     }
 
-    public static void registerPipelines(RegisterRenderPipelinesEvent event) {
-        event.registerPipeline(IMAGE);
-        event.registerPipeline(COLOR);
-        event.registerOitPipelineSet(IMAGE_OIT);
+    public static void registerPipelines() {
+        RenderPipelines.register(IMAGE);
+        RenderPipelines.register(COLOR);
+        RenderPipelines.register(IMAGE_OIT);
     }
 }

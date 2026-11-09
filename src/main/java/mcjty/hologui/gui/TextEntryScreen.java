@@ -1,6 +1,6 @@
 package mcjty.hologui.gui;
 
-import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+import mcjty.lib.network.ClientNetworking;
 import mcjty.hologui.api.components.ITextEntry;
 import mcjty.hologui.network.PacketTextEntry;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -68,7 +68,7 @@ public class TextEntryScreen extends Screen {
     @Override
     public void tick() {
         if (++focusTicks % 100 == 0) {
-            ClientPacketDistributor.sendToServer(new PacketTextEntry(holo.getId(), guiId, tag, field.getName(), "", false));
+            ClientNetworking.sendToServer(new PacketTextEntry(holo.getId(), guiId, tag, field.getName(), "", false));
         }
         if (!holo.isAlive() || !holo.getGuiId().equals(guiId) || !holo.getTag().equals(tag)) {
             onClose();
@@ -79,7 +79,7 @@ public class TextEntryScreen extends Screen {
     public void removed() {
         if (!committed && editor != null && minecraft.getConnection() != null) {
             committed = true;
-            ClientPacketDistributor.sendToServer(new PacketTextEntry(holo.getId(), guiId, tag, field.getName(), editor.getValue()));
+            ClientNetworking.sendToServer(new PacketTextEntry(holo.getId(), guiId, tag, field.getName(), editor.getValue()));
         }
     }
 }

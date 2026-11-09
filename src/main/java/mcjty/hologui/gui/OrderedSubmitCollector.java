@@ -2,6 +2,10 @@ package mcjty.hologui.gui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.List;
+import java.util.function.Function;
+import net.fabricmc.fabric.api.client.renderer.v1.mesh.Mesh;
+import net.fabricmc.fabric.api.client.renderer.v1.mesh.MeshView;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
@@ -166,5 +170,23 @@ public class OrderedSubmitCollector implements SubmitNodeCollector {
     @Override
     public void submitGizmoPrimitives(DrawableGizmoPrimitives.Group group, CameraRenderState camera, boolean onTop) {
         delegate.submitGizmoPrimitives(group, camera, onTop);
+    }
+
+    // Fabric models can submit a mesh with no vanilla parts; keep that mesh and the widget order.
+    @Override
+    public void submitBlockModel(PoseStack poses, Function<ChunkSectionLayer, RenderType> renderTypes, boolean translucent,
+            List<BlockStateModelPart> parts, @Nullable Mesh mesh, int[] tints, int light, int overlay, int outline) {
+        delegate.submitBlockModel(poses, renderTypes, translucent, parts, mesh, tints, light, overlay, outline);
+    }
+
+    @Override
+    public void submitBreakingBlockModel(PoseStack poses, List<BlockStateModelPart> parts, Mesh mesh, int progress, boolean translucent) {
+        delegate.submitBreakingBlockModel(poses, parts, mesh, progress, translucent);
+    }
+
+    @Override
+    public void submitItem(PoseStack poses, ItemDisplayContext context, int light, int overlay, int outline,
+            int[] tints, ItemQuads quads, MeshView mesh, ItemStackRenderState.FoilType foil) {
+        delegate.submitItem(poses, context, light, overlay, outline, tints, quads, mesh, foil);
     }
 }

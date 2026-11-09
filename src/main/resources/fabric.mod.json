@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "hologui",
+  "version": "${version}",
+  "name": "HoloGui",
+  "description": "Holographic interfaces",
+  "authors": [
+    "McJty"
+  ],
+  "contact": {
+    "sources": "https://github.com/McJtyMods/HoloGui",
+    "issues": "https://github.com/McJtyMods/HoloGui/issues"
+  },
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "mcjty.hologui.HoloGui"
+    ],
+    "client": [
+      "mcjty.hologui.setup.ClientSetup"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "~26.3",
+    "java": ">=25",
+    "fabric-api": ">=0.164.0+26.3",
+    "forgeconfigapiport": ">=26.3.1",
+    "team_reborn_energy": ">=5.0.0",
+    "mcjtylib": ">=26.3-11.0.4-fabric"
+  },
+  "suggests": {
+    "theoneprobe": "*",
+    "jei": "*"
+  }
+}

@@ -8,7 +8,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import mcjty.lib.network.PayloadContext;
 
 /** Only the drag intent is transmitted; the server computes the value from its own player ray. */
 public record PacketSliderInput(int entityId, String guiId, String tag, String component, boolean finish, float yaw, float pitch) implements CustomPacketPayload {
@@ -35,7 +35,7 @@ public record PacketSliderInput(int entityId, String guiId, String tag, String c
         buffer.writeFloat(pitch);
     }
 
-    public void handle(IPayloadContext context) {
+    public void handle(PayloadContext context) {
         context.enqueueWork(() -> {
             ServerPlayer player = (ServerPlayer) context.player();
             if (Float.isFinite(yaw) && Float.isFinite(pitch) && pitch >= -90 && pitch <= 90

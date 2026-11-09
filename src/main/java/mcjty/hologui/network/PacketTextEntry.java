@@ -6,7 +6,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import mcjty.lib.network.PayloadContext;
 
 public record PacketTextEntry(int entityId, String guiId, String tag, String component, String text, boolean commit) implements CustomPacketPayload {
 
@@ -35,7 +35,7 @@ public record PacketTextEntry(int entityId, String guiId, String tag, String com
         buffer.writeBoolean(commit);
     }
 
-    public void handle(IPayloadContext context) {
+    public void handle(PayloadContext context) {
         context.enqueueWork(() -> {
             ServerPlayer player = (ServerPlayer) context.player();
             if (player != null && player.level().getEntity(entityId) instanceof HoloGuiEntity holo

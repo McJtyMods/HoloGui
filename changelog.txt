@@ -1,3 +1,6 @@
+26.3-0.0.10-beta-fabric:
+- Ported to Minecraft 26.3 on Fabric.
+
 26.3-0.0.10-beta:
 - Ported to Minecraft 26.3 on NeoForge.
 
