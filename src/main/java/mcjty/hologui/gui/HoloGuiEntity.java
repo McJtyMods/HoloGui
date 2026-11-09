@@ -480,7 +480,6 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         return get2DProjection(origin, lookVec, v);
     }
 
-    @Override
     public boolean canRiderInteract() {
         return true;
     }

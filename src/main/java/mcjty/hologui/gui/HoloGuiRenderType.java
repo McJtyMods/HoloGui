@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.rendertype.RenderSetup;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
-import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
 
 public final class HoloGuiRenderType {
 
@@ -40,8 +39,8 @@ public final class HoloGuiRenderType {
         return IMAGES.apply(texture);
     }
 
-    public static void registerPipelines(RegisterRenderPipelinesEvent event) {
-        event.registerPipeline(IMAGE);
-        event.registerPipeline(COLOR);
+    public static void registerPipelines() {
+        RenderPipelines.register(IMAGE);
+        RenderPipelines.register(COLOR);
     }
 }

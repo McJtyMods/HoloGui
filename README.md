@@ -60,9 +60,15 @@ coordinates remain absolute in the normal GUI coordinate system. This also keeps
 hidden sliders and text entries unavailable to server interaction handlers.
 
 
-Development target: Minecraft 26.1.2, NeoForge 26.1.2.99, Java 25, branch `26.1.2_neo`.
-Build with `./gradlew build` standalone, or `./gradlew :ModHoloGui:build` from MultiWorkspace.
-The workspace uses the included McJtyLib and The One Probe sources. These ports require McJtyLib **26.1.2-10.0.2** or newer. Ariente and ArienteWorld also use included HoloGui/Ariente sources. Published Maven artifacts are standalone fallbacks.
-Unpublished port dependencies can be provided with `-Pariente_dependency_repository=<repository URL>`; `-Pgradletools_path=<file>` selects an explicit shared Gradle script.
+## Fabric development
 
-See the [26.1.2 port report](../ArienteWorld_neo/PORT_26_1_2.md) for migration details, validation and the tutorial world.
+Targets Minecraft 26.1.2 with Java 25, on local branch `26.1.2_fabric`.
+Build with `./gradlew build` in this checkout, or `./gradlew :ModHoloGui:build`
+from the sibling `Multi_fabric` workspace. Included McJtyLib, TOP, HoloGui and
+Ariente checkouts are used in compilation and development runs. Isolated builds
+need matching Fabric Maven artifacts; `-Pgradletools_path=<file>` selects an
+explicit shared build script.
+
+Requires McJtyLib **26.1.2-10.0.3-fabric** or newer. HoloGui, Ariente and
+ArienteWorld have separate common/client Fabric entrypoints and use native
+Fabric networking, events, registry access and transactional storage.
