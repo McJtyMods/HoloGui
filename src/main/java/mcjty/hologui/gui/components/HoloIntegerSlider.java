@@ -10,8 +10,6 @@ import mcjty.hologui.gui.SliderInput;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class HoloIntegerSlider extends AbstractHoloComponent<IIntegerSlider> implements IIntegerSlider {
 
@@ -110,7 +108,7 @@ public class HoloIntegerSlider extends AbstractHoloComponent<IIntegerSlider> imp
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
+
     public void hitClient(Player player, IHoloGuiEntity entity, double cx, double cy) {
         if (getName() != null && isTrack(cx, cy) && entity instanceof HoloGuiEntity holo) {
             SliderInput.begin(holo, this);

@@ -18,19 +18,19 @@ Holographic GUI's
 [[dependencies.hologui]]
     modId="neoforge"
     type="required"
-    versionRange="[21.1.215,)"
+    versionRange="[26.1.2.99,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.hologui]]
     modId="mcjtylib"
     type="required"
-    versionRange="[1.21-9.0.21,)"
+    versionRange="[26.1.2-10.0.2,)"
     ordering="AFTER"
     side="BOTH"
 
 [[dependencies.hologui]]
     modId="minecraft"
     type="required"
-    versionRange="[1.21.1,1.21.2)"
+    versionRange="[26.1.2]"
     ordering="NONE"
     side="BOTH"

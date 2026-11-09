@@ -10,21 +10,19 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.rendertype.RenderType;
+
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.BakedModel;
+
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.neoforged.neoforge.client.model.pipeline.VertexConsumerWrapper;
 import org.joml.Matrix4f;
 
 public class HoloGuiRenderTools {
@@ -34,7 +32,7 @@ public class HoloGuiRenderTools {
         matrixStack.scale(0.01f*scale, 0.01f*scale, 0.01f);
         matrixStack.mulPose(Axis.YP.rotationDegrees(180));
         matrixStack.mulPose(Axis.ZP.rotationDegrees(180));
-        Minecraft.getInstance().font.drawInBatch(text, (float) (x * 10 / scale - 40 / scale), (float) (y * 10 / scale - 40 / scale), color,
+        Minecraft.getInstance().font.drawInBatch(text, (float) (x * 10 / scale - 40 / scale), (float) (y * 10 / scale - 40 / scale), color | 0xff000000,
                 false, matrixStack.last().pose(), buffer, Font.DisplayMode.NORMAL, 0, 0xf000f0);  // @todo 1.15 or 140?
         matrixStack.popPose();
     }
@@ -44,12 +42,12 @@ public class HoloGuiRenderTools {
         matrixStack.scale(0.01f*scale, 0.01f*scale, 0.01f);
         matrixStack.mulPose(Axis.YP.rotationDegrees(180));
         matrixStack.mulPose(Axis.ZP.rotationDegrees(180));
-        Minecraft.getInstance().font.drawInBatch(text, (float) (x * 10 / scale - 40 / scale), (float) (y * 10 / scale - 40 / scale), color,
+        Minecraft.getInstance().font.drawInBatch(text, (float) (x * 10 / scale - 40 / scale), (float) (y * 10 / scale - 40 / scale), color | 0xff000000,
                 true, matrixStack.last().pose(), buffer, Font.DisplayMode.NORMAL, 0, 0xf000f0);  // @todo 1.15 or 140?
         matrixStack.popPose();
     }
 
-    public static void renderImage(PoseStack matrixStack, MultiBufferSource buffer, double x, double y, int u, int v, int w, int h, int txtw, int txth, ResourceLocation image) {
+    public static void renderImage(PoseStack matrixStack, MultiBufferSource buffer, double x, double y, int u, int v, int w, int h, int txtw, int txth, Identifier image) {
         matrixStack.pushPose();
         matrixStack.scale(0.01f, 0.01f, 0.01f);
         matrixStack.mulPose(Axis.YP.rotationDegrees(180));
@@ -64,13 +62,13 @@ public class HoloGuiRenderTools {
         float u1 = (float) (u + w) / txtw;
         float v1 = (float) (v + h) / txth;
         vertices.addVertex(pose, left, top + h, 0).setColor(255, 255, 255, 255).setUv(u0, v1)
-                .setLight(LightTexture.FULL_BRIGHT);
+                .setLight(LightCoordsUtil.FULL_BRIGHT);
         vertices.addVertex(pose, left + w, top + h, 0).setColor(255, 255, 255, 255).setUv(u1, v1)
-                .setLight(LightTexture.FULL_BRIGHT);
+                .setLight(LightCoordsUtil.FULL_BRIGHT);
         vertices.addVertex(pose, left + w, top, 0).setColor(255, 255, 255, 255).setUv(u1, v0)
-                .setLight(LightTexture.FULL_BRIGHT);
+                .setLight(LightCoordsUtil.FULL_BRIGHT);
         vertices.addVertex(pose, left, top, 0).setColor(255, 255, 255, 255).setUv(u0, v0)
-                .setLight(LightTexture.FULL_BRIGHT);
+                .setLight(LightCoordsUtil.FULL_BRIGHT);
         matrixStack.popPose();
     }
 
@@ -187,7 +185,7 @@ public class HoloGuiRenderTools {
         vertices.addVertex(pose, left, top, .001f).setColor(r, g, b, a);
     }
 
-    public static void renderItem(PoseStack matrixStack, MultiBufferSource buffer, double x, double y, ItemStack stack, @Nullable ResourceLocation lightmap, boolean border, float scale) {
+    public static void renderItem(PoseStack matrixStack, MultiBufferSource buffer, double x, double y, ItemStack stack, @Nullable Identifier lightmap, boolean border, float scale) {
         boolean invalid = lightmap != null && lightmap.getPath().equals("textures/gui/darken_red.png");
         renderItem(matrixStack, buffer, x, y, stack, lightmap == null ? 1 : .4f, invalid, border, scale);
     }
@@ -205,20 +203,11 @@ public class HoloGuiRenderTools {
         // GUI item transforms keep blocks and flat items readable at every viewing angle.
         // Flatten depth so even large item models stay in front of the panel.
         matrixStack.scale(.1f * scale, .1f * scale, .0001f * scale);
-        ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
-        BakedModel model = renderer.getModel(stack, null, null, 1);
-        MultiBufferSource itemBuffer = buffer;
-        if (brightness < 1 || invalid) {
-            // Disabled icons used to bind a fake lightmap, leaking state into other widgets.
-            itemBuffer = type -> new VertexConsumerWrapper(buffer.getBuffer(type)) {
-
-                @Override
-                public VertexConsumer setColor(int r, int g, int b, int a) {
-                    return super.setColor(invalid ? r : (int) (r * brightness), (int) (g * brightness), (int) (b * brightness), a);
-                }
-            };
+        if (buffer instanceof HoloRenderBatch batch) {
+            batch.item(matrixStack, stack, ItemDisplayContext.GUI, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, brightness, invalid, 1);
+        } else {
+            throw new IllegalArgumentException("Holographic items must be extracted into a HoloRenderBatch");
         }
-        renderer.render(stack, ItemDisplayContext.GUI, false, matrixStack, itemBuffer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, model);
         matrixStack.popPose();
         if (border) {
             renderBorder(matrixStack, buffer, x, y, 1, 1, 255, 255, 255, 255);
@@ -228,7 +217,7 @@ public class HoloGuiRenderTools {
     public static RenderType guiRenderType(RenderType type) {
         // Fabulous normally sends translucent item icons to a separate world framebuffer.
         // Keep GUI items with the panel so they share its depth and draw order.
-        return type == Sheets.translucentItemSheet() ? Sheets.translucentCullBlockSheet() : type;
+        return type;
     }
 
     public static void renderToolTip(PoseStack matrixStack, MultiBufferSource buffer, ItemStack stack, int x, int y, BiConsumer<ItemStack, List<String>> tooltipHandler) {
@@ -256,8 +245,8 @@ public class HoloGuiRenderTools {
         matrixStack.pushPose();
         matrixStack.translate(0, 0, -.5);
         for (int i = 0; i < Math.min(22, lines.size()); i++) {
-            font.drawInBatch(lines.get(i), left, top + i * (font.lineHeight + 1), i == 0 ? 0xffffff : 0xcccccc,
-                    false, matrixStack.last().pose(), buffer, Font.DisplayMode.NORMAL, 0, LightTexture.FULL_BRIGHT);
+            font.drawInBatch(lines.get(i), left, top + i * (font.lineHeight + 1), i == 0 ? 0xffffffff : 0xffcccccc,
+                    false, matrixStack.last().pose(), buffer, Font.DisplayMode.NORMAL, 0, LightCoordsUtil.FULL_BRIGHT);
         }
         matrixStack.popPose();
     }

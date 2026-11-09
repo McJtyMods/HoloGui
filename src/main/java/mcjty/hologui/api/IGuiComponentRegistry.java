@@ -1,7 +1,7 @@
 package mcjty.hologui.api;
 
 import mcjty.hologui.api.components.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * Use this interface to create basic components for a gui. Typically you call this in
@@ -102,7 +102,7 @@ public interface IGuiComponentRegistry {
     /**
      * The resource location and dimension to use for this icon.
      */
-    IImage image(ResourceLocation image, int w, int h);
+    IImage image(Identifier image, int w, int h);
 
     /**
      * A hardcoded color

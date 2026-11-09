@@ -1,10 +1,10 @@
 package mcjty.hologui.api;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public interface IImage {
 
-    ResourceLocation getImage();
+    Identifier getImage();
 
     int getWidth();
 

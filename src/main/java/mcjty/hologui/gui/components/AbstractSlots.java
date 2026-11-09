@@ -12,7 +12,7 @@ import mcjty.hologui.gui.ColorFromStyle;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -107,7 +107,7 @@ public abstract class AbstractSlots<P extends IGuiComponent<P>> extends Abstract
         for (Pair<ItemStack, Integer> pair : getStacks(player)) {
             ItemStack stack = pair.getLeft();
             if (exactView || !stack.isEmpty()) {
-                ResourceLocation lightmap = null;
+                Identifier lightmap = null;
                 if ((!fullBright) && selected != pair.getRight()) {
                     lightmap = HoloStackToggle.DARKEN;
                 }

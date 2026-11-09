@@ -16,7 +16,7 @@ public class CommandHoloCfg implements Command<CommandSourceStack> {
 
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandDispatcher<CommandSourceStack> dispatcher) {
         return Commands.literal("cfg")
-                .requires(cs -> cs.hasPermission(0))
+                .requires(cs -> true)
                 .executes(CMD);
     }
 

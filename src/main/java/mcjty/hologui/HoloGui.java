@@ -5,12 +5,12 @@ import java.util.function.Supplier;
 import mcjty.hologui.api.IHoloGuiHandler;
 import mcjty.hologui.config.Config;
 import mcjty.hologui.gui.HoloGuiHandler;
+import mcjty.hologui.gui.HoloGuiRenderType;
 import mcjty.hologui.network.HoloMessages;
 import mcjty.hologui.setup.ClientSetup;
 import mcjty.hologui.setup.ModSetup;
 import mcjty.hologui.setup.Registration;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -42,16 +42,17 @@ public class HoloGui {
             ClientSetup.registerConfigScreen(mod);
             bus.addListener(ClientSetup::entityRenderers);
             // The following is needed to make sure our SpriteUploader is setup at exactly the right moment
-            bus.addListener(EventPriority.NORMAL, false, ClientSetup::setupSpriteUploader);
+            bus.addListener(ClientSetup::setupSpriteUploader);
+            bus.addListener(HoloGuiRenderType::registerPipelines);
         }
 
     }
 
     private void processIMC(final InterModProcessEvent event) {
         event.getIMCStream().forEach(message -> {
-            if ("getHoloHandler".equalsIgnoreCase(message.getMethod())) {
-                Supplier<Function<IHoloGuiHandler, Void>> supplier = message.getMessageSupplier();
-                supplier.get().apply(guiHandler);
+            if ("getHoloHandler".equalsIgnoreCase(message.method())) {
+                Supplier<?> supplier = message.messageSupplier();
+                ((Function<IHoloGuiHandler, Void>) supplier.get()).apply(guiHandler);
             }
         });
     }

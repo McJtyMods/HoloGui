@@ -48,12 +48,12 @@ public class HoloGuiHandler implements IHoloGuiHandler {
     @Override
     public boolean openHoloGui(Level world, BlockPos pos, Player player) {
         IHoloGuiEntity entity = openHoloGuiEntity(world, pos, player, TAG_DEFAULT, 1.0);
-        return world.isClientSide ? true : entity != null;
+        return world.isClientSide() ? true : entity != null;
     }
 
     @Override
     public IHoloGuiEntity openHoloGuiEntity(Level world, BlockPos pos, Player player, String tag, double distance) {
-        if (world.isClientSide) {
+        if (world.isClientSide()) {
             world.playSound(player, pos.getX(), pos.getY(), pos.getZ(), HoloGuiSounds.GUIOPEN.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
             return null;
         }
@@ -91,11 +91,11 @@ public class HoloGuiHandler implements IHoloGuiHandler {
     public IHoloGuiEntity openHoloGui(Player player, String guiId, double distance) {
         // @todo, check what's wrong with sound
 
-        Level world = player.getCommandSenderWorld();
+        Level world = player.level();
         BlockPos pos = player.blockPosition();
 
         world.playSound(player, pos, HoloGuiSounds.GUIOPEN.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
-        if (world.isClientSide) {
+        if (world.isClientSide()) {
             world.playSound(player, pos.getX(), pos.getY(), pos.getZ(), HoloGuiSounds.GUIOPEN.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
             return null;
         }
@@ -106,11 +106,11 @@ public class HoloGuiHandler implements IHoloGuiHandler {
 
     @Override
     public IHoloGuiEntity openHoloGuiRelative(Entity parent, Vec3 offset, String guiId) {
-//        if (world.isClientSide) {
+//        if (world.isClientSide()) {
 //            world.playSound(pos.getX(), pos.getY(), pos.getZ(), ModSounds.guiopen, SoundCategory.PLAYERS, 1.0f, 1.0f, true);
 //            return null;
 //        }
-        Level world = parent.getCommandSenderWorld();
+        Level world = parent.level();
         HoloGuiEntity entity = createHoloGuiRelative(world, parent, offset, "");
         entity.setGuiId(guiId);
         return entity;
@@ -133,7 +133,7 @@ public class HoloGuiHandler implements IHoloGuiHandler {
         double y = parent.getY() + offset.y;
         double z = parent.getZ() + offset.z;
         entity.setPos(x, y, z);
-        entity.moveTo(x, y, z, parent.getYRot()+90, parent.getXRot());
+        entity.snapTo(x, y, z, parent.getYRot()+90, parent.getXRot());
         world.addFreshEntity(entity);
         return entity;
     }

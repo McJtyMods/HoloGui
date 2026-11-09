@@ -16,7 +16,10 @@ import mcjty.hologui.api.components.ITextEntry;
 import mcjty.hologui.gui.components.HoloWindowPanel;
 import mcjty.lib.varia.SafeClientTools;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -26,6 +29,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -43,7 +47,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     private static final EntityDataAccessor<Float> SCALE = SynchedEntityData.defineId(HoloGuiEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> CLOSESTRATEGY = SynchedEntityData.defineId(HoloGuiEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> PINNED = SynchedEntityData.defineId(HoloGuiEntity.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Optional<UUID>> OWNER = SynchedEntityData.defineId(HoloGuiEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+    private static final EntityDataAccessor<String> OWNER = SynchedEntityData.defineId(HoloGuiEntity.class, EntityDataSerializers.STRING);
 
     private AABB playerDetectionBox = null;
 
@@ -132,17 +136,18 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 
     @Nullable
     public UUID getOwnerUUID() {
-        return entityData.get(OWNER).orElse(null);
+        String owner = entityData.get(OWNER);
+        return owner.isEmpty() ? null : UUID.fromString(owner);
     }
 
     public void setOwnerUUID(UUID owner) {
-        entityData.set(OWNER, Optional.ofNullable(owner));
+        entityData.set(OWNER, owner == null ? "" : owner.toString());
     }
 
     public void positionFor(Player player, double distance) {
         Vec3 look = player.getLookAngle();
         look = new Vec3(look.x, 0, look.z).normalize();
-        moveTo(player.getX() + look.x * distance, player.getY() + player.getEyeHeight() - .5,
+        snapTo(player.getX() + look.x * distance, player.getY() + player.getEyeHeight() - .5,
                 player.getZ() + look.z * distance, player.getYRot(), 0);
         playerDetectionBox = null;
         timeout = maxTimeout;
@@ -183,7 +188,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         // @todo 1.14?
         setScale(getScale());
 
-        if (level().isClientSide) {
+        if (level().isClientSide()) {
             String id = getGuiId();
             if (id != null && !id.isEmpty()) {
                 if (!id.equals(lastGuiId)) {
@@ -235,7 +240,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 
     @Override
     public void close() {
-        if (canClose() && !level().isClientSide) {
+        if (canClose() && !level().isClientSide()) {
             closeGui();
         }
     }
@@ -438,7 +443,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
     }
 
     @Override
-    public boolean canBeCollidedWith() {
+    public boolean canBeCollidedWith(Entity other) {
         // Ray targeting uses isPickable; an overlapping GUI must not lower the player's pose.
         return false;
     }
@@ -460,7 +465,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
 
     @Nonnull
     @Override
-    public InteractionResult interact(Player player, InteractionHand hand) {
+    public InteractionResult interact(Player player, InteractionHand hand, Vec3 location) {
         // The small holo is used as a child on the flux levitator. It doesn't close like this
         if (canClose() && hasCloseStrategy(CloseStrategy.RIGHTCLICK)) {
             closeGui(player);
@@ -546,7 +551,7 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
                 x = vec2d.x * 10 / factor - offset;
                 y = vec2d.y * 10 / factor - offset;
 
-                if (!level().isClientSide) {
+                if (!level().isClientSide()) {
                     gui.hit(player, this, x, y);
                 } else {
                     gui.hitClient(player, this, x, y);
@@ -554,6 +559,11 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
             }
         }
         return true;
+    }
+
+    @Override
+    public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
+        return false;
     }
 
     @Override
@@ -575,37 +585,37 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         builder.define(SCALE, 1.0f);
         builder.define(CLOSESTRATEGY, CloseStrategy.TIMEOUT + CloseStrategy.TIMEOUT_RESET + CloseStrategy.RIGHTCLICK);
         builder.define(PINNED, false);
-        builder.define(OWNER, Optional.empty());
+        builder.define(OWNER, "");
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
+    public void readAdditionalSaveData(ValueInput compound) {
         // An entity can reload with its chunk during play; a new server session clears pins.
         entityData.set(PINNED, false);
-        setOwnerUUID(compound.hasUUID("owner") ? compound.getUUID("owner") : null);
-        this.timeout = compound.getInt("timeout");
-        this.maxTimeout = compound.getInt("maxTimeout");
-        if (compound.contains("guix")) {
-            int x = compound.getInt("guix");
-            int y = compound.getInt("guiy");
-            int z = compound.getInt("guiz");
+        setOwnerUUID(compound.read("owner", UUIDUtil.CODEC).orElse(null));
+        this.timeout = compound.getIntOr("timeout", 0);
+        this.maxTimeout = compound.getIntOr("maxTimeout", 0);
+        if (compound.getInt("guix").isPresent()) {
+            int x = compound.getIntOr("guix", 0);
+            int y = compound.getIntOr("guiy", 0);
+            int z = compound.getIntOr("guiz", 0);
             setGuiTile(new BlockPos(x, y, z));
         }
-        setTag(compound.getString("tag"));
-        setGuiId(compound.getString("guiId"));
-        if (compound.contains("scale")) {
-            setScale(compound.getFloat("scale"));
+        setTag(compound.getStringOr("tag", ""));
+        setGuiId(compound.getStringOr("guiId", ""));
+        if (compound.getFloatOr("scale", -1) >= 0) {
+            setScale(compound.getFloatOr("scale", 0));
         }
-        if (compound.contains("closeStrategy")) {
-            setCloseStrategy(compound.getInt("closeStrategy"));
+        if (compound.getInt("closeStrategy").isPresent()) {
+            setCloseStrategy(compound.getIntOr("closeStrategy", 0));
         }
-        if (!level().isClientSide && compound.hasUUID("pinSession") && compound.getUUID("pinSession").equals(pinSession())) {
+        if (!level().isClientSide() && compound.read("pinSession", UUIDUtil.CODEC).filter(pinSession()::equals).isPresent()) {
             setPinned(true);
         }
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag compound) {
+    protected void addAdditionalSaveData(ValueOutput compound) {
         compound.putInt("timeout", timeout);
         compound.putInt("maxTimeout", maxTimeout);
         BlockPos tile = getGuiTile();
@@ -625,10 +635,10 @@ public class HoloGuiEntity extends Entity implements IHoloGuiEntity {
         compound.putFloat("scale", getScale());
         compound.putInt("closeStrategy", getCloseStrategy());
         if (getOwnerUUID() != null) {
-            compound.putUUID("owner", getOwnerUUID());
+            compound.store("owner", UUIDUtil.CODEC, getOwnerUUID());
         }
-        if (isPinned() && !level().isClientSide) {
-            compound.putUUID("pinSession", pinSession());
+        if (isPinned() && !level().isClientSide()) {
+            compound.store("pinSession", UUIDUtil.CODEC, pinSession());
         }
     }
 }

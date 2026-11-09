@@ -1,45 +1,47 @@
 package mcjty.hologui.gui;
 
+import com.mojang.blaze3d.pipeline.DepthStencilState;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
+
+import com.mojang.blaze3d.pipeline.BlendFunction;
+import com.mojang.blaze3d.pipeline.ColorTargetState;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
 import java.util.function.Function;
-import net.minecraft.Util;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.rendertype.RenderSetup;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.Util;
+import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
 
-public class HoloGuiRenderType extends RenderType {
+public final class HoloGuiRenderType {
 
-    // Dummy
-    public HoloGuiRenderType(String name, VertexFormat format, VertexFormat.Mode mode, int p_173181_, boolean p_173182_, boolean p_173183_, Runnable setup, Runnable clear) {
-        super(name, format, mode, p_173181_, p_173182_, p_173183_, setup, clear);
+    private static final RenderPipeline IMAGE = RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
+            .withLocation(Identifier.fromNamespaceAndPath("hologui", "pipeline/image"))
+            .withVertexShader("core/position_tex_color").withFragmentShader("core/position_tex_color")
+            .withSampler("Sampler0").withVertexFormat(DefaultVertexFormat.POSITION_TEX_COLOR, VertexFormat.Mode.QUADS)
+            .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
+            .withDepthStencilState(DepthStencilState.DEFAULT)
+            .withCull(false).build();
+    private static final RenderPipeline COLOR = RenderPipeline.builder(RenderPipelines.DEBUG_FILLED_SNIPPET)
+            .withLocation(Identifier.fromNamespaceAndPath("hologui", "pipeline/color"))
+            .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
+            .withCull(false).build();
+    private static final Function<Identifier, RenderType> IMAGES = Util.memoize(texture -> RenderType.create("hologui_image",
+            RenderSetup.builder(IMAGE).withTexture("Sampler0", texture).createRenderSetup()));
+    public static final RenderType HOLOGUI_BACKGROUND = image(HoloGuiSpriteUploader.HOLOGUI_ATLAS);
+    public static final RenderType HOLOGUI_COLOR = RenderType.create("hologui_color", RenderSetup.builder(COLOR).createRenderSetup());
+
+    private HoloGuiRenderType() {
     }
 
-    private static final Function<ResourceLocation, RenderType> IMAGES = Util.memoize(HoloGuiRenderType::createImageType);
-
-    public static final RenderType HOLOGUI_BACKGROUND = image(HoloGuiSpriteUploader.HOLOGUI_ATLAS);
-
-    public static final RenderType HOLOGUI_COLOR = create("hologui_color", DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS, 256, false, false,
-            CompositeState.builder()
-                    .setShaderState(POSITION_COLOR_SHADER)
-                    .setCullState(NO_CULL)
-                    .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
-                    .setWriteMaskState(COLOR_DEPTH_WRITE)
-                    .createCompositeState(false));
-
-    public static RenderType image(ResourceLocation texture) {
+    public static RenderType image(Identifier texture) {
         return IMAGES.apply(texture);
     }
 
-    private static RenderType createImageType(ResourceLocation texture) {
-        // Unlit textured quads with depth writes, including the panel behind the widgets.
-        return create("hologui_image", DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, VertexFormat.Mode.QUADS, 256, false, true,
-                CompositeState.builder()
-                        .setShaderState(RENDERTYPE_TEXT_SHADER)
-                        .setTextureState(new TextureStateShard(texture, false, false))
-                        .setLightmapState(LIGHTMAP)
-                        .setCullState(NO_CULL)
-                        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
-                        .setWriteMaskState(COLOR_DEPTH_WRITE)
-                        .createCompositeState(false));
+    public static void registerPipelines(RegisterRenderPipelinesEvent event) {
+        event.registerPipeline(IMAGE);
+        event.registerPipeline(COLOR);
     }
 }

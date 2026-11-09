@@ -1,44 +1,33 @@
 package mcjty.hologui.gui;
 
-import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import mcjty.hologui.HoloGui;
 import mcjty.hologui.api.IGuiComponent;
 import mcjty.hologui.config.Config;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.joml.Matrix4f;
 
-public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
+public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity, HoloGuiEntityRender.State> {
 
-    public static final ResourceLocation GUI_BACKGROUND_1 = ResourceLocation.fromNamespaceAndPath(HoloGui.MODID, "hologui_blue_softwhite");
-    public static final ResourceLocation GUI_BACKGROUND_2 = ResourceLocation.fromNamespaceAndPath(HoloGui.MODID, "hologui_blue");
-    public static final ResourceLocation GUI_BACKGROUND_3 = ResourceLocation.fromNamespaceAndPath(HoloGui.MODID, "hologui_blue_sharpwhite");
-    public static final ResourceLocation GUI_BACKGROUND_4 = ResourceLocation.fromNamespaceAndPath(HoloGui.MODID, "hologui_blue_sharpblack");
-    public static final ResourceLocation GUI_BACKGROUND_5 = ResourceLocation.fromNamespaceAndPath(HoloGui.MODID, "hologui_blue_softblack");
-    public static final ResourceLocation GUI_BACKGROUND_6 = ResourceLocation.fromNamespaceAndPath(HoloGui.MODID, "hologui_gray_sharpblack");
-    public static final ResourceLocation GUI_BACKGROUND_7 = ResourceLocation.fromNamespaceAndPath(HoloGui.MODID, "hologui_gray_sharpwhite");
-    public static final ResourceLocation GUI_BACKGROUND_8 = ResourceLocation.fromNamespaceAndPath(HoloGui.MODID, "hologui_gray_softblack");
-
-    // Foil combines a glint consumer with the item's consumer. They need distinct builders:
-    // the fallback builder is reused between render types and would cause Duplicate delegates.
-    private static final MultiBufferSource.BufferSource GUI_BUFFERS = MultiBufferSource.immediateWithBuffers(new LinkedHashMap<>(Map.of(
-            RenderType.glint(), new ByteBufferBuilder(256),
-            RenderType.glintTranslucent(), new ByteBufferBuilder(256),
-            RenderType.entityGlint(), new ByteBufferBuilder(256),
-            RenderType.entityGlintDirect(), new ByteBufferBuilder(256),
-            RenderType.armorEntityGlint(), new ByteBufferBuilder(256))), new ByteBufferBuilder(4096));
+    public static final Identifier GUI_BACKGROUND_1 = Identifier.fromNamespaceAndPath(HoloGui.MODID, "hologui_blue_softwhite");
+    public static final Identifier GUI_BACKGROUND_2 = Identifier.fromNamespaceAndPath(HoloGui.MODID, "hologui_blue");
+    public static final Identifier GUI_BACKGROUND_3 = Identifier.fromNamespaceAndPath(HoloGui.MODID, "hologui_blue_sharpwhite");
+    public static final Identifier GUI_BACKGROUND_4 = Identifier.fromNamespaceAndPath(HoloGui.MODID, "hologui_blue_sharpblack");
+    public static final Identifier GUI_BACKGROUND_5 = Identifier.fromNamespaceAndPath(HoloGui.MODID, "hologui_blue_softblack");
+    public static final Identifier GUI_BACKGROUND_6 = Identifier.fromNamespaceAndPath(HoloGui.MODID, "hologui_gray_sharpblack");
+    public static final Identifier GUI_BACKGROUND_7 = Identifier.fromNamespaceAndPath(HoloGui.MODID, "hologui_gray_sharpwhite");
+    public static final Identifier GUI_BACKGROUND_8 = Identifier.fromNamespaceAndPath(HoloGui.MODID, "hologui_gray_softblack");
 
     public HoloGuiEntityRender(EntityRendererProvider.Context renderManager) {
         super(renderManager);
@@ -53,36 +42,37 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
     // Option 7: gray with sharp dark border: hologui5
     // Option 8: current: hologui
 
+    public static class State extends EntityRenderState {
+        private HoloRenderBatch batch;
+    }
+
     @Override
-    public void render(HoloGuiEntity entity, float yaw, float partialTicks, PoseStack stack, MultiBufferSource buffer, int light) {
-        doActualRender(entity, partialTicks, stack, buffer);
+    public State createRenderState() {
+        return new State();
     }
 
-    public static void doActualRender(HoloGuiEntity entity, PoseStack matrixStack, MultiBufferSource buffer) {
-        doActualRender(entity, Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true), matrixStack, buffer);
+    @Override
+    public void extractRenderState(HoloGuiEntity entity, State state, float partialTick) {
+        super.extractRenderState(entity, state, partialTick);
+        state.batch = extract(entity, partialTick);
     }
 
-    private static void doActualRender(HoloGuiEntity entity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer) {
-
-        // Keep the panel and its widgets ordered independently of the world's deferred buffers.
-        // All GUI passes target the main framebuffer, including translucent item icons.
-        MultiBufferSource guiBuffer = type -> GUI_BUFFERS.getBuffer(HoloGuiRenderTools.guiRenderType(type));
-        Lighting.setupForFlatItems();
-        matrixStack.pushPose();
-        try {
-            renderPanel(entity, partialTicks, matrixStack, guiBuffer);
-            GUI_BUFFERS.endBatch();
-        } finally {
-            matrixStack.popPose();
-            if (Minecraft.getInstance().level.effects().constantAmbientLight()) {
-                Lighting.setupNetherLevel();
-            } else {
-                Lighting.setupLevel();
-            }
-        }
+    public static HoloRenderBatch extract(HoloGuiEntity entity, float partialTick) {
+        HoloRenderBatch batch = new HoloRenderBatch();
+        renderPanel(entity, partialTick, new PoseStack(), batch);
+        return batch;
     }
 
-    private static void renderPanel(HoloGuiEntity entity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer) {
+    @Override
+    public void submit(State state, PoseStack poses, SubmitNodeCollector collector, CameraRenderState camera) {
+        state.batch.submit(poses, collector);
+    }
+
+    public static void doActualRender(HoloGuiEntity entity, PoseStack poses, SubmitNodeCollector collector) {
+        extract(entity, Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(true)).submit(poses, collector);
+    }
+
+    public static void renderPanel(HoloGuiEntity entity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer) {
         matrixStack.mulPose(Axis.YP.rotationDegrees(180.0F - entity.getViewYRot(partialTicks)));
         matrixStack.translate(0, .5, 0);
         float scale = entity.getScale();
@@ -95,7 +85,7 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
             style -= 8;
         }
 
-        ResourceLocation background = GUI_BACKGROUND_1;
+        Identifier background = GUI_BACKGROUND_1;
 
         switch (style) {
             case 1: background = GUI_BACKGROUND_1; break;
@@ -112,7 +102,6 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
 
         VertexConsumer builder = buffer.getBuffer(HoloGuiRenderType.HOLOGUI_BACKGROUND);
         renderQuadColor(builder, matrixStack.last().pose(), -.5f, .5f, -.5f, .5f, 255, 255, 255, 255, sprite);
-        GUI_BUFFERS.endBatch();
 
         // The transformed panel's +Z points toward the player. Widgets must stay in front of it.
         matrixStack.translate(0, 0, .01);
@@ -149,14 +138,10 @@ public class HoloGuiEntityRender extends EntityRenderer<HoloGuiEntity> {
 
     private static void renderQuadColor(VertexConsumer builder, Matrix4f matrix, float minX, float maxX, float minY, float maxY, int r, int g, int b, int a,
                                         TextureAtlasSprite sprite) {
-        builder.addVertex(matrix, minX, minY, 0).setColor(r, g, b, a).setUv(sprite.getU0(), sprite.getV0()).setLight(LightTexture.FULL_BRIGHT);
-        builder.addVertex(matrix, maxX, minY, 0).setColor(r, g, b, a).setUv(sprite.getU1(), sprite.getV0()).setLight(LightTexture.FULL_BRIGHT);
-        builder.addVertex(matrix, maxX, maxY, 0).setColor(r, g, b, a).setUv(sprite.getU1(), sprite.getV1()).setLight(LightTexture.FULL_BRIGHT);
-        builder.addVertex(matrix, minX, maxY, 0).setColor(r, g, b, a).setUv(sprite.getU0(), sprite.getV1()).setLight(LightTexture.FULL_BRIGHT);
+        builder.addVertex(matrix, minX, minY, 0).setColor(r, g, b, a).setUv(sprite.getU0(), sprite.getV0()).setLight(LightCoordsUtil.FULL_BRIGHT);
+        builder.addVertex(matrix, maxX, minY, 0).setColor(r, g, b, a).setUv(sprite.getU1(), sprite.getV0()).setLight(LightCoordsUtil.FULL_BRIGHT);
+        builder.addVertex(matrix, maxX, maxY, 0).setColor(r, g, b, a).setUv(sprite.getU1(), sprite.getV1()).setLight(LightCoordsUtil.FULL_BRIGHT);
+        builder.addVertex(matrix, minX, maxY, 0).setColor(r, g, b, a).setUv(sprite.getU0(), sprite.getV1()).setLight(LightCoordsUtil.FULL_BRIGHT);
     }
 
-    @Override
-    public ResourceLocation getTextureLocation(HoloGuiEntity pEntity) {
-        return null;
-    }
 }

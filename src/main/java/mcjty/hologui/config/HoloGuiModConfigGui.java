@@ -1,7 +1,7 @@
 package mcjty.hologui.config;
 
 import java.util.Arrays;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.screens.Screen;
@@ -19,13 +19,13 @@ public class HoloGuiModConfigGui extends Screen {
 
     @Override
     protected void init() {
-        addRenderableWidget(CycleButton.<GuiStyle>builder(style -> Component.literal(style.getName()))
+        addRenderableWidget(CycleButton.<GuiStyle>builder(style -> Component.literal(style.getName()), Config.GUI_STYLE::get)
                 .withValues(Arrays.stream(GuiStyle.values()).filter(style -> style != GuiStyle.NONE).toList())
-                .withInitialValue(Config.GUI_STYLE.get())
+
                 .create(width / 2 - 150, height / 2 - 35, 300, 20, Component.literal("Panel style"),
                         (button, value) -> Config.setGuiStyle(value)));
-        addRenderableWidget(CycleButton.<GuiTextStyle>builder(style -> Component.literal(style.name()))
-                .withValues(GuiTextStyle.values()).withInitialValue(Config.GUI_TEXT_STYLE.get())
+        addRenderableWidget(CycleButton.<GuiTextStyle>builder(style -> Component.literal(style.name()), Config.GUI_TEXT_STYLE::get)
+                .withValues(GuiTextStyle.values())
                 .create(width / 2 - 150, height / 2 - 10, 300, 20, Component.literal("Text style"),
                         (button, value) -> Config.setGuiTextStyle(value)));
         addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> onClose())
@@ -39,9 +39,9 @@ public class HoloGuiModConfigGui extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(graphics, mouseX, mouseY, partialTick);
-        graphics.drawCenteredString(font, title, width / 2, 30, 0xffffff);
-        super.render(graphics, mouseX, mouseY, partialTick);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        extractBackground(graphics, mouseX, mouseY, partialTick);
+        graphics.centeredText(font, title, width / 2, 30, 0xffffffff);
+        super.extractRenderState(graphics, mouseX, mouseY, partialTick);
     }
 }

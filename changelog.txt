@@ -1,3 +1,6 @@
+26.1.2-0.0.10-beta:
+- Ported to Minecraft 26.1.2 on NeoForge.
+
 1.21-0.0.10-beta:
 - Ported to Minecraft 1.21.1 on NeoForge.
 

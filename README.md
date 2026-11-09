@@ -60,7 +60,9 @@ coordinates remain absolute in the normal GUI coordinate system. This also keeps
 hidden sliders and text entries unavailable to server interaction handlers.
 
 
-Development target: Minecraft 1.21.1, NeoForge 21.1.215, Java 21, branch `1.21_neo`.
+Development target: Minecraft 26.1.2, NeoForge 26.1.2.99, Java 25, branch `26.1.2_neo`.
 Build with `./gradlew build` standalone, or `./gradlew :ModHoloGui:build` from MultiWorkspace.
-The workspace uses the included McJtyLib and The One Probe sources. Ariente and ArienteWorld also use included HoloGui/Ariente sources. Published Maven artifacts are standalone fallbacks.
+The workspace uses the included McJtyLib and The One Probe sources. These ports require McJtyLib **26.1.2-10.0.2** or newer. Ariente and ArienteWorld also use included HoloGui/Ariente sources. Published Maven artifacts are standalone fallbacks.
 Unpublished port dependencies can be provided with `-Pariente_dependency_repository=<repository URL>`; `-Pgradletools_path=<file>` selects an explicit shared Gradle script.
+
+See the [26.1.2 port report](../ArienteWorld_neo/PORT_26_1_2.md) for migration details, validation and the tutorial world.

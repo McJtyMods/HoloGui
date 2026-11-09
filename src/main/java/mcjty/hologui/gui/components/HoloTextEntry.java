@@ -10,8 +10,6 @@ import mcjty.hologui.gui.TextEntryScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class HoloTextEntry extends AbstractHoloComponent<ITextEntry> implements ITextEntry {
 
@@ -70,7 +68,7 @@ public class HoloTextEntry extends AbstractHoloComponent<ITextEntry> implements 
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
+
     public void hitClient(Player player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         if (getName() != null && entity instanceof HoloGuiEntity holo) {
             Minecraft.getInstance().setScreen(new TextEntryScreen(holo, this));

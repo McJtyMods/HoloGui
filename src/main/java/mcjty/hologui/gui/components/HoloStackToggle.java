@@ -13,7 +13,7 @@ import mcjty.hologui.api.components.IStackToggle;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.HoloGuiSounds;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -29,8 +29,8 @@ public class HoloStackToggle extends AbstractHoloComponent<IStackToggle> impleme
     float scale = 1.0f;
     private BiConsumer<ItemStack, List<String>> tooltipHandler = (itemStack, strings) -> {};
 
-    public static final ResourceLocation DARKEN = ResourceLocation.fromNamespaceAndPath(HoloGui.MODID, "textures/gui/darken.png");
-    public static final ResourceLocation INVALID = ResourceLocation.fromNamespaceAndPath(HoloGui.MODID, "textures/gui/darken_red.png");
+    public static final Identifier DARKEN = Identifier.fromNamespaceAndPath(HoloGui.MODID, "textures/gui/darken.png");
+    public static final Identifier INVALID = Identifier.fromNamespaceAndPath(HoloGui.MODID, "textures/gui/darken_red.png");
 
     HoloStackToggle(double x, double y, double w, double h) {
         super(x, y, w, h);

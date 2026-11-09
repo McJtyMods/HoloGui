@@ -5,6 +5,9 @@ import mcjty.hologui.HoloGui;
 import mcjty.hologui.gui.HoloGuiEntity;
 import mcjty.hologui.gui.HoloGuiSounds;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -29,6 +32,6 @@ public class Registration {
                 .setShouldReceiveVelocityUpdates(false)
                 .noSummon()
                 .fireImmune()
-                .build("hologui");
+                .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(HoloGui.MODID, "hologui")));
     }
 }

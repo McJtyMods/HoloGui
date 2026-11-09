@@ -4,11 +4,11 @@ import mcjty.hologui.api.*;
 import mcjty.hologui.api.components.*;
 import mcjty.hologui.HoloGui;
 import mcjty.hologui.gui.ColorFromStyle;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class GuiComponentRegistry implements IGuiComponentRegistry {
 
-    private ResourceLocation STANDARD = ResourceLocation.fromNamespaceAndPath(HoloGui.MODID, "textures/gui/guielements.png");
+    private Identifier STANDARD = Identifier.fromNamespaceAndPath(HoloGui.MODID, "textures/gui/guielements.png");
 
     @Override
     public IIconButton iconButton(double x, double y, double w, double h) {
@@ -99,7 +99,7 @@ public class GuiComponentRegistry implements IGuiComponentRegistry {
     public IImage image(Icons icon) {
         return new IImage() {
             @Override
-            public ResourceLocation getImage() {
+            public Identifier getImage() {
                 return STANDARD;
             }
 
@@ -129,7 +129,7 @@ public class GuiComponentRegistry implements IGuiComponentRegistry {
     public IImage image(int u, int v) {
         return new IImage() {
             @Override
-            public ResourceLocation getImage() {
+            public Identifier getImage() {
                 return STANDARD;
             }
 
@@ -156,10 +156,10 @@ public class GuiComponentRegistry implements IGuiComponentRegistry {
     }
 
     @Override
-    public IImage image(ResourceLocation image, int w, int h) {
+    public IImage image(Identifier image, int w, int h) {
         return new IImage() {
             @Override
-            public ResourceLocation getImage() {
+            public Identifier getImage() {
                 return image;
             }
 
