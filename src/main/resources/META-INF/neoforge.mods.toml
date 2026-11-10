@@ -24,7 +24,7 @@ Holographic GUI's
 [[dependencies.hologui]]
     modId="mcjtylib"
     type="required"
-    versionRange="[1.21-9.0.21,)"
+    versionRange="[1.21-9.0.22,)"
     ordering="AFTER"
     side="BOTH"
 
