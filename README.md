@@ -21,11 +21,12 @@ the current checkout, so Jenkins jobs can share a Gradle user home without
 restoring paths into another job's workspace. Standalone builds use the matching
 `MultiWorkspace` branch's script when no local copy is present.
 
-Jenkins's `BUILD_NUMBER` is appended to the published version. Ariente and
-ArienteWorld select `1.21-2.0.0+`, accepting Jenkins revisions of that release.
-To pin a revision, use `-Phologui_version=<published HoloGui version>`, including
-that suffix. An additional dependency repository can be supplied with
-`-Pariente_dependency_repository=<repository URL>`.
+Jenkins's `BUILD_NUMBER` is appended to Maven artifact versions. Ariente and
+ArienteWorld currently compile against the published artifact
+`1.21-0.0.10-beta-6`, while requiring the actual HoloGui release `1.21-2.0.0` at
+runtime. Those versions are independent. Dependency artifact versions are
+centralized in the matching MultiWorkspace `gradletools.gradle`; do not override
+them in the mod's `gradle.properties`.
 
 ## Text entry and color picking
 
