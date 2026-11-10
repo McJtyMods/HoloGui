@@ -54,7 +54,7 @@ dependencies {
     mcjtylib()
 }
 
-modpublisher(['the-one-probe'], ['mcjtylib'], ['the-one-probe'], ['mcjtylib'], [])
+modpublisher(['the-one-probe'], ['fabric-api', 'forge-config-api-port', 'mcjtylib'], ['the-one-probe'], ['fabric-api', 'forge-config-api-port', 'mcjtylib'], [])
 
 tasks.register('apiJar', Jar) {
     archiveClassifier = 'api'
