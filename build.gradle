@@ -14,7 +14,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle.userdev' version '7.1.4'
+    id 'fabric-loom' version '1.10.5'
 }
 
 apply plugin: 'com.hypherionmc.modutils.modpublisher'
@@ -22,13 +22,14 @@ apply plugin: 'com.hypherionmc.modutils.modpublisher'
 def localGradleTools = [
         project.findProperty('gradletools_path') ? file(project.property('gradletools_path')) : null,
         rootProject.file('gradletools.gradle'),
-        file('../gradletools.gradle')
-].find { it != null && it.exists() }
-apply from: localGradleTools ?: 'https://raw.githubusercontent.com/McJtyMods/MultiWorkspace/1.21_neo/gradletools.gradle'
-
+        file('../Multi_fabric/gradletools.gradle'),
+        file('../gradletools.gradle'),
+        file('gradletools.gradle')
+].find { it != null && it.isFile() }
+apply from: localGradleTools ?: 'https://raw.githubusercontent.com/McJtyMods/MultiWorkspace/1.21_fabric/gradletools.gradle'
 
 group = "com.github.mcjty"
-archivesBaseName = "hologui"
+base.archivesName = "hologui-fabric"
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 if (System.getenv('BUILD_NUMBER') != null) {
@@ -36,8 +37,10 @@ if (System.getenv('BUILD_NUMBER') != null) {
 }
 
 repos()
+access()
 runs()
 jars()
+tasks.withType(Jar).configureEach { exclude '.cache/**' }
 
 sourceSets.main.resources {
     srcDir 'src/generated/resources'
@@ -45,17 +48,14 @@ sourceSets.main.resources {
 
 dependencies {
     mc()
+    config()
+    energy()
     jei()
     top()
     mcjtylib()
 }
 
-// Unpublished dependency artifacts can be staged for standalone verification.
-if (project.hasProperty('ariente_dependency_repository')) {
-    repositories.maven { url = uri(project.property('ariente_dependency_repository')) }
-}
-
-modpublisher(['the-one-probe'], ['mcjtylib'], ['the-one-probe'], ['mcjtylib'], [])
+modpublisher(['the-one-probe'], ['fabric-api', 'forge-config-api-port', 'mcjtylib'], ['the-one-probe'], ['fabric-api', 'forge-config-api-port', 'mcjtylib'], [])
 
 tasks.register('apiJar', Jar) {
     archiveClassifier = 'api'
@@ -67,7 +67,7 @@ publishing {
         mavenJava(MavenPublication) {
             from components.java
             artifact tasks.apiJar
-            artifactId = project.archivesBaseName
+            artifactId = base.archivesName.get()
         }
     }
     repositories {
@@ -81,16 +81,27 @@ publishing {
     }
 }
 
-subsystems {
-    parchment {
-        minecraftVersion = "${parchment_minecraft_version}"
-        mappingsVersion = "${parchment_version}"
-    }
+processResources {
+    exclude '.cache/**'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    inputs.property 'version', project.version
+    filesMatching('fabric.mod.json') { expand version: project.version }
 }
 
-// NeoGradle consumes local mod source sets in development, including transitive mod dependencies.
-def localMods = ['McJtyLib', 'TheOneProbe']
-localMods.findAll { findProject(":" + it) != null }.each { modName ->
+// Loom loads the same local sources in standalone development and workspace runs.
+def localMods = ['McJtyLib', 'TheOneProbe'].findAll {
+    it != project.name && findProject(":" + it) != null
+}
+localMods.each { modName ->
     evaluationDependsOn(":" + modName)
-    runs { configureEach { modSource project(":" + modName).sourceSets.main } }
+    loom.mods.register(modName.toLowerCase()) { sourceSet project(":" + modName).sourceSets.main }
+}
+
+// Development launches load the included class directories and avoid duplicate dependency jars.
+tasks.withType(JavaExec).configureEach {
+    def sources = localMods.collect { project(":" + it) }
+    def localJars = sources.collect { it.tasks.named('jar', Jar).get().archiveFile.get().asFile } as Set
+    dependsOn tasks.named('classes'), sources.collect { it.tasks.named('classes') }
+    def launchClasspath = files(classpath.files)
+    classpath = launchClasspath.filter { !localJars.contains(it) } + files(sources.collect { it.sourceSets.main.output })
 }

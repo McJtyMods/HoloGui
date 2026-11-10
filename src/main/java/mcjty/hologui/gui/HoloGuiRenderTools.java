@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
+import mcjty.lib.client.VertexConsumerWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.LightTexture;
@@ -24,7 +25,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.neoforged.neoforge.client.model.pipeline.VertexConsumerWrapper;
 import org.joml.Matrix4f;
 
 public class HoloGuiRenderTools {

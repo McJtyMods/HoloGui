@@ -7,9 +7,9 @@ import java.util.function.BiPredicate;
 import mcjty.hologui.api.IImage;
 import mcjty.hologui.api.IStackEvent;
 import mcjty.hologui.api.components.ISlots;
+import mcjty.lib.container.IItemHandler;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class HoloSlots extends AbstractSlots<ISlots> implements ISlots {

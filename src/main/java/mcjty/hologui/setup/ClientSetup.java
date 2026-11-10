@@ -1,31 +1,27 @@
 package mcjty.hologui.setup;
 
-import mcjty.hologui.config.HoloGuiModConfigGui;
 import mcjty.hologui.gui.HoloGuiEntityRender;
 import mcjty.hologui.gui.HoloGuiSpriteUploader;
-import net.minecraft.client.Minecraft;
+import mcjty.hologui.gui.SliderInput;
+import mcjty.lib.client.ClientStartup;
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
-import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import net.minecraft.world.InteractionResult;
 
-public class ClientSetup {
+public class ClientSetup implements ClientModInitializer {
 
-    public static void registerConfigScreen(ModContainer mod) {
-        mod.registerExtensionPoint(IConfigScreenFactory.class, (container, parent) -> new HoloGuiModConfigGui(parent));
-    }
-
-    public static void entityRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(Registration.HOLOGUI_ENTITY_TYPE.get(), HoloGuiEntityRender::new);
-    }
-
-    public static void setupSpriteUploader(RegisterColorHandlersEvent.Block event) {
-        ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
-        if (resourceManager instanceof ReloadableResourceManager) {
-            HoloGuiSpriteUploader.INSTANCE = new HoloGuiSpriteUploader(Minecraft.getInstance().getTextureManager());
-            ((ReloadableResourceManager) resourceManager).registerReloadListener(HoloGuiSpriteUploader.INSTANCE);
-        }
+    @Override
+    public void onInitializeClient() {
+        EntityRendererRegistry.register(Registration.HOLOGUI_ENTITY_TYPE.get(), HoloGuiEntityRender::new);
+        ClientStartup.register(client -> {
+            HoloGuiSpriteUploader.INSTANCE = new HoloGuiSpriteUploader(client.getTextureManager());
+            ((ReloadableResourceManager) client.getResourceManager()).registerReloadListener(HoloGuiSpriteUploader.INSTANCE);
+        });
+        ClientTickEvents.END_CLIENT_TICK.register(client -> SliderInput.tick());
+        AttackBlockCallback.EVENT.register((player, level, hand, pos, direction) ->
+                level.isClientSide() && SliderInput.isDragging() ? InteractionResult.FAIL : InteractionResult.PASS);
     }
 }

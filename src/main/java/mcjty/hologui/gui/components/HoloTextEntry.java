@@ -7,11 +7,11 @@ import mcjty.hologui.api.components.ITextEntry;
 import mcjty.hologui.gui.HoloGuiEntity;
 import mcjty.hologui.gui.HoloGuiRenderTools;
 import mcjty.hologui.gui.TextEntryScreen;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class HoloTextEntry extends AbstractHoloComponent<ITextEntry> implements ITextEntry {
 
@@ -70,7 +70,7 @@ public class HoloTextEntry extends AbstractHoloComponent<ITextEntry> implements 
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public void hitClient(Player player, IHoloGuiEntity entity, double cursorX, double cursorY) {
         if (getName() != null && entity instanceof HoloGuiEntity holo) {
             Minecraft.getInstance().setScreen(new TextEntryScreen(holo, this));

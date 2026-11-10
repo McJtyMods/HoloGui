@@ -1,32 +1,24 @@
+## Fabric 1.21.1 development
+
+This branch is `1.21_fabric` and requires Java 21. In MultiWorkspace, build this mod with `./gradlew :ModHoloGui:build` from the workspace root. Individual checkouts use the same `gradletools.gradle` driver, preferring local peer sources before the Jenkins/Maven fallback. Before the remote branch is available, select the workspace script with `-Pgradletools_path=../gradletools.gradle` and use `--gradle-user-home ../.gradle-user-home`.
+
 # HoloGui
 HoloGui is a mod about holographic gui's
 
 ## Building and Jenkins
 
-For Minecraft 1.21.1 / NeoForge, select Java 21 and **Use Gradle Wrapper** in
-Jenkins (Gradle 8.14.2). Use tasks `clean build publish`, equivalent to:
+Use Java 21 and the Gradle 8.14.2 wrapper for Fabric 1.21.1. Jenkins can run
+`clean build publish`. Set `local_maven` to the Maven repository directory, or
+use `-Pmavendir=...`; otherwise publishing uses the local Maven cache. The
+publication includes the remapped mod jar, API jar and POM.
 
-```sh
-./gradlew clean build publish
-```
+The shared `1.21_fabric/gradletools.gradle` controls Fabric dependencies and
+prefers included local peers. Isolated builds use Fabric Maven coordinates.
+Jenkins appends `-BUILD_NUMBER` to this mod's version; runtime minimums are
+in `fabric.mod.json`. Dependency revision defaults and command-line overrides
+are documented in the MultiWorkspace README.
 
-NeoGradle manages mapped dependencies through build tasks, so no ForgeGradle 5
-cache workaround is needed. Set `local_maven` to the Jenkins Maven repository
-directory, or override it with `-Pmavendir=...`. Without either setting, `publish`
-writes to the local Maven cache. The publication includes the mod jar, API jar
-and POM.
-
-The shared `gradletools.gradle` keeps NeoGradle's library-list caches specific to
-the current checkout, so Jenkins jobs can share a Gradle user home without
-restoring paths into another job's workspace. Standalone builds use the matching
-`MultiWorkspace` branch's script when no local copy is present.
-
-Jenkins's `BUILD_NUMBER` is appended to Maven artifact versions. Ariente and
-ArienteWorld currently compile against the published artifact
-`1.21-0.0.10-beta-6`, while requiring the actual HoloGui release `1.21-2.0.0` at
-runtime. Those versions are independent. Dependency artifact versions are
-centralized in the matching MultiWorkspace `gradletools.gradle`; do not override
-them in the mod's `gradle.properties`.
+Ariente and ArienteWorld use the published Fabric HoloGui artifact when no local checkout is included.
 
 ## Text entry and color picking
 
@@ -87,7 +79,7 @@ coordinates remain absolute in the normal GUI coordinate system. This also keeps
 hidden sliders and text entries unavailable to server interaction handlers.
 
 
-Development target: Minecraft 1.21.1, NeoForge 21.1.215, Java 21, branch `1.21_neo`.
+Development target: Minecraft 1.21.1, Fabric, Java 21, branch `1.21_fabric`.
 Build with `./gradlew build` standalone, or `./gradlew :ModHoloGui:build` from MultiWorkspace.
 The workspace uses the included McJtyLib and The One Probe sources. Ariente and ArienteWorld also use included HoloGui/Ariente sources. Published Maven artifacts are standalone fallbacks.
-Unpublished port dependencies can be provided with `-Pariente_dependency_repository=<repository URL>`; `-Pgradletools_path=<file>` selects an explicit shared Gradle script.
+`-Pgradletools_path=<file>` selects an explicit shared Gradle script; dependency artifact versions can be overridden as described in the MultiWorkspace README.

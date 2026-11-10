@@ -2,11 +2,11 @@ package mcjty.hologui.gui;
 
 import mcjty.hologui.api.components.ITextEntry;
 import mcjty.hologui.network.PacketTextEntry;
+import mcjty.lib.network.ClientNetworking;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.MultiLineEditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 /** Keyboard focus for an in-world text field. The world and hologui remain visible. */
 public class TextEntryScreen extends Screen {
@@ -67,7 +67,7 @@ public class TextEntryScreen extends Screen {
     @Override
     public void tick() {
         if (++focusTicks % 100 == 0) {
-            PacketDistributor.sendToServer(new PacketTextEntry(holo.getId(), guiId, tag, field.getName(), "", false));
+            ClientNetworking.sendToServer(new PacketTextEntry(holo.getId(), guiId, tag, field.getName(), "", false));
         }
         if (!holo.isAlive() || !holo.getGuiId().equals(guiId) || !holo.getTag().equals(tag)) {
             onClose();
@@ -78,7 +78,7 @@ public class TextEntryScreen extends Screen {
     public void removed() {
         if (!committed && editor != null && minecraft.getConnection() != null) {
             committed = true;
-            PacketDistributor.sendToServer(new PacketTextEntry(holo.getId(), guiId, tag, field.getName(), editor.getValue()));
+            ClientNetworking.sendToServer(new PacketTextEntry(holo.getId(), guiId, tag, field.getName(), editor.getValue()));
         }
     }
 }

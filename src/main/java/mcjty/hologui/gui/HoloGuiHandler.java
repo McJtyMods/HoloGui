@@ -1,10 +1,10 @@
 package mcjty.hologui.gui;
 
-import mcjty.hologui.api.*;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;
 import mcjty.hologui.HoloGui;
+import mcjty.hologui.api.*;
 import mcjty.hologui.gui.components.GuiComponentRegistry;
 import mcjty.hologui.setup.Registration;
 import net.minecraft.core.BlockPos;

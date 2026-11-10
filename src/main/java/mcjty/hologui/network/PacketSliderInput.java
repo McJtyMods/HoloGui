@@ -1,6 +1,7 @@
 package mcjty.hologui.network;
 
 import mcjty.hologui.gui.HoloGuiEntity;
+import mcjty.lib.network.PayloadContext;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -8,7 +9,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /** Only the drag intent is transmitted; the server computes the value from its own player ray. */
 public record PacketSliderInput(int entityId, String guiId, String tag, String component, boolean finish, float yaw, float pitch) implements CustomPacketPayload {
@@ -35,7 +35,7 @@ public record PacketSliderInput(int entityId, String guiId, String tag, String c
         buffer.writeFloat(pitch);
     }
 
-    public void handle(IPayloadContext context) {
+    public void handle(PayloadContext context) {
         context.enqueueWork(() -> {
             ServerPlayer player = (ServerPlayer) context.player();
             if (Float.isFinite(yaw) && Float.isFinite(pitch) && pitch >= -90 && pitch <= 90
