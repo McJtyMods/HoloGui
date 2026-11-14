@@ -49,6 +49,11 @@ public class TextEntryScreen extends Screen {
     }
 
     @Override
+    public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        // Keep the world and its hologram visible while the field has keyboard focus.
+    }
+
+    @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         super.render(graphics, mouseX, mouseY, partialTick);
         graphics.drawCenteredString(font, "HOLOGRAPHIC TEXT", width / 2, height / 2 - 75, 0x76eaff);
