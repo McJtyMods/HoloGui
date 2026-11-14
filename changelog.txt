@@ -1,2 +1,5 @@
+26.3-5.0.1-fabric:
+- Fix holographic text fields loading client screens on dedicated servers.
+
 26.3-5.0.0-fabric:
 - Ported to Minecraft 26.3 on Fabric.
